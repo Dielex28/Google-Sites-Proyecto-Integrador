@@ -4,6 +4,11 @@ Google Sites no permite que un programa cree el sitio por ustedes: hay que armar
 desde la cuenta de Google de un integrante. Esta carpeta trae todo listo para
 **copiar y pegar**. Con esta guía el sitio queda montado en unos 30 o 40 minutos.
 
+Los bloques tienen estilo *liquid glass*: cada uno trae su propio fondo líquido que se
+mueve y reacciona al cursor, paneles de vidrio con desenfoque en tiempo real e
+indicadores que se deslizan como gotas. Por eso se ven bien sobre cualquier tema de
+Google Sites: son paneles oscuros independientes.
+
 ```
 google-sites/
 ├── GUIA.md                     ← esta guía
@@ -26,6 +31,8 @@ google-sites/
 2. Arriba a la izquierda escribe el nombre del sitio: **Mapa del Semestre 1A**.
 3. Panel derecho → **Temas** → elige **Simple**. En los círculos de color elige el
    de color personalizado y escribe **#2F5BFF** (el azul del proyecto).
+   *Opcional, para que todo el sitio se vea oscuro:* selecciona cada sección que
+   contiene un bloque y en **Fondo de la sección** prueba el estilo más oscuro.
 4. Pasa el cursor sobre el nombre del sitio → **Agregar logotipo** → sube
    `imagenes/logo-1A.png`.
 5. Engrane de **Configuración** (arriba) → **Marca** → **Favicon** → sube otra vez
@@ -39,19 +46,19 @@ página *Materias* (quedan como subpáginas).
 
 | Página | Imagen de encabezado | Bloques que se pegan (en este orden) | Altura aprox. en computadora |
 |---|---|---|---|
-| **Inicio** | *(sin encabezado, ver nota)* | `inicio/1-portada.html` · `inicio/2-materias.html` · `inicio/3-semana.html` · `inicio/4-proyecto.html` | 790 · 1800 · 440 · 510 px |
-| **Materias** | `00-inicio.jpg` | `inicio/2-materias.html` | 1800 px |
-| ↳ Tutoría de Ingreso I | `01-tutoria.jpg` | `materias/01-tutoria.html` | 1590 px |
-| ↳ Tecnologías de la Información | `02-tecnologias.jpg` | `materias/02-tecnologias.html` | 720 px |
-| ↳ Sexualidad y Perspectiva de Género | `03-sexualidad.jpg` | `materias/03-sexualidad.html` | 670 px |
-| ↳ Algoritmos y Programación | `04-algoritmos.jpg` | `materias/04-algoritmos.html` | 880 px |
-| ↳ Inglés Básico | `05-ingles.jpg` | `materias/05-ingles.html` | 720 px |
-| ↳ Historia e Identidad Universitaria | `06-historia.jpg` | `materias/06-historia.html` | 730 px |
-| ↳ Habilidad Numérica | `07-numerica.jpg` | `materias/07-numerica.html` | 630 px |
-| ↳ Habilidad de Lectoescritura | `08-lectoescritura.jpg` | `materias/08-lectoescritura.html` | 630 px |
-| ↳ Física y sus Aplicaciones | `09-fisica.jpg` | `materias/09-fisica.html` | 1330 px |
-| ↳ Educación Socioemocional | `10-socioemocional.jpg` | `materias/10-socioemocional.html` | 630 px |
-| **Equipo** | `11-equipo.jpg` | `equipo/equipo.html` | 410 px |
+| **Inicio** | *(sin encabezado, ver nota)* | `inicio/1-portada.html` · `inicio/2-materias.html` · `inicio/3-semana.html` · `inicio/4-proyecto.html` | 590 · 1650 · 590 · 510 px |
+| **Materias** | `00-inicio.jpg` | `inicio/2-materias.html` | 1650 px |
+| ↳ Tutoría de Ingreso I | `01-tutoria.jpg` | `materias/01-tutoria.html` | 1690 px |
+| ↳ Tecnologías de la Información | `02-tecnologias.jpg` | `materias/02-tecnologias.html` | 940 px |
+| ↳ Sexualidad y Perspectiva de Género | `03-sexualidad.jpg` | `materias/03-sexualidad.html` | 870 px |
+| ↳ Algoritmos y Programación | `04-algoritmos.jpg` | `materias/04-algoritmos.html` | 1010 px |
+| ↳ Inglés Básico | `05-ingles.jpg` | `materias/05-ingles.html` | 840 px |
+| ↳ Historia e Identidad Universitaria | `06-historia.jpg` | `materias/06-historia.html` | 900 px |
+| ↳ Habilidad Numérica | `07-numerica.jpg` | `materias/07-numerica.html` | 750 px |
+| ↳ Habilidad de Lectoescritura | `08-lectoescritura.jpg` | `materias/08-lectoescritura.html` | 750 px |
+| ↳ Física y sus Aplicaciones | `09-fisica.jpg` | `materias/09-fisica.html` | 1400 px |
+| ↳ Educación Socioemocional | `10-socioemocional.jpg` | `materias/10-socioemocional.html` | 750 px |
+| **Equipo** | `11-equipo.jpg` | `equipo/equipo.html` | 360 px |
 
 **Encabezado de cada página.** Pasa el cursor sobre el encabezado → **Cambiar
 imagen** → **Subir** y elige la foto de `imagenes/encabezados/`. En **Tipo de
@@ -98,8 +105,8 @@ Antes de pegar `equipo/equipo.html`, ábrelo y busca casi al final la lista
 - ¿Ya lo pegaste? Selecciona el bloque en Google Sites → ícono de lápiz
   (**Editar código**) → cambia los datos → **Siguiente** → **Insertar**.
 
-Las tarjetas giran al pasar el cursor (o al tocarlas en el celular) para mostrar
-código, correo y frase.
+Al pasar el cursor (o tocarlas en el celular) las tarjetas se transforman con un
+desenfoque líquido y muestran código, correo y frase.
 
 ## 5. Publicar y compartir
 
@@ -130,6 +137,16 @@ el bloque → **Editar código** → busca el texto y cámbialo. Si prefieren re
 todo, edita `src/contenido.py` y ejecuta `python3 src/build.py` (ver `README.md`).
 
 **¿Se puede usar el sitio web completo en lugar de Google Sites?** Sí. En la raíz
-del repositorio está la versión completa (`index.html`), con menú, páginas por
-materia, modo oscuro y animaciones. Pueden publicarla gratis con GitHub Pages y
-poner un botón en Google Sites que lleve a ella.
+del repositorio está la versión completa (`index.html`): barra lateral de vidrio,
+buscador de temas, página por materia con pestañas y fondo líquido con la foto de
+cada materia. Pueden publicarla gratis con GitHub Pages y poner un botón en Google
+Sites que lleve a ella.
+
+**¿Por qué en algunos navegadores los bordes del vidrio "doblan" lo que hay detrás?**
+Es la refracción líquida. Funciona en Chrome y Edge; en Safari y Firefox se ve el
+vidrio esmerilado normal, sin ese efecto.
+
+**Las animaciones van lentas en una computadora vieja.** En el sitio completo, abajo
+de la barra lateral está el interruptor **Efecto líquido**: apágalo y el fondo deja de
+moverse. Si el dispositivo tiene activada la opción de reducir movimiento, el sitio
+ya lo respeta solo.

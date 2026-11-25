@@ -1,61 +1,67 @@
 <!doctype html>
-<html lang="es">
+<html lang="es" data-base="">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Mapa del Semestre 1A</title>
-<meta name="claude:viewport-fit-sides" content="cover">
 <meta name="description" content="Temario de las 10 materias del primer semestre del grupo 1A (TSIN1AM), Tecnólogo en Sistemas Informáticos, Escuela Politécnica de Guadalajara.">
-<meta name="theme-color" content="#0a1222">
+<meta name="theme-color" content="#06080f">
 <link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
-<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500..800&family=Instrument+Sans:ital,wght@0,400..700;1,400..700&family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500;700&display=swap">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@300..800&family=Geist+Mono:wght@400..600&display=swap">
 <link rel="stylesheet" href="assets/css/estilos.css">
-<script>try{var t=localStorage.getItem("tema");if(t==="dark"||t==="light")document.documentElement.setAttribute("data-theme",t)}catch(e){}</script>
+<script>try{if(localStorage.getItem("calma")==="1")document.documentElement.classList.add("calma")}catch(e){}</script>
 </head>
 <body class="home" id="top">
-
+<svg class="defs" width="0" height="0" aria-hidden="true" focusable="false"><filter id="lg" x="0" y="0" width="100%" height="100%" color-interpolation-filters="sRGB"><feImage id="lg-map" href="" x="0" y="0" width="100%" height="100%" preserveAspectRatio="none" result="map"/><feDisplacementMap in="SourceGraphic" in2="map" scale="34" xChannelSelector="R" yChannelSelector="G"/></filter></svg>
+<div class="bg bg--photo" aria-hidden="true"><img class="bg__photo" src="assets/img/fotos/inicio.jpg" alt="" decoding="async"><canvas class="bg__liquid" data-liquid data-colors="#3b5bff,#8b4ff0,#ff9a3d,#17a88a"></canvas><div class="bg__blobs"><i></i><i></i><i></i></div><div class="bg__tint"></div><div class="bg__grain"></div></div>
 <a class="skip" href="#contenido">Saltar al contenido</a>
-<div class="progress" aria-hidden="true"><span data-progress></span></div>
-<header class="nav" data-nav>
-  <div class="wrap nav__in">
-    <a class="brand" href="index.html">
-      <span class="brand__mark" aria-hidden="true">1A</span>
-      <span class="brand__txt"><b>Mapa del Semestre</b><small>TSIN1AM · 2026B</small></span>
+
+<aside class="side glass" id="menu" aria-label="Navegación principal" data-drawer>
+  <a class="brand" href="index.html">
+    <span class="brand__mark" aria-hidden="true">1A</span>
+    <span class="brand__txt"><b>Mapa del Semestre</b><small>TSIN1AM · 2026B</small></span>
+  </a>
+  <nav class="side__nav" data-lens="v" data-hover>
+    <span class="lens" aria-hidden="true"></span>
+    <p class="side__label">General</p><a class="side__item acc is-active" href="index.html" data-li aria-current="page"><span class="side__ic"><svg class="ic" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><path d="M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8" /><path d="M3 10a2 2 0 0 1 .709-1.528l7-5.999a2 2 0 0 1 2.582 0l7 5.999A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" /></svg></span><span class="side__tx">Inicio</span></a><a class="side__item acc" href="index.html#semana" data-li><span class="side__ic"><svg class="ic" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><path d="M8 2v4" /><path d="M16 2v4" /><rect width="18" height="18" x="3" y="4" rx="2" /><path d="M3 10h18" /><path d="M8 14h.01" /><path d="M12 14h.01" /><path d="M16 14h.01" /><path d="M8 18h.01" /><path d="M12 18h.01" /><path d="M16 18h.01" /></svg></span><span class="side__tx">Calendario</span></a><a class="side__item acc" href="equipo.html" data-li><span class="side__ic"><svg class="ic" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" /><circle cx="9" cy="7" r="4" /><path d="M22 21v-2a4 4 0 0 0-3-3.87" /><path d="M16 3.13a4 4 0 0 1 0 7.75" /></svg></span><span class="side__tx">Equipo</span></a>
+    <p class="side__label">Materias</p><a class="side__item acc" style="--acc:#E8962E" href="materias/tutoria.html" data-li><span class="side__ic"><svg class="ic" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><path d="m16.24 7.76-1.804 5.411a2 2 0 0 1-1.265 1.265L7.76 16.24l1.804-5.411a2 2 0 0 1 1.265-1.265z" /><circle cx="12" cy="12" r="10" /></svg></span><span class="side__tx">Tutoría</span></a><a class="side__item acc" style="--acc:#3B6FF5" href="materias/tecnologias.html" data-li><span class="side__ic"><svg class="ic" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><path d="M20 16V7a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v9m16 0H4m16 0 1.28 2.55a1 1 0 0 1-.9 1.45H3.62a1 1 0 0 1-.9-1.45L4 16" /></svg></span><span class="side__tx">Tecnologías</span></a><a class="side__item acc" style="--acc:#E0517A" href="materias/sexualidad.html" data-li><span class="side__ic"><svg class="ic" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z" /><path d="M12 5 9.04 7.96a2.17 2.17 0 0 0 0 3.08c.82.82 2.13.85 3 .07l2.07-1.9a2.82 2.82 0 0 1 3.79 0l2.96 2.66" /><path d="m18 15-2-2" /><path d="m15 18-2-2" /></svg></span><span class="side__tx">Sexualidad y género</span></a><a class="side__item acc" style="--acc:#17A88A" href="materias/algoritmos.html" data-li><span class="side__ic"><svg class="ic" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><path d="m18 16 4-4-4-4" /><path d="m6 8-4 4 4 4" /><path d="m14.5 4-5 16" /></svg></span><span class="side__tx">Algoritmos</span></a><a class="side__item acc" style="--acc:#D9473B" href="materias/ingles.html" data-li><span class="side__ic"><svg class="ic" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><path d="m5 8 6 6" /><path d="m4 14 6-6 2-3" /><path d="M2 5h12" /><path d="M7 2h1" /><path d="m22 22-5-10-5 10" /><path d="M14 18h6" /></svg></span><span class="side__tx">Inglés</span></a><a class="side__item acc" style="--acc:#B07A36" href="materias/historia.html" data-li><span class="side__ic"><svg class="ic" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><line x1="3" x2="21" y1="22" y2="22" /><line x1="6" x2="6" y1="18" y2="11" /><line x1="10" x2="10" y1="18" y2="11" /><line x1="14" x2="14" y1="18" y2="11" /><line x1="18" x2="18" y1="18" y2="11" /><polygon points="12 2 20 7 4 7" /></svg></span><span class="side__tx">Historia UDG</span></a><a class="side__item acc" style="--acc:#2E9E57" href="materias/numerica.html" data-li><span class="side__ic"><svg class="ic" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><path d="M18 7V5a1 1 0 0 0-1-1H6.5a.5.5 0 0 0-.4.8l4.5 6a2 2 0 0 1 0 2.4l-4.5 6a.5.5 0 0 0 .4.8H17a1 1 0 0 0 1-1v-2" /></svg></span><span class="side__tx">Habilidad numérica</span></a><a class="side__item acc" style="--acc:#5B5FD8" href="materias/lectoescritura.html" data-li><span class="side__ic"><svg class="ic" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><path d="M12 20h9" /><path d="M16.376 3.622a1 1 0 0 1 3.002 3.002L7.368 18.635a2 2 0 0 1-.855.506l-2.872.838a.5.5 0 0 1-.62-.62l.838-2.872a2 2 0 0 1 .506-.854z" /></svg></span><span class="side__tx">Lectoescritura</span></a><a class="side__item acc" style="--acc:#8B4FF0" href="materias/fisica.html" data-li><span class="side__ic"><svg class="ic" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><circle cx="12" cy="12" r="1" /><path d="M20.2 20.2c2.04-2.03.02-7.36-4.5-11.9-4.54-4.52-9.87-6.54-11.9-4.5-2.04 2.03-.02 7.36 4.5 11.9 4.54 4.52 9.87 6.54 11.9 4.5Z" /><path d="M15.7 15.7c4.52-4.54 6.54-9.87 4.5-11.9-2.03-2.04-7.36-.02-11.9 4.5-4.52 4.54-6.54 9.87-4.5 11.9 2.03 2.04 7.36.02 11.9-4.5Z" /></svg></span><span class="side__tx">Física</span></a><a class="side__item acc" style="--acc:#1C97C9" href="materias/socioemocional.html" data-li><span class="side__ic"><svg class="ic" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><path d="M12 5a3 3 0 1 0-5.997.125 4 4 0 0 0-2.526 5.77 4 4 0 0 0 .556 6.588A4 4 0 1 0 12 18Z" /><path d="M12 5a3 3 0 1 1 5.997.125 4 4 0 0 1 2.526 5.77 4 4 0 0 1-.556 6.588A4 4 0 1 1 12 18Z" /><path d="M15 13a4.5 4.5 0 0 1-3-4 4.5 4.5 0 0 1-3 4" /><path d="M17.599 6.5a3 3 0 0 0 .399-1.375" /><path d="M6.003 5.125A3 3 0 0 0 6.401 6.5" /><path d="M3.477 10.896a4 4 0 0 1 .585-.396" /><path d="M19.938 10.5a4 4 0 0 1 .585.396" /><path d="M6 18a4 4 0 0 1-1.967-.516" /><path d="M19.967 17.484A4 4 0 0 1 18 18" /></svg></span><span class="side__tx">Socioemocional</span></a>
+  </nav>
+  <div class="side__foot">
+    <a class="side__week" href="index.html#semana">
+      <span class="gauge gauge--sm" style="--p:0.833" data-gauge><span class="gauge__fill"><i></i><i></i></span><b data-week-n>15</b></span>
+      <span class="side__weektx"><b>Semana <span data-week-n>15</span> de 18</b><small data-week-dates>23 – 27 nov</small></span>
     </a>
-    <nav class="nav__links" id="menu" aria-label="Principal" data-menu>
-      <a href="index.html" aria-current="page">Inicio</a>
-      <div class="dd" data-dd>
-        <button class="dd__btn" type="button" aria-expanded="false" aria-controls="dd-materias">Materias <svg class="ic ic--sm" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><path d="m6 9 6 6 6-6" /></svg></button>
-        <div class="dd__panel" id="dd-materias"><a class="acc" style="--acc:#E8962E" href="materias/tutoria.html"><span class="dd__ic"><svg class="ic" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><path d="m16.24 7.76-1.804 5.411a2 2 0 0 1-1.265 1.265L7.76 16.24l1.804-5.411a2 2 0 0 1 1.265-1.265z" /><circle cx="12" cy="12" r="10" /></svg></span><span class="dd__tx">Tutoría de Ingreso I<small>Formación integral</small></span></a><a class="acc" style="--acc:#3B6FF5" href="materias/tecnologias.html"><span class="dd__ic"><svg class="ic" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><path d="M20 16V7a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v9m16 0H4m16 0 1.28 2.55a1 1 0 0 1-.9 1.45H3.62a1 1 0 0 1-.9-1.45L4 16" /></svg></span><span class="dd__tx">Tecnologías de la Información<small>Tecnología</small></span></a><a class="acc" style="--acc:#E0517A" href="materias/sexualidad.html"><span class="dd__ic"><svg class="ic" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z" /><path d="M12 5 9.04 7.96a2.17 2.17 0 0 0 0 3.08c.82.82 2.13.85 3 .07l2.07-1.9a2.82 2.82 0 0 1 3.79 0l2.96 2.66" /><path d="m18 15-2-2" /><path d="m15 18-2-2" /></svg></span><span class="dd__tx">Sexualidad y Perspectiva de Género<small>Formación integral</small></span></a><a class="acc" style="--acc:#17A88A" href="materias/algoritmos.html"><span class="dd__ic"><svg class="ic" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><path d="m18 16 4-4-4-4" /><path d="m6 8-4 4 4 4" /><path d="m14.5 4-5 16" /></svg></span><span class="dd__tx">Algoritmos y Programación<small>Tecnología</small></span></a><a class="acc" style="--acc:#D9473B" href="materias/ingles.html"><span class="dd__ic"><svg class="ic" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><path d="m5 8 6 6" /><path d="m4 14 6-6 2-3" /><path d="M2 5h12" /><path d="M7 2h1" /><path d="m22 22-5-10-5 10" /><path d="M14 18h6" /></svg></span><span class="dd__tx">Inglés Básico<small>Lenguaje y comunicación</small></span></a><a class="acc" style="--acc:#B07A36" href="materias/historia.html"><span class="dd__ic"><svg class="ic" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><line x1="3" x2="21" y1="22" y2="22" /><line x1="6" x2="6" y1="18" y2="11" /><line x1="10" x2="10" y1="18" y2="11" /><line x1="14" x2="14" y1="18" y2="11" /><line x1="18" x2="18" y1="18" y2="11" /><polygon points="12 2 20 7 4 7" /></svg></span><span class="dd__tx">Historia e Identidad Universitaria<small>Formación integral</small></span></a><a class="acc" style="--acc:#2E9E57" href="materias/numerica.html"><span class="dd__ic"><svg class="ic" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><path d="M18 7V5a1 1 0 0 0-1-1H6.5a.5.5 0 0 0-.4.8l4.5 6a2 2 0 0 1 0 2.4l-4.5 6a.5.5 0 0 0 .4.8H17a1 1 0 0 0 1-1v-2" /></svg></span><span class="dd__tx">Habilidad Numérica<small>Ciencias exactas</small></span></a><a class="acc" style="--acc:#5B5FD8" href="materias/lectoescritura.html"><span class="dd__ic"><svg class="ic" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><path d="M12 20h9" /><path d="M16.376 3.622a1 1 0 0 1 3.002 3.002L7.368 18.635a2 2 0 0 1-.855.506l-2.872.838a.5.5 0 0 1-.62-.62l.838-2.872a2 2 0 0 1 .506-.854z" /></svg></span><span class="dd__tx">Habilidad de Lectoescritura<small>Lenguaje y comunicación</small></span></a><a class="acc" style="--acc:#8B4FF0" href="materias/fisica.html"><span class="dd__ic"><svg class="ic" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><circle cx="12" cy="12" r="1" /><path d="M20.2 20.2c2.04-2.03.02-7.36-4.5-11.9-4.54-4.52-9.87-6.54-11.9-4.5-2.04 2.03-.02 7.36 4.5 11.9 4.54 4.52 9.87 6.54 11.9 4.5Z" /><path d="M15.7 15.7c4.52-4.54 6.54-9.87 4.5-11.9-2.03-2.04-7.36-.02-11.9 4.5-4.52 4.54-6.54 9.87-4.5 11.9 2.03 2.04 7.36.02 11.9-4.5Z" /></svg></span><span class="dd__tx">Física y sus Aplicaciones<small>Ciencias exactas</small></span></a><a class="acc" style="--acc:#1C97C9" href="materias/socioemocional.html"><span class="dd__ic"><svg class="ic" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><path d="M12 5a3 3 0 1 0-5.997.125 4 4 0 0 0-2.526 5.77 4 4 0 0 0 .556 6.588A4 4 0 1 0 12 18Z" /><path d="M12 5a3 3 0 1 1 5.997.125 4 4 0 0 1 2.526 5.77 4 4 0 0 1-.556 6.588A4 4 0 1 1 12 18Z" /><path d="M15 13a4.5 4.5 0 0 1-3-4 4.5 4.5 0 0 1-3 4" /><path d="M17.599 6.5a3 3 0 0 0 .399-1.375" /><path d="M6.003 5.125A3 3 0 0 0 6.401 6.5" /><path d="M3.477 10.896a4 4 0 0 1 .585-.396" /><path d="M19.938 10.5a4 4 0 0 1 .585.396" /><path d="M6 18a4 4 0 0 1-1.967-.516" /><path d="M19.967 17.484A4 4 0 0 1 18 18" /></svg></span><span class="dd__tx">Educación Socioemocional<small>Formación integral</small></span></a></div>
-      </div>
-      <a href="index.html#semana">Calendario</a>
-      <a href="equipo.html">Equipo</a>
-    </nav>
-    <div class="nav__tools">
-      <button class="icon-btn" type="button" data-theme-toggle aria-label="Cambiar entre tema claro y oscuro"><svg class="ic ic--sun" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><circle cx="12" cy="12" r="4" /><path d="M12 2v2" /><path d="M12 20v2" /><path d="m4.93 4.93 1.41 1.41" /><path d="m17.66 17.66 1.41 1.41" /><path d="M2 12h2" /><path d="M20 12h2" /><path d="m6.34 17.66-1.41 1.41" /><path d="m19.07 4.93-1.41 1.41" /></svg><svg class="ic ic--moon" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z" /></svg></button>
-      <button class="icon-btn nav__burger" type="button" data-menu-toggle aria-expanded="false" aria-controls="menu" aria-label="Abrir menú"><svg class="ic ic--open" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><line x1="4" x2="20" y1="12" y2="12" /><line x1="4" x2="20" y1="6" y2="6" /><line x1="4" x2="20" y1="18" y2="18" /></svg><svg class="ic ic--close" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><path d="M18 6 6 18" /><path d="m6 6 12 12" /></svg></button>
+    <button class="side__motion" type="button" data-calma aria-pressed="false"><svg class="ic" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><path d="M7 16.3c2.2 0 4-1.83 4-4.05 0-1.16-.57-2.26-1.71-3.19S7.29 6.75 7 5.3c-.29 1.45-1.14 2.84-2.29 3.76S3 11.1 3 12.25c0 2.22 1.8 4.05 4 4.05z" /><path d="M12.56 6.6A10.97 10.97 0 0 0 14 3.02c.5 2.5 2 4.9 4 6.5s3 3.5 3 5.5a6.98 6.98 0 0 1-11.91 4.97" /></svg><span>Efecto líquido</span><i class="switch" aria-hidden="true"></i></button>
+  </div>
+</aside>
+<div class="scrim" data-drawer-close hidden></div>
+<div class="app">
+  
+<header class="top">
+  <button class="iconbtn glass-pill top__menu" type="button" data-drawer-open aria-label="Abrir menú" aria-controls="menu" aria-expanded="false"><svg class="ic" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><line x1="4" x2="20" y1="12" y2="12" /><line x1="4" x2="20" y1="6" y2="6" /><line x1="4" x2="20" y1="18" y2="18" /></svg></button>
+  <div class="top__crumbs">
+    <nav class="crumbs" aria-label="Ruta de navegación"><a href="index.html">Inicio</a><span aria-hidden="true"><svg class="ic ic--xs" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><path d="m9 18 6-6-6-6" /></svg></span><span aria-current="page">Panel del semestre</span></nav>
+    <p class="top__date" data-hoy></p>
+  </div>
+  <div class="top__tools">
+    <div class="search-wrap" data-search data-base="">
+      <label class="search glass-pill" for="buscar"><svg class="ic" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><circle cx="11" cy="11" r="8" /><path d="m21 21-4.3-4.3" /></svg><input id="buscar" type="search" placeholder="Buscar un tema…" autocomplete="off" spellcheck="false" role="combobox" aria-autocomplete="list" aria-controls="resultados" aria-expanded="false"><kbd>/</kbd></label>
+      <div class="search__res glass" id="resultados" role="listbox" aria-label="Resultados" hidden></div>
     </div>
+    <a class="avatars glass-pill" href="equipo.html" aria-label="Ver al equipo: David, Alan, Armando, Isaac, Diego"><span class="avs"><span class="av" style="--c:#E8962E" title="David">D</span><span class="av" style="--c:#3B6FF5" title="Alan">A</span><span class="av" style="--c:#E0517A" title="Armando">A</span><span class="av" style="--c:#17A88A" title="Isaac">I</span><span class="av" style="--c:#D9473B" title="Diego">D</span></span></a>
   </div>
 </header>
-<main id="contenido">
+  <main id="contenido" class="main">
 
-<section class="hero" data-spot>
-  <div class="hero__bg" aria-hidden="true"><div class="hero__grid"></div><div class="glow glow--a"></div><div class="glow glow--b"></div></div>
-  <div class="wrap hero__in">
-    <div class="hero__copy">
-      <p class="eyebrow eyebrow--night"><span class="pulse"></span>Escuela Politécnica de Guadalajara</p>
-      <h1 class="hero__title"><span class="ln">El mapa de nuestro</span> <span class="ln"><em>primer semestre</em></span></h1>
-      <p class="hero__lead">Proyecto integrador del grupo 1A, turno matutino, del Tecnólogo en Sistemas Informáticos. Reunimos las diez materias del ciclo 2026B con sus unidades y temas para consultarlas en un solo lugar.</p>
-      <div class="hero__cta"><a class="btn btn--primary" href="#materias">Explorar materias <svg class="ic" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><path d="M5 12h14" /><path d="m12 5 7 7-7 7" /></svg></a><a class="btn btn--ghost" href="equipo.html">Conocer al equipo</a></div>
-      <div class="hero__stats">
-        <div class="stat"><span class="stat__n" data-count="10">10</span><span class="stat__l">materias</span></div>
-        <div class="stat"><span class="stat__n" data-count="230">230</span><span class="stat__l">temas y subtemas</span></div>
-        <div class="stat"><span class="stat__n" data-count="18">18</span><span class="stat__l">semanas</span></div>
-        <div class="stat"><span class="stat__n" data-count="5">5</span><span class="stat__l">integrantes</span></div>
-      </div>
-    </div>
-    
-<div class="term" role="region" aria-label="Terminal decorativa: lista de las diez materias y avance del semestre">
+<section class="grid hero" aria-labelledby="titulo">
+  <div class="glass panel hero__panel span-7" data-reveal>
+    <p class="eyebrow"><span class="pulse"></span>Escuela Politécnica de Guadalajara</p>
+    <h1 class="hero__title" id="titulo">El mapa de nuestro <span class="liquid-text">primer semestre</span></h1>
+    <p class="hero__lead">Proyecto integrador del grupo 1A, turno matutino, del Tecnólogo en Sistemas Informáticos. Las diez materias del ciclo 2026B con sus unidades y temas, en un solo lugar.</p>
+    <div class="hero__cta"><a class="btn btn--liquid" href="#materias" data-ripple>Explorar materias <svg class="ic" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><path d="M5 12h14" /><path d="m12 5 7 7-7 7" /></svg></a><a class="btn btn--glass" href="equipo.html" data-ripple>Conocer al equipo</a></div>
+  </div>
+  
+<div class="term glass span-5" role="region" aria-label="Terminal decorativa: lista de las diez materias y avance del semestre" data-reveal>
   <div class="term__bar"><i></i><i></i><i></i><span>tsin1am@politecnica — bash</span></div>
   <div class="term__body" data-term data-inicio="2026-08-17">
     <p class="tl tl--cmd"><span class="t-p">tsin1am@poli</span><span class="t-c">:~/1A$</span> <span class="t-typed">ls materias/</span></p>
@@ -67,221 +73,224 @@
     <p class="tl tl--cmd tl--last"><span class="t-p">tsin1am@poli</span><span class="t-c">:~/1A$</span> <span class="t-cursor" aria-hidden="true"></span></p>
   </div>
 </div>
-  </div>
 </section>
-<div class="mq" aria-hidden="true"><div class="mq__track"><span class="mq__item">Tutoría de Ingreso I</span><span class="mq__sep"><svg class="ic ic--sm" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><path d="M9.937 15.5A2 2 0 0 0 8.5 14.063l-6.135-1.582a.5.5 0 0 1 0-.962L8.5 9.936A2 2 0 0 0 9.937 8.5l1.582-6.135a.5.5 0 0 1 .963 0L14.063 8.5A2 2 0 0 0 15.5 9.937l6.135 1.581a.5.5 0 0 1 0 .964L15.5 14.063a2 2 0 0 0-1.437 1.437l-1.582 6.135a.5.5 0 0 1-.963 0z" /><path d="M20 3v4" /><path d="M22 5h-4" /><path d="M4 17v2" /><path d="M5 18H3" /></svg></span><span class="mq__item">Tecnologías de la Información</span><span class="mq__sep"><svg class="ic ic--sm" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><path d="M9.937 15.5A2 2 0 0 0 8.5 14.063l-6.135-1.582a.5.5 0 0 1 0-.962L8.5 9.936A2 2 0 0 0 9.937 8.5l1.582-6.135a.5.5 0 0 1 .963 0L14.063 8.5A2 2 0 0 0 15.5 9.937l6.135 1.581a.5.5 0 0 1 0 .964L15.5 14.063a2 2 0 0 0-1.437 1.437l-1.582 6.135a.5.5 0 0 1-.963 0z" /><path d="M20 3v4" /><path d="M22 5h-4" /><path d="M4 17v2" /><path d="M5 18H3" /></svg></span><span class="mq__item">Sexualidad y Perspectiva de Género</span><span class="mq__sep"><svg class="ic ic--sm" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><path d="M9.937 15.5A2 2 0 0 0 8.5 14.063l-6.135-1.582a.5.5 0 0 1 0-.962L8.5 9.936A2 2 0 0 0 9.937 8.5l1.582-6.135a.5.5 0 0 1 .963 0L14.063 8.5A2 2 0 0 0 15.5 9.937l6.135 1.581a.5.5 0 0 1 0 .964L15.5 14.063a2 2 0 0 0-1.437 1.437l-1.582 6.135a.5.5 0 0 1-.963 0z" /><path d="M20 3v4" /><path d="M22 5h-4" /><path d="M4 17v2" /><path d="M5 18H3" /></svg></span><span class="mq__item">Algoritmos y Programación</span><span class="mq__sep"><svg class="ic ic--sm" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><path d="M9.937 15.5A2 2 0 0 0 8.5 14.063l-6.135-1.582a.5.5 0 0 1 0-.962L8.5 9.936A2 2 0 0 0 9.937 8.5l1.582-6.135a.5.5 0 0 1 .963 0L14.063 8.5A2 2 0 0 0 15.5 9.937l6.135 1.581a.5.5 0 0 1 0 .964L15.5 14.063a2 2 0 0 0-1.437 1.437l-1.582 6.135a.5.5 0 0 1-.963 0z" /><path d="M20 3v4" /><path d="M22 5h-4" /><path d="M4 17v2" /><path d="M5 18H3" /></svg></span><span class="mq__item">Inglés Básico</span><span class="mq__sep"><svg class="ic ic--sm" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><path d="M9.937 15.5A2 2 0 0 0 8.5 14.063l-6.135-1.582a.5.5 0 0 1 0-.962L8.5 9.936A2 2 0 0 0 9.937 8.5l1.582-6.135a.5.5 0 0 1 .963 0L14.063 8.5A2 2 0 0 0 15.5 9.937l6.135 1.581a.5.5 0 0 1 0 .964L15.5 14.063a2 2 0 0 0-1.437 1.437l-1.582 6.135a.5.5 0 0 1-.963 0z" /><path d="M20 3v4" /><path d="M22 5h-4" /><path d="M4 17v2" /><path d="M5 18H3" /></svg></span><span class="mq__item">Historia e Identidad Universitaria</span><span class="mq__sep"><svg class="ic ic--sm" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><path d="M9.937 15.5A2 2 0 0 0 8.5 14.063l-6.135-1.582a.5.5 0 0 1 0-.962L8.5 9.936A2 2 0 0 0 9.937 8.5l1.582-6.135a.5.5 0 0 1 .963 0L14.063 8.5A2 2 0 0 0 15.5 9.937l6.135 1.581a.5.5 0 0 1 0 .964L15.5 14.063a2 2 0 0 0-1.437 1.437l-1.582 6.135a.5.5 0 0 1-.963 0z" /><path d="M20 3v4" /><path d="M22 5h-4" /><path d="M4 17v2" /><path d="M5 18H3" /></svg></span><span class="mq__item">Habilidad Numérica</span><span class="mq__sep"><svg class="ic ic--sm" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><path d="M9.937 15.5A2 2 0 0 0 8.5 14.063l-6.135-1.582a.5.5 0 0 1 0-.962L8.5 9.936A2 2 0 0 0 9.937 8.5l1.582-6.135a.5.5 0 0 1 .963 0L14.063 8.5A2 2 0 0 0 15.5 9.937l6.135 1.581a.5.5 0 0 1 0 .964L15.5 14.063a2 2 0 0 0-1.437 1.437l-1.582 6.135a.5.5 0 0 1-.963 0z" /><path d="M20 3v4" /><path d="M22 5h-4" /><path d="M4 17v2" /><path d="M5 18H3" /></svg></span><span class="mq__item">Habilidad de Lectoescritura</span><span class="mq__sep"><svg class="ic ic--sm" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><path d="M9.937 15.5A2 2 0 0 0 8.5 14.063l-6.135-1.582a.5.5 0 0 1 0-.962L8.5 9.936A2 2 0 0 0 9.937 8.5l1.582-6.135a.5.5 0 0 1 .963 0L14.063 8.5A2 2 0 0 0 15.5 9.937l6.135 1.581a.5.5 0 0 1 0 .964L15.5 14.063a2 2 0 0 0-1.437 1.437l-1.582 6.135a.5.5 0 0 1-.963 0z" /><path d="M20 3v4" /><path d="M22 5h-4" /><path d="M4 17v2" /><path d="M5 18H3" /></svg></span><span class="mq__item">Física y sus Aplicaciones</span><span class="mq__sep"><svg class="ic ic--sm" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><path d="M9.937 15.5A2 2 0 0 0 8.5 14.063l-6.135-1.582a.5.5 0 0 1 0-.962L8.5 9.936A2 2 0 0 0 9.937 8.5l1.582-6.135a.5.5 0 0 1 .963 0L14.063 8.5A2 2 0 0 0 15.5 9.937l6.135 1.581a.5.5 0 0 1 0 .964L15.5 14.063a2 2 0 0 0-1.437 1.437l-1.582 6.135a.5.5 0 0 1-.963 0z" /><path d="M20 3v4" /><path d="M22 5h-4" /><path d="M4 17v2" /><path d="M5 18H3" /></svg></span><span class="mq__item">Educación Socioemocional</span><span class="mq__sep"><svg class="ic ic--sm" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><path d="M9.937 15.5A2 2 0 0 0 8.5 14.063l-6.135-1.582a.5.5 0 0 1 0-.962L8.5 9.936A2 2 0 0 0 9.937 8.5l1.582-6.135a.5.5 0 0 1 .963 0L14.063 8.5A2 2 0 0 0 15.5 9.937l6.135 1.581a.5.5 0 0 1 0 .964L15.5 14.063a2 2 0 0 0-1.437 1.437l-1.582 6.135a.5.5 0 0 1-.963 0z" /><path d="M20 3v4" /><path d="M22 5h-4" /><path d="M4 17v2" /><path d="M5 18H3" /></svg></span><span class="mq__item">Tutoría de Ingreso I</span><span class="mq__sep"><svg class="ic ic--sm" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><path d="M9.937 15.5A2 2 0 0 0 8.5 14.063l-6.135-1.582a.5.5 0 0 1 0-.962L8.5 9.936A2 2 0 0 0 9.937 8.5l1.582-6.135a.5.5 0 0 1 .963 0L14.063 8.5A2 2 0 0 0 15.5 9.937l6.135 1.581a.5.5 0 0 1 0 .964L15.5 14.063a2 2 0 0 0-1.437 1.437l-1.582 6.135a.5.5 0 0 1-.963 0z" /><path d="M20 3v4" /><path d="M22 5h-4" /><path d="M4 17v2" /><path d="M5 18H3" /></svg></span><span class="mq__item">Tecnologías de la Información</span><span class="mq__sep"><svg class="ic ic--sm" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><path d="M9.937 15.5A2 2 0 0 0 8.5 14.063l-6.135-1.582a.5.5 0 0 1 0-.962L8.5 9.936A2 2 0 0 0 9.937 8.5l1.582-6.135a.5.5 0 0 1 .963 0L14.063 8.5A2 2 0 0 0 15.5 9.937l6.135 1.581a.5.5 0 0 1 0 .964L15.5 14.063a2 2 0 0 0-1.437 1.437l-1.582 6.135a.5.5 0 0 1-.963 0z" /><path d="M20 3v4" /><path d="M22 5h-4" /><path d="M4 17v2" /><path d="M5 18H3" /></svg></span><span class="mq__item">Sexualidad y Perspectiva de Género</span><span class="mq__sep"><svg class="ic ic--sm" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><path d="M9.937 15.5A2 2 0 0 0 8.5 14.063l-6.135-1.582a.5.5 0 0 1 0-.962L8.5 9.936A2 2 0 0 0 9.937 8.5l1.582-6.135a.5.5 0 0 1 .963 0L14.063 8.5A2 2 0 0 0 15.5 9.937l6.135 1.581a.5.5 0 0 1 0 .964L15.5 14.063a2 2 0 0 0-1.437 1.437l-1.582 6.135a.5.5 0 0 1-.963 0z" /><path d="M20 3v4" /><path d="M22 5h-4" /><path d="M4 17v2" /><path d="M5 18H3" /></svg></span><span class="mq__item">Algoritmos y Programación</span><span class="mq__sep"><svg class="ic ic--sm" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><path d="M9.937 15.5A2 2 0 0 0 8.5 14.063l-6.135-1.582a.5.5 0 0 1 0-.962L8.5 9.936A2 2 0 0 0 9.937 8.5l1.582-6.135a.5.5 0 0 1 .963 0L14.063 8.5A2 2 0 0 0 15.5 9.937l6.135 1.581a.5.5 0 0 1 0 .964L15.5 14.063a2 2 0 0 0-1.437 1.437l-1.582 6.135a.5.5 0 0 1-.963 0z" /><path d="M20 3v4" /><path d="M22 5h-4" /><path d="M4 17v2" /><path d="M5 18H3" /></svg></span><span class="mq__item">Inglés Básico</span><span class="mq__sep"><svg class="ic ic--sm" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><path d="M9.937 15.5A2 2 0 0 0 8.5 14.063l-6.135-1.582a.5.5 0 0 1 0-.962L8.5 9.936A2 2 0 0 0 9.937 8.5l1.582-6.135a.5.5 0 0 1 .963 0L14.063 8.5A2 2 0 0 0 15.5 9.937l6.135 1.581a.5.5 0 0 1 0 .964L15.5 14.063a2 2 0 0 0-1.437 1.437l-1.582 6.135a.5.5 0 0 1-.963 0z" /><path d="M20 3v4" /><path d="M22 5h-4" /><path d="M4 17v2" /><path d="M5 18H3" /></svg></span><span class="mq__item">Historia e Identidad Universitaria</span><span class="mq__sep"><svg class="ic ic--sm" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><path d="M9.937 15.5A2 2 0 0 0 8.5 14.063l-6.135-1.582a.5.5 0 0 1 0-.962L8.5 9.936A2 2 0 0 0 9.937 8.5l1.582-6.135a.5.5 0 0 1 .963 0L14.063 8.5A2 2 0 0 0 15.5 9.937l6.135 1.581a.5.5 0 0 1 0 .964L15.5 14.063a2 2 0 0 0-1.437 1.437l-1.582 6.135a.5.5 0 0 1-.963 0z" /><path d="M20 3v4" /><path d="M22 5h-4" /><path d="M4 17v2" /><path d="M5 18H3" /></svg></span><span class="mq__item">Habilidad Numérica</span><span class="mq__sep"><svg class="ic ic--sm" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><path d="M9.937 15.5A2 2 0 0 0 8.5 14.063l-6.135-1.582a.5.5 0 0 1 0-.962L8.5 9.936A2 2 0 0 0 9.937 8.5l1.582-6.135a.5.5 0 0 1 .963 0L14.063 8.5A2 2 0 0 0 15.5 9.937l6.135 1.581a.5.5 0 0 1 0 .964L15.5 14.063a2 2 0 0 0-1.437 1.437l-1.582 6.135a.5.5 0 0 1-.963 0z" /><path d="M20 3v4" /><path d="M22 5h-4" /><path d="M4 17v2" /><path d="M5 18H3" /></svg></span><span class="mq__item">Habilidad de Lectoescritura</span><span class="mq__sep"><svg class="ic ic--sm" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><path d="M9.937 15.5A2 2 0 0 0 8.5 14.063l-6.135-1.582a.5.5 0 0 1 0-.962L8.5 9.936A2 2 0 0 0 9.937 8.5l1.582-6.135a.5.5 0 0 1 .963 0L14.063 8.5A2 2 0 0 0 15.5 9.937l6.135 1.581a.5.5 0 0 1 0 .964L15.5 14.063a2 2 0 0 0-1.437 1.437l-1.582 6.135a.5.5 0 0 1-.963 0z" /><path d="M20 3v4" /><path d="M22 5h-4" /><path d="M4 17v2" /><path d="M5 18H3" /></svg></span><span class="mq__item">Física y sus Aplicaciones</span><span class="mq__sep"><svg class="ic ic--sm" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><path d="M9.937 15.5A2 2 0 0 0 8.5 14.063l-6.135-1.582a.5.5 0 0 1 0-.962L8.5 9.936A2 2 0 0 0 9.937 8.5l1.582-6.135a.5.5 0 0 1 .963 0L14.063 8.5A2 2 0 0 0 15.5 9.937l6.135 1.581a.5.5 0 0 1 0 .964L15.5 14.063a2 2 0 0 0-1.437 1.437l-1.582 6.135a.5.5 0 0 1-.963 0z" /><path d="M20 3v4" /><path d="M22 5h-4" /><path d="M4 17v2" /><path d="M5 18H3" /></svg></span><span class="mq__item">Educación Socioemocional</span><span class="mq__sep"><svg class="ic ic--sm" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><path d="M9.937 15.5A2 2 0 0 0 8.5 14.063l-6.135-1.582a.5.5 0 0 1 0-.962L8.5 9.936A2 2 0 0 0 9.937 8.5l1.582-6.135a.5.5 0 0 1 .963 0L14.063 8.5A2 2 0 0 0 15.5 9.937l6.135 1.581a.5.5 0 0 1 0 .964L15.5 14.063a2 2 0 0 0-1.437 1.437l-1.582 6.135a.5.5 0 0 1-.963 0z" /><path d="M20 3v4" /><path d="M22 5h-4" /><path d="M4 17v2" /><path d="M5 18H3" /></svg></span></div></div>
 
-<section class="section" id="materias">
-  <div class="wrap">
-    <header class="sec-head" data-reveal>
+<section class="grid stats" aria-label="Resumen del semestre">
+  <article class="glass stat span-3" data-reveal data-jelly>
+    <p class="stat__k">Materias</p>
+    <p class="stat__v"><span data-count="10">10</span><small>en 4 áreas</small></p>
+    <ul class="stat__areas"><li title="Tecnología"><i style="--c:#3b6ff5"></i>Tecnología <b>2</b></li><li title="Ciencias exactas"><i style="--c:#8b4ff0"></i>Ciencias <b>2</b></li><li title="Lenguaje y comunicación"><i style="--c:#d9473b"></i>Lenguaje <b>2</b></li><li title="Formación integral"><i style="--c:#e8962e"></i>Integral <b>4</b></li></ul>
+  </article>
+  <article class="glass stat span-3" data-reveal data-jelly>
+    <p class="stat__k">Temas y subtemas</p>
+    <p class="stat__v"><span data-count="230">230</span></p>
+    <div class="bars" role="group" aria-label="Temas por materia"><span class="bar" style="--h:1.000" tabindex="0" data-tip="Tutoría · 47 temas" aria-label="Tutoría de Ingreso I: 47 temas"></span><span class="bar" style="--h:0.447" tabindex="0" data-tip="Tecnologías · 21 temas" aria-label="Tecnologías de la Información: 21 temas"></span><span class="bar" style="--h:0.340" tabindex="0" data-tip="Sexualidad y género · 16 temas" aria-label="Sexualidad y Perspectiva de Género: 16 temas"></span><span class="bar" style="--h:0.617" tabindex="0" data-tip="Algoritmos · 29 temas" aria-label="Algoritmos y Programación: 29 temas"></span><span class="bar" style="--h:0.383" tabindex="0" data-tip="Inglés · 18 temas" aria-label="Inglés Básico: 18 temas"></span><span class="bar" style="--h:0.362" tabindex="0" data-tip="Historia UDG · 17 temas" aria-label="Historia e Identidad Universitaria: 17 temas"></span><span class="bar" style="--h:0.362" tabindex="0" data-tip="Habilidad numérica · 17 temas" aria-label="Habilidad Numérica: 17 temas"></span><span class="bar" style="--h:0.532" tabindex="0" data-tip="Lectoescritura · 25 temas" aria-label="Habilidad de Lectoescritura: 25 temas"></span><span class="bar" style="--h:0.489" tabindex="0" data-tip="Física · 23 temas" aria-label="Física y sus Aplicaciones: 23 temas"></span><span class="bar" style="--h:0.362" tabindex="0" data-tip="Socioemocional · 17 temas" aria-label="Educación Socioemocional: 17 temas"></span></div>
+  </article>
+  <article class="glass stat span-3" data-reveal data-jelly>
+    <p class="stat__k">Semana del ciclo</p>
+    <p class="stat__v"><span data-week-n>15</span><small>de 18</small></p>
+    <div class="ticks" data-ticks aria-hidden="true"><span class="tick is-past"></span><span class="tick is-past"></span><span class="tick is-past"></span><span class="tick is-past"></span><span class="tick is-past"></span><span class="tick is-past"></span><span class="tick is-past"></span><span class="tick is-past"></span><span class="tick is-past"></span><span class="tick is-past"></span><span class="tick is-past"></span><span class="tick is-past"></span><span class="tick is-past"></span><span class="tick is-past"></span><span class="tick is-now"></span><span class="tick"></span><span class="tick"></span><span class="tick"></span></div>
+  </article>
+  <article class="glass stat span-3" data-reveal data-jelly>
+    <p class="stat__k">Equipo</p>
+    <p class="stat__v"><span data-count="5">5</span><small>integrantes</small></p>
+    <div class="stat__team"><span class="avs"><span class="av" style="--c:#E8962E" title="David">D</span><span class="av" style="--c:#3B6FF5" title="Alan">A</span><span class="av" style="--c:#E0517A" title="Armando">A</span><span class="av" style="--c:#17A88A" title="Isaac">I</span><span class="av" style="--c:#D9473B" title="Diego">D</span></span><a class="pill pill--link" href="equipo.html" data-ripple>Ver equipo <svg class="ic ic--xs" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><path d="M7 7h10v10" /><path d="M7 17 17 7" /></svg></a></div>
+  </article>
+</section>
+
+<section class="block" id="materias" aria-labelledby="t-materias">
+  <header class="block__head">
+    <div>
       <p class="eyebrow">Ciclo 2026B · 10 materias</p>
-      <h2>Lo que vamos a aprender</h2>
-      <p class="lead">Cada materia tiene su propia página con unidades, ejes temáticos y temas. Filtra por área o entra directo a la que buscas.</p>
-    </header>
-    <div class="filters" role="group" aria-label="Filtrar materias por área"><button class="chip is-on" type="button" data-filter="todas" aria-pressed="true">Todas <span>10</span></button><button class="chip" type="button" data-filter="tecnologia" aria-pressed="false">Tecnología <span>2</span></button><button class="chip" type="button" data-filter="ciencias" aria-pressed="false">Ciencias exactas <span>2</span></button><button class="chip" type="button" data-filter="comunicacion" aria-pressed="false">Lenguaje y comunicación <span>2</span></button><button class="chip" type="button" data-filter="integral" aria-pressed="false">Formación integral <span>4</span></button></div>
-    <div class="mgrid" data-mgrid>
-<a class="mcard acc mcard--wide" style="--acc:#E8962E" href="materias/tutoria.html" data-area="integral" data-tilt data-reveal>
-  <div class="mcard__media"><img src="assets/img/fotos/tutoria-card.jpg" alt="" loading="lazy" decoding="async" width="900" height="600"></div>
-  <div class="mcard__body">
-    <div class="mcard__top"><span class="mcard__ic"><svg class="ic" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><path d="m16.24 7.76-1.804 5.411a2 2 0 0 1-1.265 1.265L7.76 16.24l1.804-5.411a2 2 0 0 1 1.265-1.265z" /><circle cx="12" cy="12" r="10" /></svg></span><span class="mcard__area">Formación integral</span></div>
-    <h3>Tutoría de Ingreso I</h3>
-    <p>Integración grupal, reglamentos, SIIAU y estrategias para permanecer y aprender mejor en el bachillerato.</p><ol class="mcard__list mcard__list--wide"><li>Mi espacio, mi grupo, mi contexto</li><li>La tutoría como acompañamiento</li><li>Mejorando mi aprendizaje</li><li>Habilidades para la colaboración en el aula</li></ol>
-    <div class="mcard__foot"><span>4 unidades · 47 temas</span><span class="mcard__go"><svg class="ic" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><path d="M7 7h10v10" /><path d="M7 17 17 7" /></svg></span></div>
-  </div>
+      <h2 id="t-materias">Lo que vamos a aprender</h2>
+    </div>
+    <div class="seg glass-pill" role="group" aria-label="Filtrar materias por área" data-lens="h" data-filters>
+      <span class="lens" aria-hidden="true"></span><button class="seg__btn is-active" type="button" data-filter="todas" aria-pressed="true" data-li>Todas <small>10</small></button><button class="seg__btn" type="button" data-filter="tecnologia" aria-pressed="false" data-li>Tecnología <small>2</small></button><button class="seg__btn" type="button" data-filter="ciencias" aria-pressed="false" data-li>Ciencias exactas <small>2</small></button><button class="seg__btn" type="button" data-filter="comunicacion" aria-pressed="false" data-li>Lenguaje y comunicación <small>2</small></button><button class="seg__btn" type="button" data-filter="integral" aria-pressed="false" data-li>Formación integral <small>4</small></button>
+    </div>
+  </header>
+  <div class="mgrid" data-mgrid>
+<a href="materias/tutoria.html" class="mcard glass acc mcard--wide" style="--acc:#E8962E" data-area="integral" data-reveal data-jelly>
+  <img class="mcard__photo" src="assets/img/fotos/tutoria-card.jpg" alt="" loading="lazy" decoding="async">
+  <div class="mcard__top"><span class="orb"><svg class="ic" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><path d="m16.24 7.76-1.804 5.411a2 2 0 0 1-1.265 1.265L7.76 16.24l1.804-5.411a2 2 0 0 1 1.265-1.265z" /><circle cx="12" cy="12" r="10" /></svg></span><span class="mcard__area">Formación integral</span><span class="mcard__go"><svg class="ic" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><path d="M7 7h10v10" /><path d="M7 17 17 7" /></svg></span></div>
+  <h3 class="mcard__title">Tutoría de Ingreso I</h3>
+  <p class="mcard__sum">Integración grupal, reglamentos, SIIAU y estrategias para permanecer y aprender mejor en el bachillerato.</p><ol class="mcard__list"><li>Mi espacio, mi grupo, mi contexto</li><li>La tutoría como acompañamiento</li><li>Mejorando mi aprendizaje</li><li>Habilidades para la colaboración en el aula</li></ol>
+  <p class="mcard__foot">4 unidades · 47 temas</p>
 </a>
-<a class="mcard acc" style="--acc:#3B6FF5" href="materias/tecnologias.html" data-area="tecnologia" data-tilt data-reveal>
-  <div class="mcard__media"><img src="assets/img/fotos/tecnologias-card.jpg" alt="" loading="lazy" decoding="async" width="900" height="600"></div>
-  <div class="mcard__body">
-    <div class="mcard__top"><span class="mcard__ic"><svg class="ic" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><path d="M20 16V7a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v9m16 0H4m16 0 1.28 2.55a1 1 0 0 1-.9 1.45H3.62a1 1 0 0 1-.9-1.45L4 16" /></svg></span><span class="mcard__area">Tecnología</span></div>
-    <h3>Tecnologías de la Información</h3>
-    <p>Sistema operativo, archivos, ofimática y ciudadanía digital para trabajar con orden y seguridad.</p>
-    <div class="mcard__foot"><span>3 ejes temáticos · 21 temas</span><span class="mcard__go"><svg class="ic" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><path d="M7 7h10v10" /><path d="M7 17 17 7" /></svg></span></div>
-  </div>
+<a href="materias/tecnologias.html" class="mcard glass acc" style="--acc:#3B6FF5" data-area="tecnologia" data-reveal data-jelly>
+  <img class="mcard__photo" src="assets/img/fotos/tecnologias-card.jpg" alt="" loading="lazy" decoding="async">
+  <div class="mcard__top"><span class="orb"><svg class="ic" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><path d="M20 16V7a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v9m16 0H4m16 0 1.28 2.55a1 1 0 0 1-.9 1.45H3.62a1 1 0 0 1-.9-1.45L4 16" /></svg></span><span class="mcard__area">Tecnología</span><span class="mcard__go"><svg class="ic" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><path d="M7 7h10v10" /><path d="M7 17 17 7" /></svg></span></div>
+  <h3 class="mcard__title">Tecnologías de la Información</h3>
+  <p class="mcard__sum">Sistema operativo, archivos, ofimática y ciudadanía digital para trabajar con orden y seguridad.</p><ol class="mcard__list"><li>Entorno operativo y gestión de archivos</li><li>Herramientas de productividad y ofimática</li><li>Ciudadanía digital e internet</li></ol>
+  <p class="mcard__foot">3 ejes temáticos · 21 temas</p>
 </a>
-<a class="mcard acc" style="--acc:#E0517A" href="materias/sexualidad.html" data-area="integral" data-tilt data-reveal>
-  <div class="mcard__media"><img src="assets/img/fotos/sexualidad-card.jpg" alt="" loading="lazy" decoding="async" width="900" height="600"></div>
-  <div class="mcard__body">
-    <div class="mcard__top"><span class="mcard__ic"><svg class="ic" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z" /><path d="M12 5 9.04 7.96a2.17 2.17 0 0 0 0 3.08c.82.82 2.13.85 3 .07l2.07-1.9a2.82 2.82 0 0 1 3.79 0l2.96 2.66" /><path d="m18 15-2-2" /><path d="m15 18-2-2" /></svg></span><span class="mcard__area">Formación integral</span></div>
-    <h3>Sexualidad y Perspectiva de Género</h3>
-    <p>Sexualidad humana, igualdad de género, salud sexual y reproductiva, y decisiones informadas.</p>
-    <div class="mcard__foot"><span>4 ejes temáticos · 16 temas</span><span class="mcard__go"><svg class="ic" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><path d="M7 7h10v10" /><path d="M7 17 17 7" /></svg></span></div>
-  </div>
+<a href="materias/sexualidad.html" class="mcard glass acc" style="--acc:#E0517A" data-area="integral" data-reveal data-jelly>
+  <img class="mcard__photo" src="assets/img/fotos/sexualidad-card.jpg" alt="" loading="lazy" decoding="async">
+  <div class="mcard__top"><span class="orb"><svg class="ic" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z" /><path d="M12 5 9.04 7.96a2.17 2.17 0 0 0 0 3.08c.82.82 2.13.85 3 .07l2.07-1.9a2.82 2.82 0 0 1 3.79 0l2.96 2.66" /><path d="m18 15-2-2" /><path d="m15 18-2-2" /></svg></span><span class="mcard__area">Formación integral</span><span class="mcard__go"><svg class="ic" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><path d="M7 7h10v10" /><path d="M7 17 17 7" /></svg></span></div>
+  <h3 class="mcard__title">Sexualidad y Perspectiva de Género</h3>
+  <p class="mcard__sum">Sexualidad humana, igualdad de género, salud sexual y reproductiva, y decisiones informadas.</p><ol class="mcard__list"><li>Dimensiones de la sexualidad humana</li><li>Perspectiva de género</li><li>Salud sexual y reproductiva</li><li>Vínculos afectivos y toma de decisiones</li></ol>
+  <p class="mcard__foot">4 ejes temáticos · 16 temas</p>
 </a>
-<a class="mcard acc" style="--acc:#17A88A" href="materias/algoritmos.html" data-area="tecnologia" data-tilt data-reveal>
-  <div class="mcard__media"><img src="assets/img/fotos/algoritmos-card.jpg" alt="" loading="lazy" decoding="async" width="900" height="600"></div>
-  <div class="mcard__body">
-    <div class="mcard__top"><span class="mcard__ic"><svg class="ic" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><path d="m18 16 4-4-4-4" /><path d="m6 8-4 4 4 4" /><path d="m14.5 4-5 16" /></svg></span><span class="mcard__area">Tecnología</span></div>
-    <h3>Algoritmos y Programación</h3>
-    <p>Datos, variables y operadores; pseudocódigo, diagramas de flujo, estructuras de control y C.</p>
-    <div class="mcard__foot"><span>4 ejes temáticos · 29 temas</span><span class="mcard__go"><svg class="ic" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><path d="M7 7h10v10" /><path d="M7 17 17 7" /></svg></span></div>
-  </div>
+<a href="materias/algoritmos.html" class="mcard glass acc" style="--acc:#17A88A" data-area="tecnologia" data-reveal data-jelly>
+  <img class="mcard__photo" src="assets/img/fotos/algoritmos-card.jpg" alt="" loading="lazy" decoding="async">
+  <div class="mcard__top"><span class="orb"><svg class="ic" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><path d="m18 16 4-4-4-4" /><path d="m6 8-4 4 4 4" /><path d="m14.5 4-5 16" /></svg></span><span class="mcard__area">Tecnología</span><span class="mcard__go"><svg class="ic" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><path d="M7 7h10v10" /><path d="M7 17 17 7" /></svg></span></div>
+  <h3 class="mcard__title">Algoritmos y Programación</h3>
+  <p class="mcard__sum">Datos, variables y operadores; pseudocódigo, diagramas de flujo, estructuras de control y C.</p><ol class="mcard__list"><li>Fundamentos de algoritmos</li><li>Representación de algoritmos</li><li>Estructuras de control</li><li>Introducción a la codificación</li></ol>
+  <p class="mcard__foot">4 ejes temáticos · 29 temas</p>
 </a>
-<a class="mcard acc" style="--acc:#D9473B" href="materias/ingles.html" data-area="comunicacion" data-tilt data-reveal>
-  <div class="mcard__media"><img src="assets/img/fotos/ingles-card.jpg" alt="" loading="lazy" decoding="async" width="900" height="600"></div>
-  <div class="mcard__body">
-    <div class="mcard__top"><span class="mcard__ic"><svg class="ic" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><path d="m5 8 6 6" /><path d="m4 14 6-6 2-3" /><path d="M2 5h12" /><path d="M7 2h1" /><path d="m22 22-5-10-5 10" /><path d="M14 18h6" /></svg></span><span class="mcard__area">Lenguaje y comunicación</span></div>
-    <h3>Inglés Básico</h3>
-    <p>Presentaciones personales, verb to be, pronombres, demostrativos y rutinas en presente simple.</p>
-    <div class="mcard__foot"><span>3 ejes temáticos · 18 temas</span><span class="mcard__go"><svg class="ic" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><path d="M7 7h10v10" /><path d="M7 17 17 7" /></svg></span></div>
-  </div>
+<a href="materias/ingles.html" class="mcard glass acc" style="--acc:#D9473B" data-area="comunicacion" data-reveal data-jelly>
+  <img class="mcard__photo" src="assets/img/fotos/ingles-card.jpg" alt="" loading="lazy" decoding="async">
+  <div class="mcard__top"><span class="orb"><svg class="ic" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><path d="m5 8 6 6" /><path d="m4 14 6-6 2-3" /><path d="M2 5h12" /><path d="M7 2h1" /><path d="m22 22-5-10-5 10" /><path d="M14 18h6" /></svg></span><span class="mcard__area">Lenguaje y comunicación</span><span class="mcard__go"><svg class="ic" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><path d="M7 7h10v10" /><path d="M7 17 17 7" /></svg></span></div>
+  <h3 class="mcard__title">Inglés Básico</h3>
+  <p class="mcard__sum">Presentaciones personales, verb to be, pronombres, demostrativos y rutinas en presente simple.</p><ol class="mcard__list"><li>Información personal y presentaciones</li><li>Estructuras gramaticales base</li><li>Vida cotidiana y rutinas</li></ol>
+  <p class="mcard__foot">3 ejes temáticos · 18 temas</p>
 </a>
-<a class="mcard acc" style="--acc:#B07A36" href="materias/historia.html" data-area="integral" data-tilt data-reveal>
-  <div class="mcard__media"><img src="assets/img/fotos/historia-card.jpg" alt="" loading="lazy" decoding="async" width="900" height="600"></div>
-  <div class="mcard__body">
-    <div class="mcard__top"><span class="mcard__ic"><svg class="ic" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><line x1="3" x2="21" y1="22" y2="22" /><line x1="6" x2="6" y1="18" y2="11" /><line x1="10" x2="10" y1="18" y2="11" /><line x1="14" x2="14" y1="18" y2="11" /><line x1="18" x2="18" y1="18" y2="11" /><polygon points="12 2 20 7 4 7" /></svg></span><span class="mcard__area">Formación integral</span></div>
-    <h3>Historia e Identidad Universitaria</h3>
-    <p>De la Real Universidad de 1792 a la Red Universitaria: historia, misión y ser universitario.</p>
-    <div class="mcard__foot"><span>4 unidades · 17 temas</span><span class="mcard__go"><svg class="ic" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><path d="M7 7h10v10" /><path d="M7 17 17 7" /></svg></span></div>
-  </div>
+<a href="materias/historia.html" class="mcard glass acc" style="--acc:#B07A36" data-area="integral" data-reveal data-jelly>
+  <img class="mcard__photo" src="assets/img/fotos/historia-card.jpg" alt="" loading="lazy" decoding="async">
+  <div class="mcard__top"><span class="orb"><svg class="ic" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><line x1="3" x2="21" y1="22" y2="22" /><line x1="6" x2="6" y1="18" y2="11" /><line x1="10" x2="10" y1="18" y2="11" /><line x1="14" x2="14" y1="18" y2="11" /><line x1="18" x2="18" y1="18" y2="11" /><polygon points="12 2 20 7 4 7" /></svg></span><span class="mcard__area">Formación integral</span><span class="mcard__go"><svg class="ic" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><path d="M7 7h10v10" /><path d="M7 17 17 7" /></svg></span></div>
+  <h3 class="mcard__title">Historia e Identidad Universitaria</h3>
+  <p class="mcard__sum">De la Real Universidad de 1792 a la Red Universitaria: historia, misión y ser universitario.</p><ol class="mcard__list"><li>Historia y desarrollo de la UDG</li><li>Identidad y misión de la UDG</li><li>La universidad en la sociedad actual</li><li>Ser universitario</li></ol>
+  <p class="mcard__foot">4 unidades · 17 temas</p>
 </a>
-<a class="mcard acc" style="--acc:#2E9E57" href="materias/numerica.html" data-area="ciencias" data-tilt data-reveal>
-  <div class="mcard__media"><img src="assets/img/fotos/numerica-card.jpg" alt="" loading="lazy" decoding="async" width="900" height="600"></div>
-  <div class="mcard__body">
-    <div class="mcard__top"><span class="mcard__ic"><svg class="ic" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><path d="M18 7V5a1 1 0 0 0-1-1H6.5a.5.5 0 0 0-.4.8l4.5 6a2 2 0 0 1 0 2.4l-4.5 6a.5.5 0 0 0 .4.8H17a1 1 0 0 0 1-1v-2" /></svg></span><span class="mcard__area">Ciencias exactas</span></div>
-    <h3>Habilidad Numérica</h3>
-    <p>Números reales, proporciones y porcentajes, álgebra básica y razonamiento lógico-matemático.</p>
-    <div class="mcard__foot"><span>4 ejes temáticos · 17 temas</span><span class="mcard__go"><svg class="ic" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><path d="M7 7h10v10" /><path d="M7 17 17 7" /></svg></span></div>
-  </div>
+<a href="materias/numerica.html" class="mcard glass acc" style="--acc:#2E9E57" data-area="ciencias" data-reveal data-jelly>
+  <img class="mcard__photo" src="assets/img/fotos/numerica-card.jpg" alt="" loading="lazy" decoding="async">
+  <div class="mcard__top"><span class="orb"><svg class="ic" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><path d="M18 7V5a1 1 0 0 0-1-1H6.5a.5.5 0 0 0-.4.8l4.5 6a2 2 0 0 1 0 2.4l-4.5 6a.5.5 0 0 0 .4.8H17a1 1 0 0 0 1-1v-2" /></svg></span><span class="mcard__area">Ciencias exactas</span><span class="mcard__go"><svg class="ic" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><path d="M7 7h10v10" /><path d="M7 17 17 7" /></svg></span></div>
+  <h3 class="mcard__title">Habilidad Numérica</h3>
+  <p class="mcard__sum">Números reales, proporciones y porcentajes, álgebra básica y razonamiento lógico-matemático.</p><ol class="mcard__list"><li>Sentido numérico y aritmética</li><li>Proporcionalidad y porcentajes</li><li>Introducción al pensamiento algebraico</li><li>Razonamiento lógico-matemático</li></ol>
+  <p class="mcard__foot">4 ejes temáticos · 17 temas</p>
 </a>
-<a class="mcard acc" style="--acc:#5B5FD8" href="materias/lectoescritura.html" data-area="comunicacion" data-tilt data-reveal>
-  <div class="mcard__media"><img src="assets/img/fotos/lectoescritura-card.jpg" alt="" loading="lazy" decoding="async" width="900" height="600"></div>
-  <div class="mcard__body">
-    <div class="mcard__top"><span class="mcard__ic"><svg class="ic" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><path d="M12 20h9" /><path d="M16.376 3.622a1 1 0 0 1 3.002 3.002L7.368 18.635a2 2 0 0 1-.855.506l-2.872.838a.5.5 0 0 1-.62-.62l.838-2.872a2 2 0 0 1 .506-.854z" /></svg></span><span class="mcard__area">Lenguaje y comunicación</span></div>
-    <h3>Habilidad de Lectoescritura</h3>
-    <p>Comprensión lectora, ortografía, redacción de textos y expresión oral frente a grupo.</p>
-    <div class="mcard__foot"><span>4 ejes temáticos · 25 temas</span><span class="mcard__go"><svg class="ic" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><path d="M7 7h10v10" /><path d="M7 17 17 7" /></svg></span></div>
-  </div>
+<a href="materias/lectoescritura.html" class="mcard glass acc" style="--acc:#5B5FD8" data-area="comunicacion" data-reveal data-jelly>
+  <img class="mcard__photo" src="assets/img/fotos/lectoescritura-card.jpg" alt="" loading="lazy" decoding="async">
+  <div class="mcard__top"><span class="orb"><svg class="ic" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><path d="M12 20h9" /><path d="M16.376 3.622a1 1 0 0 1 3.002 3.002L7.368 18.635a2 2 0 0 1-.855.506l-2.872.838a.5.5 0 0 1-.62-.62l.838-2.872a2 2 0 0 1 .506-.854z" /></svg></span><span class="mcard__area">Lenguaje y comunicación</span><span class="mcard__go"><svg class="ic" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><path d="M7 7h10v10" /><path d="M7 17 17 7" /></svg></span></div>
+  <h3 class="mcard__title">Habilidad de Lectoescritura</h3>
+  <p class="mcard__sum">Comprensión lectora, ortografía, redacción de textos y expresión oral frente a grupo.</p><ol class="mcard__list"><li>Comprensión lectora</li><li>Normativa de la lengua</li><li>Producción de textos</li><li>Expresión oral</li></ol>
+  <p class="mcard__foot">4 ejes temáticos · 25 temas</p>
 </a>
-<a class="mcard acc mcard--wide" style="--acc:#8B4FF0" href="materias/fisica.html" data-area="ciencias" data-tilt data-reveal>
-  <div class="mcard__media"><img src="assets/img/fotos/fisica-card.jpg" alt="" loading="lazy" decoding="async" width="900" height="600"></div>
-  <div class="mcard__body">
-    <div class="mcard__top"><span class="mcard__ic"><svg class="ic" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><circle cx="12" cy="12" r="1" /><path d="M20.2 20.2c2.04-2.03.02-7.36-4.5-11.9-4.54-4.52-9.87-6.54-11.9-4.5-2.04 2.03-.02 7.36 4.5 11.9 4.54 4.52 9.87 6.54 11.9 4.5Z" /><path d="M15.7 15.7c4.52-4.54 6.54-9.87 4.5-11.9-2.03-2.04-7.36-.02-11.9 4.5-4.52 4.54-6.54 9.87-4.5 11.9 2.03 2.04 7.36.02 11.9-4.5Z" /></svg></span><span class="mcard__area">Ciencias exactas</span></div>
-    <h3>Física y sus Aplicaciones</h3>
-    <p>Medición, movimiento y fuerzas, electricidad y magnetismo, sonido y luz en 18 semanas.</p><ol class="mcard__list mcard__list--wide"><li>Método científico y medición</li><li>Movimiento y fuerzas</li><li>Electricidad y magnetismo</li><li>Sonido y luz</li></ol>
-    <div class="mcard__foot"><span>4 unidades · 23 temas</span><span class="mcard__go"><svg class="ic" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><path d="M7 7h10v10" /><path d="M7 17 17 7" /></svg></span></div>
-  </div>
+<a href="materias/fisica.html" class="mcard glass acc mcard--wide" style="--acc:#8B4FF0" data-area="ciencias" data-reveal data-jelly>
+  <img class="mcard__photo" src="assets/img/fotos/fisica-card.jpg" alt="" loading="lazy" decoding="async">
+  <div class="mcard__top"><span class="orb"><svg class="ic" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><circle cx="12" cy="12" r="1" /><path d="M20.2 20.2c2.04-2.03.02-7.36-4.5-11.9-4.54-4.52-9.87-6.54-11.9-4.5-2.04 2.03-.02 7.36 4.5 11.9 4.54 4.52 9.87 6.54 11.9 4.5Z" /><path d="M15.7 15.7c4.52-4.54 6.54-9.87 4.5-11.9-2.03-2.04-7.36-.02-11.9 4.5-4.52 4.54-6.54 9.87-4.5 11.9 2.03 2.04 7.36.02 11.9-4.5Z" /></svg></span><span class="mcard__area">Ciencias exactas</span><span class="mcard__go"><svg class="ic" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><path d="M7 7h10v10" /><path d="M7 17 17 7" /></svg></span></div>
+  <h3 class="mcard__title">Física y sus Aplicaciones</h3>
+  <p class="mcard__sum">Medición, movimiento y fuerzas, electricidad y magnetismo, sonido y luz en 18 semanas.</p><ol class="mcard__list"><li>Método científico y medición</li><li>Movimiento y fuerzas</li><li>Electricidad y magnetismo</li><li>Sonido y luz</li></ol>
+  <p class="mcard__foot">4 unidades · 23 temas</p>
 </a>
-<a class="mcard acc" style="--acc:#1C97C9" href="materias/socioemocional.html" data-area="integral" data-tilt data-reveal>
-  <div class="mcard__media"><img src="assets/img/fotos/socioemocional-card.jpg" alt="" loading="lazy" decoding="async" width="900" height="600"></div>
-  <div class="mcard__body">
-    <div class="mcard__top"><span class="mcard__ic"><svg class="ic" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><path d="M12 5a3 3 0 1 0-5.997.125 4 4 0 0 0-2.526 5.77 4 4 0 0 0 .556 6.588A4 4 0 1 0 12 18Z" /><path d="M12 5a3 3 0 1 1 5.997.125 4 4 0 0 1 2.526 5.77 4 4 0 0 1-.556 6.588A4 4 0 1 1 12 18Z" /><path d="M15 13a4.5 4.5 0 0 1-3-4 4.5 4.5 0 0 1-3 4" /><path d="M17.599 6.5a3 3 0 0 0 .399-1.375" /><path d="M6.003 5.125A3 3 0 0 0 6.401 6.5" /><path d="M3.477 10.896a4 4 0 0 1 .585-.396" /><path d="M19.938 10.5a4 4 0 0 1 .585.396" /><path d="M6 18a4 4 0 0 1-1.967-.516" /><path d="M19.967 17.484A4 4 0 0 1 18 18" /></svg></span><span class="mcard__area">Formación integral</span></div>
-    <h3>Educación Socioemocional</h3>
-    <p>Autoconocimiento, autorregulación, empatía, colaboración y un proyecto de vida con metas claras.</p>
-    <div class="mcard__foot"><span>5 ejes temáticos · 17 temas</span><span class="mcard__go"><svg class="ic" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><path d="M7 7h10v10" /><path d="M7 17 17 7" /></svg></span></div>
-  </div>
+<a href="materias/socioemocional.html" class="mcard glass acc" style="--acc:#1C97C9" data-area="integral" data-reveal data-jelly>
+  <img class="mcard__photo" src="assets/img/fotos/socioemocional-card.jpg" alt="" loading="lazy" decoding="async">
+  <div class="mcard__top"><span class="orb"><svg class="ic" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><path d="M12 5a3 3 0 1 0-5.997.125 4 4 0 0 0-2.526 5.77 4 4 0 0 0 .556 6.588A4 4 0 1 0 12 18Z" /><path d="M12 5a3 3 0 1 1 5.997.125 4 4 0 0 1 2.526 5.77 4 4 0 0 1-.556 6.588A4 4 0 1 1 12 18Z" /><path d="M15 13a4.5 4.5 0 0 1-3-4 4.5 4.5 0 0 1-3 4" /><path d="M17.599 6.5a3 3 0 0 0 .399-1.375" /><path d="M6.003 5.125A3 3 0 0 0 6.401 6.5" /><path d="M3.477 10.896a4 4 0 0 1 .585-.396" /><path d="M19.938 10.5a4 4 0 0 1 .585.396" /><path d="M6 18a4 4 0 0 1-1.967-.516" /><path d="M19.967 17.484A4 4 0 0 1 18 18" /></svg></span><span class="mcard__area">Formación integral</span><span class="mcard__go"><svg class="ic" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><path d="M7 7h10v10" /><path d="M7 17 17 7" /></svg></span></div>
+  <h3 class="mcard__title">Educación Socioemocional</h3>
+  <p class="mcard__sum">Autoconocimiento, autorregulación, empatía, colaboración y un proyecto de vida con metas claras.</p><ol class="mcard__list"><li>Autoconocimiento</li><li>Autorregulación</li><li>Conciencia social y empatía</li><li>Colaboración y sentido de pertenencia</li><li>Proyecto de vida</li></ol>
+  <p class="mcard__foot">5 ejes temáticos · 17 temas</p>
 </a></div>
-  </div>
 </section>
 
-<section class="section section--tight" id="semana">
-  <div class="wrap">
-    <div class="week" data-week='[{&quot;s&quot;: 1, &quot;ini&quot;: &quot;2026-08-17&quot;, &quot;f&quot;: &quot;17 – 21 ago&quot;, &quot;t&quot;: &quot;Encuadre, diagnóstico y método científico&quot;}, {&quot;s&quot;: 2, &quot;ini&quot;: &quot;2026-08-24&quot;, &quot;f&quot;: &quot;24 – 28 ago&quot;, &quot;t&quot;: &quot;1.3 Magnitudes&quot;}, {&quot;s&quot;: 3, &quot;ini&quot;: &quot;2026-08-31&quot;, &quot;f&quot;: &quot;31 ago – 4 sep&quot;, &quot;t&quot;: &quot;1.5 Conversión de unidades&quot;}, {&quot;s&quot;: 4, &quot;ini&quot;: &quot;2026-09-07&quot;, &quot;f&quot;: &quot;7 – 11 sep&quot;, &quot;t&quot;: &quot;1.6 Prefijos del Sistema Internacional&quot;}, {&quot;s&quot;: 5, &quot;ini&quot;: &quot;2026-09-14&quot;, &quot;f&quot;: &quot;14 – 18 sep&quot;, &quot;t&quot;: &quot;2.1 Movimiento Rectilíneo Uniforme (MRU)&quot;}, {&quot;s&quot;: 6, &quot;ini&quot;: &quot;2026-09-21&quot;, &quot;f&quot;: &quot;21 – 25 sep&quot;, &quot;t&quot;: &quot;2.2 Movimiento R. U. Acelerado y caída libre&quot;}, {&quot;s&quot;: 7, &quot;ini&quot;: &quot;2026-09-28&quot;, &quot;f&quot;: &quot;28 sep – 2 oct&quot;, &quot;t&quot;: &quot;2.3 Las fuerzas y las Leyes de Newton&quot;}, {&quot;s&quot;: 8, &quot;ini&quot;: &quot;2026-10-05&quot;, &quot;f&quot;: &quot;5 – 9 oct&quot;, &quot;t&quot;: &quot;2.4 Sistemas de fuerzas (teoría)&quot;}, {&quot;s&quot;: 9, &quot;ini&quot;: &quot;2026-10-12&quot;, &quot;f&quot;: &quot;12 – 16 oct&quot;, &quot;t&quot;: &quot;2.4 Proyecto experimental de equilibrio&quot;}, {&quot;s&quot;: 10, &quot;ini&quot;: &quot;2026-10-19&quot;, &quot;f&quot;: &quot;19 – 23 oct&quot;, &quot;t&quot;: &quot;3.1 Electricidad estática (inicio de examen departamental)&quot;}, {&quot;s&quot;: 11, &quot;ini&quot;: &quot;2026-10-26&quot;, &quot;f&quot;: &quot;26 – 30 oct&quot;, &quot;t&quot;: &quot;3.2 Campo eléctrico&quot;}, {&quot;s&quot;: 12, &quot;ini&quot;: &quot;2026-11-02&quot;, &quot;f&quot;: &quot;2 – 6 nov&quot;, &quot;t&quot;: &quot;3.3 Voltaje&quot;}, {&quot;s&quot;: 13, &quot;ini&quot;: &quot;2026-11-09&quot;, &quot;f&quot;: &quot;9 – 13 nov&quot;, &quot;t&quot;: &quot;3.6 Circuitos en serie y paralelo&quot;}, {&quot;s&quot;: 14, &quot;ini&quot;: &quot;2026-11-16&quot;, &quot;f&quot;: &quot;16 – 20 nov&quot;, &quot;t&quot;: &quot;3.7 Magnetismo&quot;}, {&quot;s&quot;: 15, &quot;ini&quot;: &quot;2026-11-23&quot;, &quot;f&quot;: &quot;23 – 27 nov&quot;, &quot;t&quot;: &quot;4.1 Definición y propagación del sonido&quot;}, {&quot;s&quot;: 16, &quot;ini&quot;: &quot;2026-11-30&quot;, &quot;f&quot;: &quot;30 nov – 4 dic&quot;, &quot;t&quot;: &quot;4.2 Propiedades del sonido y contaminación&quot;}, {&quot;s&quot;: 17, &quot;ini&quot;: &quot;2026-12-07&quot;, &quot;f&quot;: &quot;7 – 11 dic&quot;, &quot;t&quot;: &quot;4.3 Luz visible y cámara oscura&quot;}, {&quot;s&quot;: 18, &quot;ini&quot;: &quot;2026-12-14&quot;, &quot;f&quot;: &quot;14 – 18 dic&quot;, &quot;t&quot;: &quot;Fecha límite para el registro y publicación de la evaluación continua en el periodo ordinario y extraordinario&quot;}]' data-reveal>
-      <div class="week__head">
-        <div>
-          <p class="eyebrow">Calendario del ciclo 2026B</p>
-          <h2>¿En qué semana vamos?</h2>
-          <p class="week__now" data-week-text>Semana 15 · 23 – 27 nov. En Física toca: 4.1 Definición y propagación del sonido. Faltan 3 semanas para el cierre del ciclo.</p>
-        </div>
-        <div class="week__big" aria-hidden="true"><span data-week-n>15</span><small>/18</small></div>
+<section class="grid" id="semana" aria-labelledby="t-semana">
+  <div class="glass panel week span-8" data-reveal>
+    <div class="week__head">
+      <div>
+        <p class="eyebrow">Calendario del ciclo 2026B</p>
+        <h2 id="t-semana">¿En qué semana vamos?</h2>
+        <p class="week__now" data-week-text>Semana 15 · 23 – 27 nov. Faltan 3 semanas para el cierre del ciclo.</p>
       </div>
-      <div class="week__track">
-        <ol class="week__bar" aria-label="Semanas del ciclo"><li class="is-past" data-s="1" title="Semana 1 · 17 – 21 ago"><span>1</span></li><li class="is-past" data-s="2" title="Semana 2 · 24 – 28 ago"><span>2</span></li><li class="is-past" data-s="3" title="Semana 3 · 31 ago – 4 sep"><span>3</span></li><li class="is-past" data-s="4" title="Semana 4 · 7 – 11 sep"><span>4</span></li><li class="is-past" data-s="5" title="Semana 5 · 14 – 18 sep"><span>5</span></li><li class="is-past" data-s="6" title="Semana 6 · 21 – 25 sep"><span>6</span></li><li class="is-past" data-s="7" title="Semana 7 · 28 sep – 2 oct"><span>7</span></li><li class="is-past" data-s="8" title="Semana 8 · 5 – 9 oct"><span>8</span></li><li class="is-past" data-s="9" title="Semana 9 · 12 – 16 oct"><span>9</span></li><li class="is-past" data-s="10" title="Semana 10 · 19 – 23 oct"><span>10</span></li><li class="is-past" data-s="11" title="Semana 11 · 26 – 30 oct"><span>11</span></li><li class="is-past" data-s="12" title="Semana 12 · 2 – 6 nov"><span>12</span></li><li class="is-past" data-s="13" title="Semana 13 · 9 – 13 nov"><span>13</span></li><li class="is-past" data-s="14" title="Semana 14 · 16 – 20 nov"><span>14</span></li><li class="is-now" data-s="15" title="Semana 15 · 23 – 27 nov"><span>15</span></li><li class="" data-s="16" title="Semana 16 · 30 nov – 4 dic"><span>16</span></li><li class="" data-s="17" title="Semana 17 · 7 – 11 dic"><span>17</span></li><li class="" data-s="18" title="Semana 18 · 14 – 18 dic"><span>18</span></li></ol>
-        <div class="week__months" aria-hidden="true"><span style="grid-column:1">Ago</span><span style="grid-column:3">Sep</span><span style="grid-column:7">Oct</span><span style="grid-column:12">Nov</span><span style="grid-column:16">Dic</span></div>
+      <div class="gauge gauge--lg" style="--p:0.833" data-gauge role="img" aria-label="Avance del ciclo: semana 15 de 18">
+        <span class="gauge__fill"><i></i><i></i></span>
+        <span class="gauge__txt"><b data-week-n>15</b><small>de 18</small></span>
       </div>
     </div>
-  </div>
-</section>
-
-<section class="section about" id="proyecto">
-  <div class="wrap about__in">
-    <figure class="about__media" data-reveal>
-        <img src="assets/img/fotos/proyecto.jpg" alt="Estudiantes trabajando en equipo con sus laptops" loading="lazy" decoding="async" width="2000" height="1000">
-        <figcaption class="about__badge"><svg class="ic" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><path d="m15.477 12.89 1.515 8.526a.5.5 0 0 1-.81.47l-3.58-2.687a1 1 0 0 0-1.197 0l-3.586 2.686a.5.5 0 0 1-.81-.469l1.514-8.526" /><circle cx="12" cy="8" r="6" /></svg><span>Proyecto integrador<br><b>Ciclo 2026B</b></span></figcaption>
-      </figure>
-    <div class="about__copy" data-reveal>
-      <p class="eyebrow">Sobre el proyecto</p>
-      <h2>Un sitio hecho por y para el 1A</h2>
-      <p>Este sitio es nuestro proyecto integrador. Organiza el temario de cada materia del primer semestre para consultarlo rápido, repasar antes de un examen y saber qué tema viene después.</p>
-      <dl class="facts"><div><dt>Escuela</dt><dd>Escuela Politécnica de Guadalajara</dd></div><div><dt>Carrera</dt><dd>Tecnólogo en Sistemas Informáticos</dd></div><div><dt>Grupo y turno</dt><dd>1A · Matutino</dd></div><div><dt>Clave del grupo</dt><dd>TSIN1AM</dd></div><div><dt>Ciclo escolar</dt><dd>2026B</dd></div></dl>
+    <dl class="week__nums">
+      <div><dt>Semanas cursadas</dt><dd data-week-done>14</dd></div>
+      <div><dt>Semanas restantes</dt><dd data-week-left>3</dd></div>
+      <div><dt>Avance del ciclo</dt><dd data-week-pct>83 %</dd></div>
+    </dl>
+    <div class="week__track">
+      <ol class="week__bar" data-weekbar aria-label="Semanas del ciclo"><li class="is-past" title="Semana 1 · 17 – 21 ago"><span>1</span></li><li class="is-past" title="Semana 2 · 24 – 28 ago"><span>2</span></li><li class="is-past" title="Semana 3 · 31 ago – 4 sep"><span>3</span></li><li class="is-past" title="Semana 4 · 7 – 11 sep"><span>4</span></li><li class="is-past" title="Semana 5 · 14 – 18 sep"><span>5</span></li><li class="is-past" title="Semana 6 · 21 – 25 sep"><span>6</span></li><li class="is-past" title="Semana 7 · 28 sep – 2 oct"><span>7</span></li><li class="is-past" title="Semana 8 · 5 – 9 oct"><span>8</span></li><li class="is-past" title="Semana 9 · 12 – 16 oct"><span>9</span></li><li class="is-past" title="Semana 10 · 19 – 23 oct"><span>10</span></li><li class="is-past" title="Semana 11 · 26 – 30 oct"><span>11</span></li><li class="is-past" title="Semana 12 · 2 – 6 nov"><span>12</span></li><li class="is-past" title="Semana 13 · 9 – 13 nov"><span>13</span></li><li class="is-past" title="Semana 14 · 16 – 20 nov"><span>14</span></li><li class="is-now" title="Semana 15 · 23 – 27 nov"><span>15</span></li><li class="" title="Semana 16 · 30 nov – 4 dic"><span>16</span></li><li class="" title="Semana 17 · 7 – 11 dic"><span>17</span></li><li class="" title="Semana 18 · 14 – 18 dic"><span>18</span></li></ol>
+      <div class="week__months" aria-hidden="true"><span style="grid-column:1">Ago</span><span style="grid-column:3">Sep</span><span style="grid-column:7">Oct</span><span style="grid-column:12">Nov</span><span style="grid-column:16">Dic</span></div>
     </div>
   </div>
+  <div class="glass panel upnext span-4" data-reveal>
+    <p class="eyebrow"><svg class="ic ic--xs" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><circle cx="12" cy="12" r="1" /><path d="M20.2 20.2c2.04-2.03.02-7.36-4.5-11.9-4.54-4.52-9.87-6.54-11.9-4.5-2.04 2.03-.02 7.36 4.5 11.9 4.54 4.52 9.87 6.54 11.9 4.5Z" /><path d="M15.7 15.7c4.52-4.54 6.54-9.87 4.5-11.9-2.03-2.04-7.36-.02-11.9 4.5-4.52 4.54-6.54 9.87-4.5 11.9 2.03 2.04 7.36.02 11.9-4.5Z" /></svg> Física · semana a semana</p>
+    <h3 class="upnext__title">Esta semana y lo que sigue</h3>
+    <ol class="upnext__list" data-upnext><li class="is-now"><span class="upnext__k">Esta semana · 23 – 27 nov</span><b>4.1 Definición y propagación del sonido</b><small>Actividades 1.8 · Participación 0.5</small></li><li class=""><span class="upnext__k">Semana 16 · 30 nov – 4 dic</span><b>4.2 Propiedades del sonido y contaminación</b><small>Actividades 1.8 · Participación 1.0</small></li><li class=""><span class="upnext__k">Semana 17 · 7 – 11 dic</span><b>4.3 Luz visible y cámara oscura · 4.4 Espectro no visible y evaluación final</b><small>Integrador 10.0 · Actividades 1.0 · Actividades 1.0 · Participación 0.5</small></li></ol>
+  </div>
 </section>
 
-<section class="section" id="equipo">
-  <div class="wrap">
-    <header class="sec-head sec-head--row" data-reveal>
-      <div><p class="eyebrow">Equipo · 1A Matutino</p>
-      <h2>Quienes hicimos este sitio</h2>
-      <p class="lead">Pasa el cursor o toca una tarjeta para ver los datos de cada integrante.</p></div>
-      <a class="btn btn--line" href="equipo.html">Ver la página del equipo <svg class="ic" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><path d="M5 12h14" /><path d="m12 5 7 7-7 7" /></svg></a>
-    </header>
-    <div class="team" data-equipo style="--n-row:5">
-<article class="tcard" tabindex="0">
-  <div class="tcard__in"><div class="tcard__face tcard__front">
-    <div class="tcard__avatar">D</div>
+<section class="grid" id="proyecto" aria-labelledby="t-proyecto">
+  <figure class="glass media span-5" data-reveal>
+    <img src="assets/img/fotos/proyecto.jpg" alt="Estudiantes trabajando en equipo con sus laptops" loading="lazy" decoding="async">
+    <figcaption class="media__cap glass-pill"><svg class="ic ic--sm" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><path d="m15.477 12.89 1.515 8.526a.5.5 0 0 1-.81.47l-3.58-2.687a1 1 0 0 0-1.197 0l-3.586 2.686a.5.5 0 0 1-.81-.469l1.514-8.526" /><circle cx="12" cy="8" r="6" /></svg> Proyecto integrador · 2026B</figcaption>
+  </figure>
+  <div class="glass panel about span-7" data-reveal>
+    <p class="eyebrow">Sobre el proyecto</p>
+    <h2 id="t-proyecto">Un sitio hecho por y para el 1A</h2>
+    <p class="about__p">Este sitio es nuestro proyecto integrador. Organiza el temario de cada materia del primer semestre para consultarlo rápido, repasar antes de un examen y saber qué tema viene después.</p>
+    <dl class="facts"><div><dt>Escuela</dt><dd>Escuela Politécnica de Guadalajara</dd></div><div><dt>Carrera</dt><dd>Tecnólogo en Sistemas Informáticos</dd></div><div><dt>Grupo y turno</dt><dd>1A · Matutino</dd></div><div><dt>Clave del grupo</dt><dd>TSIN1AM</dd></div><div><dt>Ciclo escolar</dt><dd>2026B</dd></div></dl>
+  </div>
+</section>
+
+<section class="block" id="equipo" aria-labelledby="t-equipo">
+  <header class="block__head">
+    <div><p class="eyebrow">Equipo · 1A Matutino</p>
+    <h2 id="t-equipo">Quienes hicimos este sitio</h2>
+    <p class="lead">Pasa el cursor o toca una tarjeta para ver los datos de cada integrante.</p></div>
+    <a class="btn btn--glass" href="equipo.html" data-ripple>Página del equipo <svg class="ic" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><path d="M5 12h14" /><path d="m12 5 7 7-7 7" /></svg></a>
+  </header>
+  <div class="team" data-equipo style="--n-row:5">
+<article class="tcard glass acc" style="--acc:#E8962E" tabindex="0">
+  <div class="tcard__front">
+    <span class="tcard__orb">D</span>
     <span class="tcard__num">Integrante 01</span>
     <h3 class="tcard__name">David</h3>
     <p class="tcard__rol is-empty">Rol en el equipo</p>
-  </div></div>
+  </div>
 </article>
-<article class="tcard" tabindex="0">
-  <div class="tcard__in"><div class="tcard__face tcard__front">
-    <div class="tcard__avatar">A</div>
+<article class="tcard glass acc" style="--acc:#3B6FF5" tabindex="0">
+  <div class="tcard__front">
+    <span class="tcard__orb">A</span>
     <span class="tcard__num">Integrante 02</span>
     <h3 class="tcard__name">Alan</h3>
     <p class="tcard__rol is-empty">Rol en el equipo</p>
-  </div></div>
+  </div>
 </article>
-<article class="tcard" tabindex="0">
-  <div class="tcard__in"><div class="tcard__face tcard__front">
-    <div class="tcard__avatar">A</div>
+<article class="tcard glass acc" style="--acc:#E0517A" tabindex="0">
+  <div class="tcard__front">
+    <span class="tcard__orb">A</span>
     <span class="tcard__num">Integrante 03</span>
     <h3 class="tcard__name">Armando</h3>
     <p class="tcard__rol is-empty">Rol en el equipo</p>
-  </div></div>
+  </div>
 </article>
-<article class="tcard" tabindex="0">
-  <div class="tcard__in"><div class="tcard__face tcard__front">
-    <div class="tcard__avatar">I</div>
+<article class="tcard glass acc" style="--acc:#17A88A" tabindex="0">
+  <div class="tcard__front">
+    <span class="tcard__orb">I</span>
     <span class="tcard__num">Integrante 04</span>
     <h3 class="tcard__name">Isaac</h3>
     <p class="tcard__rol is-empty">Rol en el equipo</p>
-  </div></div>
+  </div>
 </article>
-<article class="tcard" tabindex="0">
-  <div class="tcard__in"><div class="tcard__face tcard__front">
-    <div class="tcard__avatar">D</div>
+<article class="tcard glass acc" style="--acc:#D9473B" tabindex="0">
+  <div class="tcard__front">
+    <span class="tcard__orb">D</span>
     <span class="tcard__num">Integrante 05</span>
     <h3 class="tcard__name">Diego</h3>
     <p class="tcard__rol is-empty">Rol en el equipo</p>
-  </div></div>
+  </div>
 </article></div>
-  </div>
 </section>
-</main>
-
+  </main>
+  
 <footer class="foot">
-  <div class="wrap foot__in">
-    <div class="foot__brand">
-      <a class="brand brand--foot" href="index.html"><span class="brand__mark" aria-hidden="true">1A</span>
-      <span class="brand__txt"><b>Mapa del Semestre</b><small>TSIN1AM · 2026B</small></span></a>
-      <p>Escuela Politécnica de Guadalajara<br>Tecnólogo en Sistemas Informáticos<br>Grupo 1A · Turno matutino</p>
-    </div>
-    <div class="foot__col"><p class="foot__h">Materias</p><ul><li><a href="materias/tutoria.html">Tutoría de Ingreso I</a></li><li><a href="materias/tecnologias.html">Tecnologías de la Información</a></li><li><a href="materias/sexualidad.html">Sexualidad y Perspectiva de Género</a></li><li><a href="materias/algoritmos.html">Algoritmos y Programación</a></li><li><a href="materias/ingles.html">Inglés Básico</a></li></ul></div>
-    <div class="foot__col"><p class="foot__h" aria-hidden="true">&nbsp;</p><ul><li><a href="materias/historia.html">Historia e Identidad Universitaria</a></li><li><a href="materias/numerica.html">Habilidad Numérica</a></li><li><a href="materias/lectoescritura.html">Habilidad de Lectoescritura</a></li><li><a href="materias/fisica.html">Física y sus Aplicaciones</a></li><li><a href="materias/socioemocional.html">Educación Socioemocional</a></li></ul></div>
-    <div class="foot__col"><p class="foot__h">Sitio</p><ul>
-      <li><a href="index.html#materias">Todas las materias</a></li>
-      <li><a href="index.html#semana">Calendario del ciclo</a></li>
-      <li><a href="index.html#proyecto">Sobre el proyecto</a></li>
-      <li><a href="equipo.html">Nuestro equipo</a></li></ul></div>
-  </div>
-  <div class="wrap foot__base">
-    <p>Proyecto académico elaborado por estudiantes del grupo 1A. No es un sitio oficial de la institución.</p>
-    <p>Fotografías: Unsplash · Íconos: Lucide</p>
-  </div>
+  <p>Escuela Politécnica de Guadalajara · Tecnólogo en Sistemas Informáticos · Grupo 1A, turno matutino · Ciclo 2026B</p>
+  <p>Proyecto académico elaborado por estudiantes del grupo 1A. No es un sitio oficial de la institución. Fotografías: Unsplash · Íconos: Lucide</p>
 </footer>
-<a class="totop" href="#top" aria-label="Volver arriba" data-totop><svg class="ic" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><path d="m5 12 7-7 7 7" /><path d="M12 19V5" /></svg></a>
+<a class="totop iconbtn glass-pill" href="#top" aria-label="Volver arriba" data-totop><svg class="ic" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><path d="m5 12 7-7 7 7" /><path d="M12 19V5" /></svg></a>
+</div>
+
+<nav class="dock glass" aria-label="Accesos rápidos" data-lens="h">
+  <span class="lens" aria-hidden="true"></span>
+  <a class="dock__item is-active" href="index.html" data-li><svg class="ic" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><path d="M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8" /><path d="M3 10a2 2 0 0 1 .709-1.528l7-5.999a2 2 0 0 1 2.582 0l7 5.999A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" /></svg><span>Inicio</span></a>
+  <button class="dock__item" type="button" data-drawer-open data-li><svg class="ic" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><rect width="7" height="7" x="3" y="3" rx="1" /><rect width="7" height="7" x="14" y="3" rx="1" /><rect width="7" height="7" x="14" y="14" rx="1" /><rect width="7" height="7" x="3" y="14" rx="1" /></svg><span>Materias</span></button>
+  <a class="dock__item" href="index.html#semana" data-li><svg class="ic" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><path d="M8 2v4" /><path d="M16 2v4" /><rect width="18" height="18" x="3" y="4" rx="2" /><path d="M3 10h18" /><path d="M8 14h.01" /><path d="M12 14h.01" /><path d="M16 14h.01" /><path d="M8 18h.01" /><path d="M12 18h.01" /><path d="M16 18h.01" /></svg><span>Semana</span></a>
+  <a class="dock__item" href="equipo.html" data-li><svg class="ic" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" /><circle cx="9" cy="7" r="4" /><path d="M22 21v-2a4 4 0 0 0-3-3.87" /><path d="M16 3.13a4 4 0 0 1 0 7.75" /></svg><span>Equipo</span></a>
+</nav>
 <script src="assets/js/equipo.js"></script>
+<script src="assets/js/datos.js"></script>
 <script src="assets/js/main.js" defer></script>
 </body>
 </html>
