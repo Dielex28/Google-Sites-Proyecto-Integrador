@@ -1,0 +1,27 @@
+# Encabezados para Netlify y Cloudflare Pages (GitHub Pages los ignora).
+# Las reglas no se enciman a propósito: si dos reglas ponen el mismo encabezado,
+# esos servicios juntan los valores.
+/*
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: strict-origin-when-cross-origin
+  Permissions-Policy: camera=(), microphone=(), geolocation=()
+  X-Frame-Options: SAMEORIGIN
+
+/assets/css/*
+  Cache-Control: public, max-age=31536000, immutable
+
+/assets/fonts/*
+  Cache-Control: public, max-age=31536000, immutable
+
+/assets/img/*
+  Cache-Control: public, max-age=2592000
+
+/assets/js/*
+  Cache-Control: public, max-age=3600
+
+/assets/calendario-2026b.ics
+  Cache-Control: public, max-age=86400
+  Content-Type: text/calendar; charset=utf-8
+
+/sw.js
+  Cache-Control: no-cache

@@ -15,6 +15,11 @@ SITIO = {
     "clave": "TSIN1AM",
     "ciclo": "2026B",
     "titulo": "Mapa del Semestre 1A",
+    # ✏️ Cuando compren el dominio escríbanlo aquí, con https:// y sin "/" al final,
+    #    por ejemplo "https://www.mapa1a.com", y vuelvan a ejecutar  python3 src/build.py
+    #    Se usa para el mapa del sitio (sitemap), las vistas previas al compartir el enlace
+    #    en WhatsApp o redes, las direcciones canónicas para Google y el archivo CNAME.
+    "url": "",
 }
 
 # Áreas para filtrar las materias en la portada

@@ -1,6 +1,5 @@
 /* Mapa del Semestre 1A · Liquid Glass Fluid
-   Interacción y animaciones. Funciona igual en el sitio completo y en los
-   bloques de Google Sites (ahí <html> lleva la clase "embed").
+   Interacción y animaciones del sitio.
 
    Piezas principales:
    - Agua: simulación de ondas en WebGL2 que refracta la foto de fondo, con
@@ -8,12 +7,13 @@
    - Luz: el cursor (o, en pantallas táctiles, el desplazamiento) es la luz que
      hace girar el borde brillante y el reflejo de cada panel de vidrio.
    - Lentes: indicadores que se deslizan y se estiran con física de resorte.
-   - Repaso: casillas para marcar temas repasados (se guarda en el navegador). */
+   - Repaso: casillas para marcar temas repasados (se guarda en el navegador).
+   - Herramientas: paleta de comandos (Ctrl K), temporizador de estudio, notas
+     por materia, sonidos de agua, avisos, app instalable y modo sin conexión. */
 (function () {
   "use strict";
 
   var root = document.documentElement;
-  var EMBED = root.classList.contains("embed");
   var mm = function (q) { return window.matchMedia ? window.matchMedia(q) : { matches: false }; };
   var REDUCE = mm("(prefers-reduced-motion: reduce)").matches;
   var FINE = mm("(hover: hover) and (pointer: fine)").matches;
@@ -23,6 +23,8 @@
   var SEMANAS = window.SEMANAS || [];
   var INICIO = new Date(2026, 7, 17); // lunes de la semana 1 del ciclo 2026B
   var DIA = 864e5;
+  var BASE = root.getAttribute("data-base") || "";
+  var WEB = /^https?:$/.test(location.protocol);
 
   function esc(s) {
     return String(s == null ? "" : s).replace(/[&<>"']/g, function (c) {
@@ -246,21 +248,37 @@
       });
     }
 
-    /* foto de fondo como textura (data URI: funciona también al abrir con doble clic) */
+    /* foto de fondo como textura. En el dominio se usa la misma <img> (WebP del tamaño
+       justo); al abrir el archivo con doble clic el navegador la trata como de otro
+       origen, así que se carga la copia incrustada (assets/js/fondos/). */
     var imgTex = null, imgAsp = 2;
-    if (conFoto && window.FONDO) {
-      capa.classList.add("is-loading");
-      var im = new Image();
-      im.onload = function () {
-        imgTex = textura();
+    function usarFoto(im) {
+      try {
+        var tx = textura();
         gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGB, gl.RGB, gl.UNSIGNED_BYTE, im);
-        imgAsp = im.width / im.height;
+        imgTex = tx;
+        imgAsp = (im.naturalWidth || im.width) / (im.naturalHeight || im.height);
         capa.classList.add("is-water");
-        capa.classList.remove("is-loading");
-      };
-      im.onerror = function () { capa.classList.remove("is-loading"); };
-      im.src = window.FONDO;
-    } else if (!conFoto) {
+      } catch (e) { imgTex = null; }
+      capa.classList.remove("is-loading");
+      if (!corriendo) dibujar(performance.now());
+    }
+    function sinFoto() { capa.classList.remove("is-loading"); }
+    if (conFoto) {
+      capa.classList.add("is-loading");
+      var fotoEl = $(".bg__photo", capa);
+      if (WEB && fotoEl) {
+        var lista = function () { if (fotoEl.decode) fotoEl.decode().then(function () { usarFoto(fotoEl); }, function () { usarFoto(fotoEl); }); else usarFoto(fotoEl); };
+        if (fotoEl.complete && fotoEl.naturalWidth) lista();
+        else { fotoEl.addEventListener("load", lista, { once: true }); fotoEl.addEventListener("error", sinFoto, { once: true }); }
+      } else {
+        var incrustada = function () { var im = new Image(); im.onload = function () { usarFoto(im); }; im.onerror = sinFoto; im.src = window.FONDO; };
+        var guion = capa.getAttribute("data-fondo");
+        if (window.FONDO) incrustada();
+        else if (guion) { var sc = document.createElement("script"); sc.src = guion; sc.onload = incrustada; sc.onerror = sinFoto; document.head.appendChild(sc); }
+        else sinFoto();
+      }
+    } else {
       capa.classList.add("is-water");
     }
 
@@ -319,13 +337,15 @@
       gl.drawArrays(gl.TRIANGLES, 0, 3);
     }
 
-    var corriendo = false, ultimo = 0, acum = 0, muestras = [], proximaLluvia = 0;
+    var corriendo = false, ultimo = 0, acum = 0, muestras = [], proximaLluvia = 0, suave = false;
     function cuadro(ahora) {
       if (!corriendo) return;
       requestAnimationFrame(cuadro);
-      var dt = ultimo ? ahora - ultimo : 16.7;
-      if (dt < 1000 / niveles[nivel].fps - 3) return;
-      if (ultimo && ahora - t0 > 2500) {
+      /* el primer cuadro siempre se dibuja (antes, a 40 o 30 cuadros por segundo nunca arrancaba) */
+      var primero = !ultimo;
+      var dt = primero ? 1000 / niveles[nivel].fps : ahora - ultimo;
+      if (!primero && dt < 1000 / niveles[nivel].fps - 3) return;
+      if (!primero && ahora - t0 > 2500) {
         muestras.push(dt);
         if (muestras.length >= 90) {
           var prom = muestras.reduce(function (a, b) { return a + b; }, 0) / muestras.length;
@@ -335,8 +355,8 @@
       }
       ultimo = ahora;
       if (ahora > proximaLluvia) {
-        proximaLluvia = ahora + 900 + Math.random() * 1600;
-        cola.push([Math.random(), Math.random(), 0.012 + Math.random() * 0.016, 0.03 + Math.random() * 0.05]);
+        proximaLluvia = ahora + (suave ? 4200 : 900) + Math.random() * 1600;
+        cola.push([Math.random(), Math.random(), 0.012 + Math.random() * 0.016, (0.03 + Math.random() * 0.05) * (suave ? 0.4 : 1)]);
       }
       cola.splice(0, 14).forEach(function (g) { soltar(g[0], g[1], g[2], g[3]); });
       acum += Math.min(dt, 100);
@@ -355,7 +375,7 @@
       var dist = Math.hypot(e.clientX - prev.x, e.clientY - prev.y);
       if (dist < 7) return;
       var vel = dist / Math.max(8, ahora - prev.t);
-      cola.push([x, y, 0.014 + Math.min(0.012, vel * 0.004), Math.min(0.07, 0.008 + vel * 0.016)]);
+      cola.push([x, y, 0.014 + Math.min(0.012, vel * 0.004), Math.min(0.07, 0.008 + vel * 0.016) * (suave ? 0.35 : 1)]);
       prev = { x: e.clientX, y: e.clientY, t: ahora };
     }, { passive: true });
     window.addEventListener("pointerdown", function (e) {
@@ -378,6 +398,7 @@
     return {
       iniciar: function () { if (corriendo) return; corriendo = true; ultimo = 0; requestAnimationFrame(cuadro); },
       detener: function () { corriendo = false; dibujar(performance.now()); },
+      calmar: function (on) { suave = !!on; },
       salpicar: function (xpx, ypx, k) {
         cola.push([xpx / window.innerWidth, 1 - ypx / window.innerHeight, 0.05, k || 0.4]);
         if (!corriendo) { soltar(xpx / window.innerWidth, 1 - ypx / window.innerHeight, 0.05, k || 0.4); dibujar(performance.now()); }
@@ -466,6 +487,7 @@
     return {
       iniciar: function () { if (corriendo) return; corriendo = true; requestAnimationFrame(bucle); },
       detener: function () { corriendo = false; dibujar(performance.now()); },
+      calmar: function () {},
       salpicar: function (x, y) { gl.uniform3f(U.drop, x / window.innerWidth, 1 - y / window.innerHeight, (performance.now() - t0) / 1000); }
     };
   }
@@ -830,9 +852,11 @@
     var hoy = new Date();
     var h = hoy.getHours();
     var saludo = h < 12 ? "Buenos días" : h < 19 ? "Buenas tardes" : "Buenas noches";
-    var fecha = "";
-    try { fecha = new Intl.DateTimeFormat("es-MX", { weekday: "long", day: "numeric", month: "long" }).format(hoy); } catch (e) { fecha = hoy.toLocaleDateString(); }
-    el.textContent = saludo + ", 1A · " + fecha.charAt(0).toUpperCase() + fecha.slice(1);
+    var fecha = "", corta = mm("(max-width: 600px)").matches;
+    try { fecha = new Intl.DateTimeFormat("es-MX", { weekday: "long", day: "numeric", month: corta ? "short" : "long" }).format(hoy); } catch (e) { fecha = hoy.toLocaleDateString(); }
+    fecha = fecha.charAt(0).toUpperCase() + fecha.slice(1);
+    el.textContent = corta ? fecha : saludo + ", 1A · " + fecha;
+    el.title = saludo + ", 1A";
     if (!REDUCE) el.classList.add("is-in");
   });
 
@@ -944,6 +968,7 @@
       b.addEventListener("click", function () {
         var f = b.getAttribute("data-filter");
         if (lf) lf.activar(b);
+        sonar("tab");
         $$("[data-filter]", filtros).forEach(function (x) { x.setAttribute("aria-pressed", x === b ? "true" : "false"); });
         var visiblesM = [];
         $$(".mcard", mgrid).forEach(function (c) {
@@ -1057,7 +1082,8 @@
       b.addEventListener("click", function () {
         var id = b.getAttribute("data-tab");
         mostrarPanel(id);
-        if (!EMBED && history.replaceState) history.replaceState(null, "", "#" + id);
+        if (history.replaceState) history.replaceState(null, "", "#" + id);
+        sonar("tab");
       });
       b.addEventListener("keydown", function (e) {
         var d = e.key === "ArrowRight" ? 1 : e.key === "ArrowLeft" ? -1 : 0;
@@ -1071,12 +1097,12 @@
 
   /* abre la pestaña y resalta el tema que pide la dirección (#u2, #t2-5…) */
   function abrirHash() {
-    if (EMBED) return;
     var id = decodeURIComponent((location.hash || "").slice(1));
     if (!id) return;
     var el = document.getElementById(id);
     if (!el) return;
     var panel = el.closest("[data-panel]");
+    if (!panel && el.classList.contains("cal__w")) { resaltarSemana(el); return; }
     if (panel) mostrarPanel(panel.id);
     if (panel && el !== panel) {
       setTimeout(function () {
@@ -1093,11 +1119,14 @@
 
   /* =========================================================== calendario de Física */
   var cal = $("[data-cal]");
-  function centrarSemana() {
-    var hoy = cal && $(".cal__w.is-now", cal);
-    if (EMBED && hoy && cal.scrollHeight > cal.clientHeight) {
-      cal.scrollTop = Math.max(0, hoy.offsetTop - cal.offsetTop - cal.clientHeight / 2 + hoy.offsetHeight / 2);
-    }
+  function centrarSemana() {}
+  function resaltarSemana(el) {
+    if (!el) return;
+    if (el.hidden) { var todas = $('[data-cal-filter="0"]'); if (todas) todas.click(); }
+    setTimeout(function () {
+      el.scrollIntoView({ block: "center", behavior: REDUCE ? "auto" : "smooth" });
+      rebotar(el, "is-hit");
+    }, 80);
   }
   if (cal) {
     $$(".cal__w", cal).forEach(function (li, idx) {
@@ -1110,14 +1139,14 @@
       b.addEventListener("click", function () {
         var u = b.getAttribute("data-cal-filter");
         if (lc) lc.activar(b);
+        sonar("tab");
         $$("[data-cal-filter]").forEach(function (x) { x.setAttribute("aria-pressed", x === b ? "true" : "false"); });
         var n = 0;
         $$(".cal__w", cal).forEach(function (li) {
-          var ver = u === "0" || li.getAttribute("data-u") === u;
+          var ver = u === "0" || (u === "ev" ? li.getAttribute("data-ev") === "1" : li.getAttribute("data-u") === u);
           li.hidden = !ver;
           if (ver && !REDUCE) { li.style.animationDelay = (n++ * 40) + "ms"; rebotar(li, "is-in"); }
         });
-        cal.scrollTop = 0;
       });
     });
   }
@@ -1208,7 +1237,8 @@
         guardar("repaso:" + slug, JSON.stringify(Object.keys(marcados)));
         pintar(b);
         b.classList.remove("is-pop");
-        if (marcados[id]) { rebotar(b, "is-pop"); if (orb) rebotar(orb, "is-splash"); }
+        if (marcados[id]) { rebotar(b, "is-pop"); if (orb) rebotar(orb, "is-splash"); sonar("gota"); vibrar(10); }
+        else sonar("suave");
         actualizar(true);
       });
     });
@@ -1229,6 +1259,7 @@
         guardar("repaso:" + slug, "[]");
         botonesR.forEach(pintar);
         actualizar(true);
+        avisar("Repaso reiniciado. ¡A empezar de nuevo!");
       });
     }
     actualizar(false);
@@ -1261,22 +1292,635 @@
     });
   })();
 
-  /* =========================================================== buscador de temas */
-  var buscador = $("[data-search]");
-  var INDICE = window.INDICE || [];
-  if (buscador && INDICE.length) {
-    var input = $("input", buscador);
-    var caja2 = $(".search__res", buscador);
-    var base = buscador.getAttribute("data-base") || "";
-    var sinAcento = function (s) { return s.normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase(); };
+  /* =========================================================== avisos flotantes */
+  var toasts = $("[data-toasts]");
+  function avisar(msg, op) {
+    op = op || {};
+    if (!toasts) return function () {};
+    var t = document.createElement("div");
+    t.className = "toast glass" + (op.tipo ? " toast--" + op.tipo : "");
+    t.setAttribute("role", "status");
+    t.innerHTML = '<span class="toast__dot" aria-hidden="true"></span><span class="toast__t">' + esc(msg) + "</span>" +
+      (op.accion ? '<button class="toast__btn" type="button">' + esc(op.accion) + "</button>" : "") +
+      '<button class="toast__x" type="button" aria-label="Cerrar aviso"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button>';
+    toasts.appendChild(t);
+    if (iog) iog.observe(t);
+    var cerrar = function () {
+      if (t.classList.contains("is-out")) return;
+      t.classList.add("is-out");
+      setTimeout(function () { t.remove(); }, 420);
+    };
+    $(".toast__x", t).addEventListener("click", cerrar);
+    if (op.accion) $(".toast__btn", t).addEventListener("click", function () { cerrar(); if (op.fn) op.fn(); });
+    var vida = setTimeout(cerrar, op.ms || 3800);
+    t.addEventListener("pointerenter", function () { clearTimeout(vida); });
+    t.addEventListener("pointerleave", function () { vida = setTimeout(cerrar, 1800); });
+    while (toasts.children.length > 3) toasts.firstChild.remove();
+    pedirLuz();
+    return cerrar;
+  }
+
+  /* =========================================================== sonidos de agua (Web Audio, apagados por omisión) */
+  var sonidoOn = leer("sonido") === "1";
+  var actx = null;
+  function audio() {
+    if (!actx) {
+      var AC = window.AudioContext || window.webkitAudioContext;
+      if (!AC) return null;
+      try { actx = new AC(); } catch (e) { return null; }
+    }
+    if (actx.state === "suspended") actx.resume();
+    return actx;
+  }
+  /* una gota real suena como una burbuja que resuena: tono que sube muy rápido y se apaga */
+  function burbuja(ctx, t, f0, f1, dur, vol) {
+    var o = ctx.createOscillator(), g = ctx.createGain();
+    o.type = "sine";
+    o.frequency.setValueAtTime(f0, t);
+    o.frequency.exponentialRampToValueAtTime(f1, t + dur * 0.8);
+    g.gain.setValueAtTime(0.0001, t);
+    g.gain.exponentialRampToValueAtTime(vol, t + 0.008);
+    g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
+    o.connect(g);
+    g.connect(ctx.destination);
+    o.start(t);
+    o.stop(t + dur + 0.03);
+  }
+  function sonar(tipo, forzar) {
+    if (!sonidoOn && !forzar) return;
+    var ctx = audio();
+    if (!ctx) return;
+    var t = ctx.currentTime + 0.01, r = Math.random();
+    if (tipo === "campana") {
+      [0, 0.45].forEach(function (d, k) {
+        [[660, 0.15], [990, 0.06], [1320, 0.045], [1980, 0.018]].forEach(function (p) {
+          var o = ctx.createOscillator(), g = ctx.createGain();
+          o.type = "sine";
+          o.frequency.value = p[0] * (k ? 1.26 : 1);
+          g.gain.setValueAtTime(0.0001, t + d);
+          g.gain.exponentialRampToValueAtTime(p[1], t + d + 0.012);
+          g.gain.exponentialRampToValueAtTime(0.0001, t + d + 2);
+          o.connect(g);
+          g.connect(ctx.destination);
+          o.start(t + d);
+          o.stop(t + d + 2.1);
+        });
+      });
+      return;
+    }
+    var f = { gota: [430 + r * 90, 2.7, 0.13, 0.2], suave: [300 + r * 40, 1.7, 0.1, 0.08], tab: [640 + r * 70, 1.9, 0.07, 0.06], abrir: [380, 2.4, 0.15, 0.12] }[tipo] || [520, 2, 0.08, 0.07];
+    burbuja(ctx, t, f[0], f[0] * f[1], f[2], f[3]);
+    if (tipo === "abrir") burbuja(ctx, t + 0.08, 560, 1500, 0.1, 0.07);
+  }
+  function vibrar(ms) {
+    if (!COARSE || !navigator.vibrate) return;
+    try { navigator.vibrate(ms); } catch (e) { /* sin vibración */ }
+  }
+  $$("[data-sonido]").forEach(function (b) {
+    b.setAttribute("aria-pressed", sonidoOn ? "true" : "false");
+    b.addEventListener("click", function () {
+      sonidoOn = !sonidoOn;
+      guardar("sonido", sonidoOn ? "1" : "0");
+      $$("[data-sonido]").forEach(function (x) { x.setAttribute("aria-pressed", sonidoOn ? "true" : "false"); });
+      if (sonidoOn) sonar("gota");
+      avisar(sonidoOn ? "Sonidos de agua activados" : "Sonidos desactivados");
+    });
+  });
+  document.addEventListener("click", function (e) {
+    var b = e.target.closest && e.target.closest(".btn, .pill, .iconbtn, .dock__item, .side__motion, .side__install");
+    if (b && !b.hasAttribute("data-sonido")) sonar("tab");
+  });
+
+  /* =========================================================== notificaciones del sistema (temporizador) */
+  function notificar(titulo, cuerpo) {
+    if (!window.Notification || Notification.permission !== "granted" || !document.hidden) return;
+    var op = { body: cuerpo, icon: BASE + "assets/img/icons/icon-192.png", badge: BASE + "assets/img/icons/favicon-32.png", tag: "temporizador" };
+    try {
+      if (navigator.serviceWorker && navigator.serviceWorker.controller) navigator.serviceWorker.ready.then(function (r) { r.showNotification(titulo, op); });
+      else new Notification(titulo, op);
+    } catch (e) { /* sin notificaciones */ }
+  }
+
+  /* =========================================================== temporizador de estudio */
+  var T = (function () {
+    var pop = $("[data-timer]");
+    var abrirB = $("[data-timer-open]");
+    var chip = $("[data-timer-chip]");
+    var gauge = $("[data-timer-gauge]");
+    var txt = $("[data-timer-t]"), modoTxt = $("[data-timer-modo]");
+    var toggle = $("[data-timer-toggle]");
+    var presets = $("[data-timer-presets]");
+    var lp = presets && lenteDe(presets);
+    var titulo = document.title;
+    var st = null, reloj = 0;
+    function cargar() {
+      try { st = JSON.parse(leer("temporizador") || "null"); } catch (e) { st = null; }
+      if (!st || !st.preset) st = { preset: [25, 5], modo: "enfoque", fin: 0, resta: 25 * 60000 };
+    }
+    cargar();
+    function total() { return (st.modo === "enfoque" ? st.preset[0] : st.preset[1]) * 60000; }
+    function restante() { return st.fin ? Math.max(0, st.fin - Date.now()) : Math.min(st.resta, total()); }
+    function hoyClave() { var d = new Date(); return d.getFullYear() + "-" + pad(d.getMonth() + 1) + "-" + pad(d.getDate()); }
+    function sesionesHoy() {
+      try { var h = JSON.parse(leer("temporizador:hoy") || "{}"); return h.d === hoyClave() ? h.n : 0; } catch (e) { return 0; }
+    }
+    function salvar() { guardar("temporizador", JSON.stringify(st)); }
+    function mmss(ms) { var s = Math.ceil(ms / 1000); return pad(Math.floor(s / 60)) + ":" + pad(s % 60); }
+    function pintar() {
+      var r = restante(), corre = !!st.fin, m = mmss(r), enf = st.modo === "enfoque";
+      if (txt) txt.textContent = m;
+      if (modoTxt) modoTxt.textContent = enf ? "Enfoque" : "Descanso";
+      if (gauge) {
+        gauge.style.setProperty("--p", (r / total()).toFixed(4));
+        gauge.classList.toggle("is-break", !enf);
+        gauge.classList.toggle("is-high", r / total() > 0.56);
+        gauge.setAttribute("aria-label", (enf ? "Enfoque" : "Descanso") + ": quedan " + m);
+      }
+      if (chip) { chip.hidden = !corre && r >= total(); chip.textContent = m; }
+      if (abrirB) { abrirB.classList.toggle("is-running", corre); abrirB.classList.toggle("is-break", !enf); }
+      if (toggle) {
+        toggle.classList.toggle("is-running", corre);
+        $("span", toggle).textContent = corre ? "Pausar" : r < total() ? "Continuar" : "Iniciar";
+      }
+      $$("[data-timer-start]").forEach(function (b) {
+        b.classList.toggle("is-running", corre);
+        $("span", b).textContent = corre ? (enf ? "Enfoque · " : "Descanso · ") + m : r < total() ? "Continuar · " + m : "Empezar";
+      });
+      $$("[data-timer-hoy]").forEach(function (el) { el.textContent = sesionesHoy(); });
+      document.title = corre ? "⏱ " + m + " · " + (enf ? "Enfoque" : "Descanso") + " — " + titulo : titulo;
+      var calmo = corre && enf;
+      root.classList.toggle("enfoque", calmo);
+      if (agua && agua.calmar) agua.calmar(calmo);
+    }
+    function terminar() {
+      sonar("campana", true);
+      vibrar([180, 90, 180]);
+      if (st.modo === "enfoque") {
+        guardar("temporizador:hoy", JSON.stringify({ d: hoyClave(), n: sesionesHoy() + 1 }));
+        st.modo = "descanso";
+        st.resta = total();
+        st.fin = Date.now() + st.resta;
+        avisar("¡Sesión completada! Descansa " + st.preset[1] + " minutos.", { tipo: "ok", ms: 7000 });
+        notificar("¡Sesión de enfoque completada!", "Descansa " + st.preset[1] + " minutos.");
+      } else {
+        st.modo = "enfoque";
+        st.fin = 0;
+        st.resta = total();
+        avisar("Se acabó el descanso. ¿Otra sesión?", { accion: "Iniciar", fn: iniciar, ms: 9000 });
+        notificar("Descanso terminado", "Cuando quieras, empieza otra sesión de estudio.");
+      }
+      salvar();
+      if (gauge) rebotar(gauge, "is-splash");
+    }
+    function tic() {
+      if (st.fin && restante() <= 0) terminar();
+      pintar();
+    }
+    function correr() { clearInterval(reloj); if (st.fin) reloj = setInterval(tic, 250); }
+    function iniciar() {
+      if (!st.fin) st.fin = Date.now() + (restante() > 0 ? restante() : total());
+      salvar();
+      correr();
+      pintar();
+      sonar("gota");
+      if (window.Notification && Notification.permission === "default") { try { Notification.requestPermission(); } catch (e) { /* nada */ } }
+    }
+    function pausar() { st.resta = restante(); st.fin = 0; salvar(); correr(); pintar(); sonar("suave"); }
+    function reiniciar() { st.fin = 0; st.modo = "enfoque"; st.resta = total(); salvar(); correr(); pintar(); if (gauge) rebotar(gauge, "is-splash"); }
+    function saltar() {
+      var corre = !!st.fin;
+      st.modo = st.modo === "enfoque" ? "descanso" : "enfoque";
+      st.resta = total();
+      st.fin = corre ? Date.now() + st.resta : 0;
+      salvar(); correr(); pintar();
+    }
+    function abrir(on) {
+      if (!pop) return;
+      var mostrar = on == null ? pop.hidden : on;
+      if (mostrar === !pop.hidden) return;
+      if (mostrar) {
+        pop.hidden = false;
+        requestAnimationFrame(function () { pop.classList.add("is-open"); });
+        if (lp) lp.fijar();
+        if (iog) iog.observe(pop);
+        pedirLuz();
+        sonar("abrir");
+      } else {
+        pop.classList.remove("is-open");
+        setTimeout(function () { if (!pop.classList.contains("is-open")) pop.hidden = true; }, 360);
+      }
+      if (abrirB) abrirB.setAttribute("aria-expanded", mostrar ? "true" : "false");
+    }
+    if (presets) {
+      $$("[data-timer-preset]", presets).forEach(function (b) {
+        var v = b.getAttribute("data-timer-preset").split(",").map(Number);
+        if (v[0] === st.preset[0] && v[1] === st.preset[1]) {
+          if (lp) lp.activar(b);
+          $$("[data-timer-preset]", presets).forEach(function (x) { x.setAttribute("aria-pressed", x === b ? "true" : "false"); });
+        }
+        b.addEventListener("click", function () {
+          st.preset = v;
+          st.modo = "enfoque";
+          st.fin = 0;
+          st.resta = total();
+          salvar(); correr();
+          if (lp) lp.activar(b);
+          $$("[data-timer-preset]", presets).forEach(function (x) { x.setAttribute("aria-pressed", x === b ? "true" : "false"); });
+          pintar();
+          sonar("tab");
+          if (gauge) rebotar(gauge, "is-splash");
+        });
+      });
+    }
+    if (abrirB) abrirB.addEventListener("click", function () { abrir(); });
+    document.addEventListener("click", function (e) {
+      if (pop && !pop.hidden && !pop.contains(e.target) && !e.target.closest("[data-timer-open]")) abrir(false);
+    });
+    document.addEventListener("keydown", function (e) {
+      if (e.key === "Escape" && pop && !pop.hidden) { abrir(false); if (abrirB) abrirB.focus(); }
+    });
+    if (toggle) toggle.addEventListener("click", function () { if (st.fin) pausar(); else iniciar(); });
+    $$("[data-timer-reset]").forEach(function (b) { b.addEventListener("click", reiniciar); });
+    $$("[data-timer-skip]").forEach(function (b) { b.addEventListener("click", saltar); });
+    $$("[data-timer-start]").forEach(function (b) {
+      b.addEventListener("click", function () {
+        if (st.fin) { pausar(); return; }
+        iniciar();
+        if (restante() >= total() - 1500) avisar("Sesión de " + (st.modo === "enfoque" ? st.preset[0] : st.preset[1]) + " minutos en marcha. El agua se calma mientras estudias.", { accion: "Ver", fn: function () { window.scrollTo({ top: 0, behavior: REDUCE ? "auto" : "smooth" }); abrir(true); } });
+      });
+    });
+    /* la sesión sigue en otras pestañas y al volver a la página */
+    window.addEventListener("storage", function (e) { if (e.key === "temporizador" || e.key === "temporizador:hoy") { cargar(); correr(); pintar(); } });
+    document.addEventListener("visibilitychange", function () { if (!document.hidden) tic(); });
+    if (st.fin && Date.now() - st.fin > 10 * 60000) { st.fin = 0; st.modo = "enfoque"; st.resta = total(); salvar(); }
+    correr();
+    tic();
+    return {
+      abrir: abrir,
+      enfocar: function () {
+        if (st.fin && st.modo === "enfoque") { abrir(true); return; }
+        st.modo = "enfoque"; st.fin = 0; st.resta = total();
+        iniciar();
+        abrir(true);
+      }
+    };
+  })();
+
+  /* =========================================================== notas por materia */
+  $$("[data-notas]").forEach(function (caja) {
+    var slug = caja.getAttribute("data-notas"), clave = "notas:" + slug;
+    var ta = $("textarea", caja);
+    var estadoEl = $("[data-notas-estado]", caja), estado = $("span", estadoEl);
+    var cuenta = $("[data-notas-cuenta]", caja);
+    var tab = $('[data-tab="notas"]');
+    var nombre = (($(".mhero__title") || {}).textContent || slug).trim();
+    ta.value = leer(clave) || "";
+    function contarP() {
+      var n = (ta.value.trim().match(/\S+/g) || []).length;
+      cuenta.textContent = n + (n === 1 ? " palabra" : " palabras");
+      if (tab) tab.classList.toggle("has-dot", n > 0);
+      caja.classList.toggle("is-empty", !n);
+    }
+    function hora() { var d = new Date(); return pad(d.getHours()) + ":" + pad(d.getMinutes()); }
+    function alto() { if (!ta.offsetParent) return; ta.style.height = "auto"; ta.style.height = Math.max(280, ta.scrollHeight + 4) + "px"; }
+    estado.textContent = ta.value ? "Guardado en este navegador" : "Sin notas todavía";
+    contarP();
+    var espera = 0;
+    function escribir(v) {
+      guardar(clave, v);
+      caja.classList.remove("is-saving");
+      estado.textContent = v ? "Guardado · " + hora() : "Sin notas todavía";
+      rebotar(estadoEl, "is-bump");
+    }
+    ta.addEventListener("input", function () {
+      caja.classList.add("is-saving");
+      estado.textContent = "Guardando…";
+      clearTimeout(espera);
+      espera = setTimeout(function () { escribir(ta.value); }, 450);
+      contarP();
+      alto();
+    });
+    ta.addEventListener("focus", alto);
+    $$("[data-tab]").forEach(function (b) { b.addEventListener("click", function () { setTimeout(alto, 30); }); });
+    $("[data-notas-copiar]", caja).addEventListener("click", function () {
+      if (!ta.value.trim()) { avisar("Todavía no hay nada que copiar"); return; }
+      copiarTexto(ta.value, "Notas copiadas al portapapeles");
+    });
+    $("[data-notas-bajar]", caja).addEventListener("click", function () {
+      if (!ta.value.trim()) { avisar("Todavía no hay nada que descargar"); return; }
+      var fecha = new Date().toLocaleDateString("es-MX");
+      var blob = new Blob(["Mis notas · " + nombre + "\nMapa del Semestre 1A · " + fecha + "\n\n" + ta.value + "\n"], { type: "text/plain;charset=utf-8" });
+      var a = document.createElement("a");
+      a.href = URL.createObjectURL(blob);
+      a.download = "notas-" + slug + ".txt";
+      document.body.appendChild(a);
+      a.click();
+      setTimeout(function () { URL.revokeObjectURL(a.href); a.remove(); }, 400);
+      avisar("Descargando notas-" + slug + ".txt", { tipo: "ok" });
+    });
+    var borrar = $("[data-notas-borrar]", caja), confirmar = 0;
+    borrar.addEventListener("click", function () {
+      if (!ta.value.trim()) { avisar("No hay notas que borrar"); return; }
+      var etq = $("span", borrar);
+      if (!borrar.classList.contains("is-confirm")) {
+        borrar.classList.add("is-confirm");
+        etq.textContent = "¿Seguro? Toca otra vez";
+        confirmar = setTimeout(function () { borrar.classList.remove("is-confirm"); etq.textContent = "Borrar"; }, 3000);
+        return;
+      }
+      clearTimeout(confirmar);
+      borrar.classList.remove("is-confirm");
+      etq.textContent = "Borrar";
+      var antes = ta.value;
+      ta.value = "";
+      escribir("");
+      contarP();
+      alto();
+      avisar("Notas borradas", { accion: "Deshacer", ms: 7000, fn: function () { ta.value = antes; escribir(antes); contarP(); alto(); } });
+    });
+  });
+
+  /* =========================================================== compartir, imprimir y atajos de la materia */
+  function copiarTexto(texto, msg) {
+    var fallo = function () { avisar("No se pudo copiar. Selecciona el texto y cópialo a mano."); };
+    try { navigator.clipboard.writeText(texto).then(function () { avisar(msg, { tipo: "ok" }); }, fallo); } catch (e) { fallo(); }
+  }
+  function compartir() {
+    var desc = $('meta[name="description"]');
+    var datos = { title: document.title, text: desc ? desc.content : "", url: location.href.split("#")[0] };
+    if (navigator.share) { navigator.share(datos).catch(function () { /* cancelado */ }); return; }
+    try {
+      navigator.clipboard.writeText(datos.url).then(function () { avisar("Enlace copiado. ¡Compártelo con tu equipo!", { tipo: "ok" }); },
+        function () { avisar("Copia este enlace: " + datos.url, { ms: 9000 }); });
+    } catch (e) { avisar("Copia este enlace: " + datos.url, { ms: 9000 }); }
+  }
+  $$("[data-share]").forEach(function (b) { b.addEventListener("click", compartir); });
+  $$("[data-print]").forEach(function (b) { b.addEventListener("click", function () { window.print(); }); });
+  function irPestana(id) {
+    mostrarPanel(id);
+    if (history.replaceState) history.replaceState(null, "", "#" + id);
+    var barra = $(".tabsbar");
+    if (barra) barra.scrollIntoView({ block: "start", behavior: REDUCE ? "auto" : "smooth" });
+    if (id === "notas") setTimeout(function () { var ta = $("[data-notas] textarea"); if (ta) ta.focus({ preventScroll: true }); }, 450);
+  }
+  $$("[data-ir-tab]").forEach(function (b) { b.addEventListener("click", function () { irPestana(b.getAttribute("data-ir-tab")); }); });
+
+  /* deslizar el dedo sobre el contenido cambia de pestaña */
+  (function () {
+    var tabsC = $("[data-tabs]"), pan = $("[data-panels]");
+    if (!tabsC || !pan) return;
+    var x0 = null, y0 = 0, t0 = 0;
+    pan.addEventListener("touchstart", function (e) {
+      if (e.touches.length !== 1 || e.target.closest("textarea, input, pre, table, .seg")) { x0 = null; return; }
+      x0 = e.touches[0].clientX; y0 = e.touches[0].clientY; t0 = Date.now();
+    }, { passive: true });
+    pan.addEventListener("touchend", function (e) {
+      if (x0 == null) return;
+      var dx = e.changedTouches[0].clientX - x0, dy = e.changedTouches[0].clientY - y0;
+      x0 = null;
+      if (Math.abs(dx) < 70 || Math.abs(dy) > Math.abs(dx) * 0.6 || Date.now() - t0 > 700) return;
+      var bs = $$("[data-tab]", tabsC);
+      var i = bs.map(function (b) { return b.getAttribute("aria-selected"); }).indexOf("true");
+      var sig = bs[i + (dx < 0 ? 1 : -1)];
+      if (!sig) { rebotar(pan, dx < 0 ? "is-edge-r" : "is-edge-l"); return; }
+      var id = sig.getAttribute("data-tab");
+      mostrarPanel(id);
+      if (history.replaceState) history.replaceState(null, "", "#" + id);
+      var p = document.getElementById(id);
+      if (p) rebotar(p, dx < 0 ? "is-swipe-l" : "is-swipe-r");
+      sonar("tab");
+      vibrar(6);
+      var barra = $(".tabsbar");
+      if (barra && pan.getBoundingClientRect().top < 0) barra.scrollIntoView({ block: "start", behavior: REDUCE ? "auto" : "smooth" });
+    }, { passive: true });
+  })();
+
+  /* =========================================================== portada: "tu día" */
+  (function () {
+    var hoy0 = new Date();
+    hoy0.setHours(0, 0, 0, 0);
+    function fechaLocal(iso) { var p = iso.split("-"); return new Date(+p[0], +p[1] - 1, +p[2]); }
+
+    var caja = $("[data-nexteval]");
+    if (caja) {
+      var e = (window.EVALUACIONES || []).filter(function (x) { return x.s >= Math.max(SEMANA, 1); })[0];
+      var set = function (sel, v) { var el = $(sel, caja); if (el) el.textContent = v; };
+      var g = $("[data-nexteval-gauge]", caja), p = 1;
+      if (!e) {
+        set("[data-nexteval-t]", "Sin evaluaciones pendientes");
+        set("[data-nexteval-m]", "El plan de Física ya terminó. ¡Buen cierre de ciclo!");
+        set("[data-nexteval-c]", "");
+        set("[data-nexteval-d]", "✓");
+        set("[data-nexteval-u]", "listo");
+      } else {
+        var dias = Math.round((fechaLocal(e.ini) - hoy0) / DIA);
+        set("[data-nexteval-t]", e.n);
+        set("[data-nexteval-m]", "Física · Semana " + e.s + " · " + e.f + " · " + e.pts.toFixed(1) + " pts");
+        if (e.s === SEMANA || dias <= 0) {
+          set("[data-nexteval-c]", "Esta semana · ¡prepárate!");
+          set("[data-nexteval-d]", "¡Ya!");
+          set("[data-nexteval-u]", "esta semana");
+          caja.classList.add("is-soon");
+        } else {
+          set("[data-nexteval-c]", dias <= 7 ? "La próxima semana" : "En " + Math.round(dias / 7) + " semanas");
+          set("[data-nexteval-d]", dias);
+          set("[data-nexteval-u]", dias === 1 ? "día" : "días");
+          p = clamp(1 - dias / 42, 0.06, 1);
+          caja.classList.toggle("is-soon", dias <= 7);
+        }
+        var mas = $("[data-nexteval-more]", caja);
+        var SLOT = { examen: "s1", act: "s2", tarea: "s3", integrador: "s4", part: "s5" };
+        var lista = window.EVALUACIONES || [];
+        var siguientes = lista.slice(lista.indexOf(e) + 1, lista.indexOf(e) + 3);
+        var cierre = SEMANAS[17];
+        if (mas) {
+          mas.innerHTML = '<li class="nexteval__k">Después</li>' + siguientes.map(function (x) {
+            return '<li style="--c:var(--' + (SLOT[x.k] || "s1") + ')"><i></i><span>' + esc(x.n) + "</span><small>Sem " + x.s + " · " + esc(x.f) + "</small></li>";
+          }).join("") + (siguientes.length < 2 && cierre ? '<li style="--c:#5fd38a"><i></i><span>Cierre del ciclo y calificaciones</span><small>Sem 18 · ' + esc(cierre.f) + "</small></li>" : "");
+        }
+      }
+      if (g) {
+        g.style.setProperty("--p", "0");
+        setTimeout(function () { g.style.setProperty("--p", p.toFixed(3)); }, REDUCE ? 0 : 500);
+      }
+    }
+
+    var minis = $$("[data-mini]");
+    if (minis.length) {
+      var TOT = window.TOTALES || {}, suma = 0, tot = 0, sugerida = null, empezadas = 0;
+      (window.MATERIAS || []).forEach(function (m) {
+        var T2 = TOT[m.s] || 1, n = Math.min(vistos(m.s).length, T2), pr = n / T2;
+        suma += n; tot += T2;
+        if (n > 0 && pr < 1) empezadas++;
+        var el = $('[data-mini="' + m.s + '"]');
+        if (el) {
+          var o = $(".mini__orb", el);
+          setTimeout(function () { o.style.setProperty("--p", pr.toFixed(3)); }, REDUCE ? 0 : 600);
+          $("[data-mini-p]", el).textContent = Math.round(pr * 100) + " %";
+          el.classList.toggle("is-done", pr >= 1);
+          el.setAttribute("aria-label", m.n + ": " + Math.round(pr * 100) + " % repasado");
+        }
+        var cand = { m: m, p: pr, n: n };
+        if (pr < 1 && (!sugerida || (n > 0 && (sugerida.n === 0 || pr < sugerida.p)))) sugerida = cand;
+      });
+      $$("[data-repaso-total]").forEach(function (el) { el.textContent = Math.round(suma / tot * 100) + " %"; });
+      var sug = $("[data-repaso-sug]");
+      if (sug) {
+        var enlace = sugerida ? '<a href="materias/' + sugerida.m.s + '.html" style="--acc:' + sugerida.m.col + '">' + esc(sugerida.m.n) + "</a>" : "";
+        if (!sugerida) sug.textContent = "¡Repasaste todo el temario del semestre! Excelente trabajo.";
+        else if (!suma) sug.innerHTML = "Aún no marcas temas. Empieza por " + enlace + " y toca el círculo de cada tema que repases.";
+        else sug.innerHTML = "Sugerencia: sigue con " + enlace + ", llevas " + Math.round(sugerida.p * 100) + " %." + (empezadas > 1 ? " Tienes " + empezadas + " materias en curso." : "");
+      }
+    }
+  })();
+
+  /* =========================================================== página del calendario */
+  (function () {
+    $$("[data-cierre]").forEach(function (el) {
+      var hoy0 = new Date();
+      hoy0.setHours(0, 0, 0, 0);
+      el.textContent = Math.max(0, Math.round((new Date(2026, 11, 18) - hoy0) / DIA));
+    });
+    $$(".evl").forEach(function (li) {
+      var a = $("a", li), s = +(a.getAttribute("href").split("sem-")[1] || 0);
+      li.classList.toggle("is-past", s < SEMANA);
+      li.classList.toggle("is-now", s === SEMANA);
+    });
+    $$("[data-ir-semana]").forEach(function (b) {
+      b.addEventListener("click", function () {
+        var w = $(".cal__w.is-now") || (SEMANA > 18 ? $("#sem-18") : $("#sem-1"));
+        if (history.replaceState && w) history.replaceState(null, "", "#" + w.id);
+        resaltarSemana(w);
+      });
+    });
+    $$('a[href^="#sem-"]').forEach(function (a) {
+      a.addEventListener("click", function (e) {
+        var w = document.getElementById(a.getAttribute("href").slice(1));
+        if (!w) return;
+        e.preventDefault();
+        if (history.replaceState) history.replaceState(null, "", a.getAttribute("href"));
+        resaltarSemana(w);
+        sonar("gota");
+      });
+    });
+  })();
+
+  /* =========================================================== páginas recientes (para la paleta) */
+  var ACTUAL = null;
+  (function () {
+    var cls = document.body.classList, h = null, t = "", c = "#ffc35c";
+    var rep = $("[data-repaso]");
+    if (rep) {
+      var sl = rep.getAttribute("data-repaso");
+      var M = (window.MATERIAS || []).filter(function (x) { return x.s === sl; })[0];
+      if (M) { h = "materias/" + sl + ".html"; t = M.n; c = M.col; }
+    } else if (cls.contains("cal-page")) { h = "calendario.html"; t = "Calendario del ciclo"; c = "#ff9a3d"; }
+    else if (cls.contains("team-page")) { h = "equipo.html"; t = "Equipo"; c = "#3b5bff"; }
+    else if (cls.contains("home")) { ACTUAL = "index.html"; }
+    if (!h) return;
+    ACTUAL = h;
+    var lista = [];
+    try { lista = JSON.parse(leer("recientes") || "[]"); } catch (e) { lista = []; }
+    lista = lista.filter(function (x) { return x && x.h !== h; });
+    lista.unshift({ h: h, t: t, c: c });
+    guardar("recientes", JSON.stringify(lista.slice(0, 6)));
+  })();
+
+  /* =========================================================== app instalable */
+  var instalar = null;
+  function pedirInstalar() {
+    if (instalar) {
+      instalar.prompt();
+      instalar.userChoice.then(function () { instalar = null; $$("[data-install]").forEach(function (b) { b.hidden = true; }); }, function () {});
+    } else if (/iphone|ipad|ipod/i.test(navigator.userAgent)) {
+      avisar("En iPhone: toca Compartir y luego «Agregar a pantalla de inicio».", { ms: 8000 });
+    } else {
+      avisar("Abre el menú del navegador y elige «Instalar» o «Agregar a la pantalla de inicio».", { ms: 8000 });
+    }
+  }
+  window.addEventListener("beforeinstallprompt", function (e) {
+    e.preventDefault();
+    instalar = e;
+    $$("[data-install]").forEach(function (b) { b.hidden = false; rebotar(b, "is-jelly"); });
+  });
+  $$("[data-install]").forEach(function (b) { b.addEventListener("click", pedirInstalar); });
+  window.addEventListener("appinstalled", function () {
+    instalar = null;
+    $$("[data-install]").forEach(function (b) { b.hidden = true; });
+    avisar("¡Listo! El Mapa del Semestre ya está instalado como app.", { tipo: "ok" });
+  });
+
+  /* =========================================================== sin conexión y actualizaciones */
+  if (WEB && "serviceWorker" in navigator) {
+    var recargar = false;
+    window.addEventListener("load", function () {
+      navigator.serviceWorker.register(BASE + "sw.js").then(function (reg) {
+        var ofrecer = function (w) {
+          avisar("Hay una versión nueva del sitio.", { accion: "Actualizar", ms: 15000, fn: function () { recargar = true; w.postMessage("actualizar"); } });
+        };
+        if (reg.waiting && navigator.serviceWorker.controller) ofrecer(reg.waiting);
+        reg.addEventListener("updatefound", function () {
+          var w = reg.installing;
+          if (!w) return;
+          w.addEventListener("statechange", function () {
+            if (w.state !== "installed") return;
+            if (navigator.serviceWorker.controller) ofrecer(w);
+            else if (leer("sin-conexion") !== "1") { guardar("sin-conexion", "1"); avisar("Listo: el sitio ya funciona sin internet en este dispositivo.", { tipo: "ok", ms: 5000 }); }
+          });
+        });
+      }).catch(function () { /* sin service worker */ });
+      navigator.serviceWorker.addEventListener("controllerchange", function () { if (recargar) location.reload(); });
+    });
+  }
+  window.addEventListener("offline", function () { avisar("Sin conexión. Las páginas que ya visitaste siguen disponibles."); });
+  window.addEventListener("online", function () { avisar("Conexión recuperada", { tipo: "ok" }); });
+
+  /* =========================================================== paleta de comandos (Ctrl K) */
+  var MAC = /mac|iphone|ipad/i.test(navigator.platform || navigator.userAgent);
+  $$("[data-kbd]").forEach(function (k) { k.textContent = MAC ? "⌘ K" : "Ctrl K"; });
+  $$(".foot__key kbd").forEach(function (k) { if (k.textContent === "Ctrl K") k.textContent = MAC ? "⌘ K" : "Ctrl K"; });
+  var pal = $("[data-pal]");
+  var abrirPal = function () {}, cerrarPal = function () {};
+  if (pal) (function () {
+    var q = $("#pal-q", pal), lista = $("#pal-lista", pal), cuentaP = $("[data-pal-count]", pal);
+    var plantilla = $("#pal-iconos", pal);
+    var ICON = {};
+    if (plantilla && plantilla.content) $$("[data-i]", plantilla.content).forEach(function (i) { ICON[i.getAttribute("data-i")] = i.innerHTML; });
+    var sinAcento = function (s) { return String(s).normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase(); };
+    var INDICE = window.INDICE || [];
     INDICE.forEach(function (it) { it.n = sinAcento(it.t + " " + it.m); it.nt = sinAcento(it.t); });
-    var sel = -1, resultados = [];
-    var resaltar = function (texto, terminos) {
+    var ICON_MATERIA = {};
+    $$(".side__item[data-li]").forEach(function (a) {
+      var m = (a.getAttribute("href") || "").match(/materias\/([a-z]+)\.html$/);
+      var svg = $(".side__ic svg", a);
+      if (m && svg) ICON_MATERIA[m[1]] = svg.outerHTML;
+    });
+    var semanaIr = clamp(SEMANA, 1, 18);
+    var ACCIONES = [
+      { t: "Ir al inicio", m: "Página", i: "house", h: "index.html", k: "inicio portada principal home" },
+      { t: "Calendario del ciclo", m: "Página", i: "calendar-days", h: "calendario.html", k: "semanas fechas examenes evaluaciones fisica" },
+      { t: "Ir a esta semana (" + semanaIr + ")", m: "Calendario", i: "crosshair", h: "calendario.html#sem-" + semanaIr, k: "hoy semana actual que toca" },
+      { t: "Equipo", m: "Página", i: "users", h: "equipo.html", k: "integrantes nombres companeros" },
+      { t: "Empezar sesión de estudio", m: "Temporizador", i: "timer", fn: function () { T.enfocar(); }, k: "pomodoro enfoque estudiar concentrar timer reloj" },
+      { t: "Abrir temporizador", m: "Temporizador", i: "clock-3", fn: function () { T.abrir(true); }, k: "pomodoro timer descanso tecla t" },
+      { t: function () { return calma ? "Activar efecto líquido" : "Pausar efecto líquido"; }, m: "Ajustes", i: "droplets", fn: function () { var b = $("[data-calma]"); if (b) b.click(); }, k: "agua animaciones movimiento calma rendimiento" },
+      { t: function () { return sonidoOn ? "Desactivar sonidos" : "Activar sonidos de agua"; }, m: "Ajustes", i: "volume-2", fn: function () { var b = $("[data-sonido]"); if (b) b.click(); }, k: "audio sonido silencio" },
+      { t: "Descargar calendario (.ics)", m: "Calendario", i: "download", h: "assets/calendario-2026b.ics", descarga: true, k: "google calendar outlook recordatorios agregar" },
+      { t: "Instalar como app", m: "Ajustes", i: "monitor-down", fn: pedirInstalar, k: "pwa instalar celular escritorio sin conexion offline" }
+    ];
+    if ($("[data-notas]")) ACCIONES.unshift({ t: "Mis notas de esta materia", m: "Materia", i: "notebook-pen", fn: function () { irPestana("notas"); }, k: "apuntes notas escribir" });
+    if ($("[data-print]")) ACCIONES.push({ t: "Imprimir temario", m: "Materia", i: "printer", fn: function () { setTimeout(function () { window.print(); }, 380); }, k: "imprimir pdf papel" });
+    if ($("[data-share]")) ACCIONES.push({ t: "Compartir esta página", m: "Página", i: "share-2", fn: compartir, k: "compartir enlace link whatsapp" });
+    ACCIONES.forEach(function (a) { a.accion = true; });
+    function titulo(a) { return typeof a.t === "function" ? a.t() : a.t; }
+
+    var opciones = [], sel = 0, abridor = null;
+    function resaltar(texto, terminos) {
+      if (!terminos.length) return esc(texto);
       var chars = Array.from(texto);
       var norm = chars.map(function (c) { return sinAcento(c) || c; });
       var marca = new Array(chars.length).fill(false);
-      var plano = norm.join("");
-      var mapa = [];
+      var plano = norm.join(""), mapa = [];
       norm.forEach(function (s, i) { for (var k = 0; k < s.length; k++) mapa.push(i); });
       terminos.forEach(function (t) {
         var desde = 0, pos;
@@ -1292,49 +1936,154 @@
         out += esc(c);
       });
       return out + (abierto ? "</mark>" : "");
+    }
+    function icono(o) {
+      if (o.i && ICON[o.i]) return '<span class="pal__ic">' + ICON[o.i] + "</span>";
+      if (o.k === "materia") { var slug = (o.h.match(/materias\/([a-z]+)\.html/) || [])[1]; if (ICON_MATERIA[slug]) return '<span class="pal__ic pal__ic--acc">' + ICON_MATERIA[slug] + "</span>"; }
+      if (o.k === "unidad" && ICON.layers) return '<span class="pal__ic pal__ic--acc">' + ICON.layers + "</span>";
+      return '<span class="pal__ic pal__ic--dot"><i></i></span>';
+    }
+    function fila(o, i, terminos) {
+      var dentro = icono(o) + '<span class="pal__tx"><b>' + resaltar(titulo(o), terminos) + "</b><small>" + esc(o.m) + "</small></span>" +
+        '<kbd class="pal__go" aria-hidden="true">↵</kbd>';
+      var attrs = ' class="pal__it" role="option" id="pal-o-' + i + '" data-o="' + i + '" aria-selected="false" style="--c:' + (o.c || "var(--gold)") + ";--i:" + Math.min(i, 12) + '"';
+      if (o.h) return "<a" + attrs + ' href="' + esc(BASE + o.h) + '"' + (o.descarga ? " download" : "") + ">" + dentro + "</a>";
+      return '<button type="button"' + attrs + ">" + dentro + "</button>";
+    }
+    function grupo(nombre, items, terminos) {
+      if (!items.length) return "";
+      var html = '<p class="pal__g">' + nombre + "</p>";
+      items.forEach(function (o) { opciones.push(o); html += fila(o, opciones.length - 1, terminos); });
+      return html;
+    }
+    function buscar() {
+      var texto = q.value.trim();
+      var terminos = sinAcento(texto).split(/\s+/).filter(Boolean);
+      opciones = [];
+      var html = "";
+      if (!terminos.length) {
+        var rec = [];
+        try { rec = JSON.parse(leer("recientes") || "[]"); } catch (e) { rec = []; }
+        rec = rec.filter(function (r) { return r && r.h && r.h !== ACTUAL; }).slice(0, 4).map(function (r) {
+          var esM = /^materias\//.test(r.h);
+          return { t: r.t, m: esM ? "Visitada hace poco · Materia" : "Visitada hace poco", h: r.h, c: r.c, k: esM ? "materia" : "", i: esM ? null : (r.h === "equipo.html" ? "users" : "calendar-days") };
+        });
+        html += grupo("Recientes", rec, []);
+        html += grupo("Acciones", ACCIONES.slice(0, 7), []);
+        html += grupo("Materias", INDICE.filter(function (it) { return it.k === "materia"; }), []);
+      } else {
+        var acc = ACCIONES.filter(function (a) {
+          var n = sinAcento(titulo(a) + " " + a.m + " " + a.k);
+          return terminos.every(function (t) { return n.indexOf(t) !== -1; });
+        }).slice(0, 4);
+        var res = INDICE.filter(function (it) { return terminos.every(function (t) { return it.n.indexOf(t) !== -1; }); })
+          .map(function (it) {
+            var p = 0;
+            if (it.nt.indexOf(terminos[0]) === 0) p -= 3;
+            else if (it.nt.indexOf(" " + terminos[0]) !== -1) p -= 1.5;
+            if (it.k === "materia") p -= 2.5;
+            if (it.k === "unidad") p -= 1;
+            p += it.t.length / 200;
+            return { it: it, p: p };
+          })
+          .sort(function (a, b) { return a.p - b.p; });
+        var total = res.length;
+        html += grupo("Temario", res.slice(0, 12).map(function (x) { return x.it; }), terminos);
+        html += grupo("Acciones", acc, terminos);
+        if (!opciones.length) html = '<div class="pal__empty"><b>Sin resultados para «' + esc(texto) + '»</b><span>Prueba con otra palabra, por ejemplo «vectores», «PSeInt» o «examen».</span></div>';
+        if (cuentaP) cuentaP.textContent = total ? total + (total === 1 ? " tema" : " temas") : "";
+      }
+      if (!terminos.length && cuentaP) cuentaP.textContent = INDICE.length + " temas en el índice";
+      lista.innerHTML = html;
+      sel = 0;
+      pintarSel(false);
+    }
+    function pintarSel(desplazar) {
+      $$(".pal__it", lista).forEach(function (el, i) { el.setAttribute("aria-selected", i === sel ? "true" : "false"); });
+      var el = $("#pal-o-" + sel, lista);
+      if (el) {
+        q.setAttribute("aria-activedescendant", el.id);
+        if (desplazar !== false) el.scrollIntoView({ block: "nearest" });
+      } else q.removeAttribute("aria-activedescendant");
+    }
+    function activar(i, nueva) {
+      var o = opciones[i];
+      if (!o) return;
+      var el = $("#pal-o-" + i, lista);
+      if (o.h) {
+        cerrarPal(true);
+        if (o.descarga) { el.click(); return; }
+        if (nueva) window.open(BASE + o.h, "_blank");
+        else location.href = BASE + o.h;
+        return;
+      }
+      cerrarPal(true);
+      if (o.fn) o.fn();
+    }
+    abrirPal = function () {
+      if (!pal.hidden) { q.select(); return; }
+      abridor = document.activeElement;
+      pal.hidden = false;
+      root.classList.add("pal-open");
+      q.value = "";
+      buscar();
+      requestAnimationFrame(function () { pal.classList.add("is-open"); });
+      q.focus();
+      sonar("abrir");
+      vibrar(8);
     };
-    var pintarRes = function () {
-      $$(".res", caja2).forEach(function (r, i) { r.setAttribute("aria-selected", i === sel ? "true" : "false"); });
-      var r = $$(".res", caja2)[sel];
-      if (r) { r.scrollIntoView({ block: "nearest" }); input.setAttribute("aria-activedescendant", r.id); }
+    cerrarPal = function (sinFoco) {
+      if (pal.hidden) return;
+      pal.classList.remove("is-open");
+      root.classList.remove("pal-open");
+      setTimeout(function () { if (!pal.classList.contains("is-open")) pal.hidden = true; }, 300);
+      if (!sinFoco && abridor && abridor.focus) abridor.focus({ preventScroll: true });
     };
-    var buscar = function () {
-      var q = input.value.trim();
-      if (q.length < 2) { caja2.hidden = true; input.setAttribute("aria-expanded", "false"); return; }
-      var terminos = sinAcento(q).split(/\s+/).filter(Boolean);
-      resultados = INDICE.filter(function (it) { return terminos.every(function (t) { return it.n.indexOf(t) !== -1; }); })
-        .map(function (it) {
-          var p = 0;
-          if (it.nt.indexOf(terminos[0]) === 0) p -= 3;
-          if (it.m === "Materia") p -= 2;
-          p += it.t.length / 200;
-          return { it: it, p: p };
-        })
-        .sort(function (a, b) { return a.p - b.p; }).slice(0, 8).map(function (x) { return x.it; });
-      sel = resultados.length ? 0 : -1;
-      caja2.innerHTML = resultados.length
-        ? resultados.map(function (it, i) {
-          return '<a class="res" role="option" id="res-' + i + '" href="' + esc(base + it.h) + '" style="--c:' + it.c + '"><i></i><span><b>' +
-            resaltar(it.t, terminos) + "</b><small>" + esc(it.m) + "</small></span></a>";
-        }).join("")
-        : '<p class="res-empty">No encontramos «' + esc(q) + '». Prueba con otra palabra.</p>';
-      caja2.hidden = false;
-      input.setAttribute("aria-expanded", "true");
-      pintarRes();
-    };
-    input.addEventListener("input", buscar);
-    input.addEventListener("focus", function () { if (input.value.trim().length >= 2) buscar(); });
-    input.addEventListener("keydown", function (e) {
-      if (e.key === "ArrowDown" && resultados.length) { e.preventDefault(); sel = (sel + 1) % resultados.length; pintarRes(); }
-      else if (e.key === "ArrowUp" && resultados.length) { e.preventDefault(); sel = (sel - 1 + resultados.length) % resultados.length; pintarRes(); }
-      else if (e.key === "Enter" && sel >= 0) { e.preventDefault(); var r = $$(".res", caja2)[sel]; if (r) { caja2.hidden = true; location.href = r.href; } }
-      else if (e.key === "Escape") { caja2.hidden = true; input.blur(); }
+    q.addEventListener("input", buscar);
+    q.addEventListener("keydown", function (e) {
+      if (e.key === "ArrowDown" || e.key === "ArrowUp") {
+        e.preventDefault();
+        if (!opciones.length) return;
+        sel = (sel + (e.key === "ArrowDown" ? 1 : -1) + opciones.length) % opciones.length;
+        pintarSel();
+      } else if (e.key === "Enter") {
+        e.preventDefault();
+        activar(sel, e.ctrlKey || e.metaKey);
+      } else if (e.key === "Escape") {
+        e.preventDefault();
+        cerrarPal();
+      } else if (e.key === "Tab") {
+        e.preventDefault();
+      }
     });
-    caja2.addEventListener("click", function (e) { if (e.target.closest(".res")) { caja2.hidden = true; input.blur(); } });
-    document.addEventListener("click", function (e) { if (!buscador.contains(e.target)) { caja2.hidden = true; input.setAttribute("aria-expanded", "false"); } });
-    document.addEventListener("keydown", function (e) {
-      var escribiendo = /input|textarea|select/i.test((document.activeElement || {}).tagName || "");
-      if (e.key === "/" && !escribiendo) { e.preventDefault(); input.focus(); }
+    lista.addEventListener("pointermove", function (e) {
+      var it = e.target.closest(".pal__it");
+      if (!it) return;
+      var i = +it.getAttribute("data-o");
+      if (i !== sel) { sel = i; pintarSel(false); }
     });
-  }
+    lista.addEventListener("click", function (e) {
+      var it = e.target.closest(".pal__it");
+      if (!it) return;
+      if (e.ctrlKey || e.metaKey || e.shiftKey || e.button === 1) return;
+      e.preventDefault();
+      activar(+it.getAttribute("data-o"));
+    });
+    $$("[data-pal-close]", pal).forEach(function (s) { s.addEventListener("click", function () { cerrarPal(); }); });
+    $$("[data-pal-open]").forEach(function (b) { b.addEventListener("click", function () { abrirPal(); }); });
+  })();
+
+  /* =========================================================== atajos de teclado */
+  document.addEventListener("keydown", function (e) {
+    var a = document.activeElement || {};
+    var escribiendo = /input|textarea|select/i.test(a.tagName || "") || a.isContentEditable;
+    if ((e.ctrlKey || e.metaKey) && !e.altKey && (e.key === "k" || e.key === "K")) {
+      e.preventDefault();
+      if (pal && !pal.hidden) cerrarPal(); else abrirPal();
+      return;
+    }
+    if (escribiendo || e.ctrlKey || e.metaKey || e.altKey) return;
+    if (e.key === "/") { e.preventDefault(); abrirPal(); }
+    else if (e.key === "t" || e.key === "T") { e.preventDefault(); T.abrir(); }
+  });
 })();

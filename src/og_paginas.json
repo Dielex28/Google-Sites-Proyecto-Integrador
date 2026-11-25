@@ -1,0 +1,106 @@
+[
+ {
+  "eyebrow": "Escuela Politécnica de Guadalajara · TSIN1AM",
+  "titulo": "El mapa de nuestro primer semestre",
+  "sub": "10 materias · 230 temas · repaso, notas y calendario",
+  "foto": "inicio",
+  "color": "#ff9a3d",
+  "nombre": "inicio"
+ },
+ {
+  "eyebrow": "Ciclo 2026B · 18 semanas",
+  "titulo": "Calendario del ciclo",
+  "sub": "Temas, evaluaciones y recordatorios semana a semana",
+  "foto": "fisica",
+  "color": "#ff9a3d",
+  "nombre": "calendario"
+ },
+ {
+  "eyebrow": "Grupo TSIN1AM",
+  "titulo": "Nuestro equipo",
+  "sub": "Seis integrantes · Tecnólogo en Sistemas Informáticos",
+  "foto": "equipo",
+  "color": "#3b5bff",
+  "nombre": "equipo"
+ },
+ {
+  "eyebrow": "Formación integral",
+  "titulo": "Tutoría de Ingreso I",
+  "sub": "4 unidades · 47 temas",
+  "foto": "tutoria",
+  "color": "#E8962E",
+  "nombre": "tutoria"
+ },
+ {
+  "eyebrow": "Tecnología",
+  "titulo": "Tecnologías de la Información",
+  "sub": "3 ejes temáticos · 21 temas",
+  "foto": "tecnologias",
+  "color": "#3B6FF5",
+  "nombre": "tecnologias"
+ },
+ {
+  "eyebrow": "Formación integral",
+  "titulo": "Sexualidad y Perspectiva de Género",
+  "sub": "4 ejes temáticos · 16 temas",
+  "foto": "sexualidad",
+  "color": "#E0517A",
+  "nombre": "sexualidad"
+ },
+ {
+  "eyebrow": "Tecnología",
+  "titulo": "Programación Básica",
+  "sub": "4 ejes temáticos · 29 temas",
+  "foto": "programacion",
+  "color": "#17A88A",
+  "nombre": "programacion"
+ },
+ {
+  "eyebrow": "Lenguaje y comunicación",
+  "titulo": "Inglés Básico",
+  "sub": "3 ejes temáticos · 18 temas",
+  "foto": "ingles",
+  "color": "#D9473B",
+  "nombre": "ingles"
+ },
+ {
+  "eyebrow": "Formación integral",
+  "titulo": "Historia e Identidad Universitaria",
+  "sub": "4 unidades · 17 temas",
+  "foto": "historia",
+  "color": "#B07A36",
+  "nombre": "historia"
+ },
+ {
+  "eyebrow": "Ciencias exactas",
+  "titulo": "Habilidad Numérica",
+  "sub": "4 ejes temáticos · 17 temas",
+  "foto": "numerica",
+  "color": "#2E9E57",
+  "nombre": "numerica"
+ },
+ {
+  "eyebrow": "Lenguaje y comunicación",
+  "titulo": "Habilidad de Lectoescritura",
+  "sub": "4 ejes temáticos · 25 temas",
+  "foto": "lectoescritura",
+  "color": "#5B5FD8",
+  "nombre": "lectoescritura"
+ },
+ {
+  "eyebrow": "Ciencias exactas",
+  "titulo": "Física y sus Aplicaciones",
+  "sub": "4 unidades · 23 temas",
+  "foto": "fisica",
+  "color": "#8B4FF0",
+  "nombre": "fisica"
+ },
+ {
+  "eyebrow": "Formación integral",
+  "titulo": "Educación Socioemocional",
+  "sub": "5 ejes temáticos · 17 temas",
+  "foto": "socioemocional",
+  "color": "#1C97C9",
+  "nombre": "socioemocional"
+ }
+]
