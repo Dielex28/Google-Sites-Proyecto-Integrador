@@ -318,6 +318,8 @@
     var lista = window.EQUIPO;
     if (!Array.isArray(lista) || !lista.length) return;
     caja.innerHTML = lista.map(tarjeta).join("");
+    var n = lista.length;
+    caja.style.setProperty("--n-row", n <= 5 ? n : n === 6 ? 3 : n <= 8 ? 4 : 5);
     $$(".tcard", caja).forEach(function (t) {
       var girar = function () {
         var on = !t.classList.contains("is-flipped");

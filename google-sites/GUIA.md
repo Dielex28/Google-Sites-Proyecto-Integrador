@@ -10,7 +10,7 @@ google-sites/
 ├── codigos/                    ← 15 bloques HTML para "Insertar código"
 │   ├── inicio/                 (portada, materias, semana actual, sobre el proyecto)
 │   ├── materias/               (uno por materia, con pestañas por unidad)
-│   └── equipo/                 (tarjetas de los 8 integrantes)
+│   └── equipo/                 (tarjetas de los integrantes)
 └── imagenes/
     ├── encabezados/            ← fotos para el encabezado de cada página
     ├── logo-1A.png             ← logotipo cuadrado (también sirve como ícono)
@@ -51,7 +51,7 @@ página *Materias* (quedan como subpáginas).
 | ↳ Habilidad de Lectoescritura | `08-lectoescritura.jpg` | `materias/08-lectoescritura.html` | 630 px |
 | ↳ Física y sus Aplicaciones | `09-fisica.jpg` | `materias/09-fisica.html` | 1330 px |
 | ↳ Educación Socioemocional | `10-socioemocional.jpg` | `materias/10-socioemocional.html` | 630 px |
-| **Equipo** | `11-equipo.jpg` | `equipo/equipo.html` | 740 px |
+| **Equipo** | `11-equipo.jpg` | `equipo/equipo.html` | 410 px |
 
 **Encabezado de cada página.** Pasa el cursor sobre el encabezado → **Cambiar
 imagen** → **Subir** y elige la foto de `imagenes/encabezados/`. En **Tipo de
@@ -82,16 +82,19 @@ bote de basura, o elige el tipo **Solo título**.
 ## 4. Datos del equipo
 
 Antes de pegar `equipo/equipo.html`, ábrelo y busca casi al final la lista
-`window.EQUIPO = [`. Hay **8 renglones**, uno por integrante:
+`window.EQUIPO = [`. Hay un renglón por integrante y los nombres ya están puestos
+(David, Alan, Armando, Isaac y Diego). Completa el resto de los datos, por ejemplo:
 
 ```js
-{ nombre: "Ana López Martínez", codigo: "226012345", correo: "ana.lopez@alumnos.udg.mx", rol: "Diseño y contenido", frase: "Me gusta programar videojuegos", foto: "" },
+{ nombre: "David López Martínez", codigo: "226012345", correo: "david.lopez@alumnos.udg.mx", rol: "Diseño y contenido", frase: "Me gusta programar videojuegos", foto: "" },
 ```
 
 - Escribe los datos **entre las comillas**. Lo que dejes vacío (`""`) aparece como un
   espacio punteado "Por completar".
 - `foto` necesita un enlace público a una imagen cuadrada. Si no tienen uno, déjalo
   vacío: la tarjeta muestra las iniciales con el color del integrante.
+- Para agregar a alguien, copia un renglón completo (de `{` a `},`) y cámbiale los
+  datos. Las tarjetas se acomodan solas para que ninguna quede sola en una fila.
 - ¿Ya lo pegaste? Selecciona el bloque en Google Sites → ícono de lápiz
   (**Editar código**) → cambia los datos → **Siguiente** → **Insertar**.
 

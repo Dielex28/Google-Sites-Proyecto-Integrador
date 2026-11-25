@@ -620,8 +620,9 @@ a.t-m:hover { text-decoration: underline; text-underline-offset: 3px; }
 .facts dd { margin: 4px 0 0; font-weight: 600; }
 
 /* equipo */
-.team { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 18px; }
-.tcard { height: 310px; perspective: 1200px; cursor: pointer; border-radius: var(--r-lg); outline: none; }
+/* tarjetas centradas: --n-row = tarjetas por fila en pantallas anchas (lo calcula el sitio según el número de integrantes) */
+.team { --per-row: var(--n-row, 4); display: flex; flex-wrap: wrap; justify-content: center; gap: 18px; }
+.tcard { flex: 0 0 calc((100% - (var(--per-row) - 1) * 18px) / var(--per-row)); min-width: 0; height: 310px; perspective: 1200px; cursor: pointer; border-radius: var(--r-lg); outline: none; }
 .tcard:focus-visible { outline: 2px solid var(--brand); outline-offset: 4px; }
 .tcard__in { position: relative; height: 100%; transform-style: preserve-3d; transition: transform 0.8s var(--ease); }
 .tcard.is-flipped .tcard__in { transform: rotateY(180deg); }
@@ -989,7 +990,7 @@ a.t-m:hover { text-decoration: underline; text-underline-offset: 3px; }
 /* ------------------------------------------------------------- adaptable */
 @media (max-width: 1080px) {
   .mgrid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-  .team { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .team { --per-row: 3; }
   .foot__in { grid-template-columns: 1fr 1fr; }
   .foot__brand { grid-column: 1 / -1; }
 }
@@ -1006,6 +1007,7 @@ a.t-m:hover { text-decoration: underline; text-underline-offset: 3px; }
   .about__badge { right: 12px; }
 }
 @media (max-width: 760px) {
+  .team { --per-row: 2; }
   .indic, .utiles { grid-template-columns: minmax(0, 1fr); }
   .utiles { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .tline { grid-template-columns: minmax(0, 1fr); padding-left: 2px; }
@@ -1036,7 +1038,7 @@ a.t-m:hover { text-decoration: underline; text-underline-offset: 3px; }
   .unit__head { align-items: flex-start; }
 }
 @media (max-width: 480px) {
-  .team { grid-template-columns: minmax(0, 1fr); }
+  .team { --per-row: 1; }
   .tcard { height: 290px; }
   .brand__txt small { display: none; }
 }

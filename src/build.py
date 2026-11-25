@@ -85,6 +85,20 @@ def fmt(x):
 TOTAL_TEMAS = sum(total_temas(m) for m in MATERIAS)
 FISICA = next(m for m in MATERIAS if m["slug"] == "fisica")
 
+# Los integrantes se leen de assets/js/equipo.js (un renglón por persona)
+NOMBRES_EQUIPO = re.findall(r'nombre:\s*"([^"]*)"', (RAIZ / "assets/js/equipo.js").read_text(encoding="utf-8"))
+N_EQUIPO = len(NOMBRES_EQUIPO)
+PALABRAS = {1: "Un", 2: "Dos", 3: "Tres", 4: "Cuatro", 5: "Cinco", 6: "Seis", 7: "Siete", 8: "Ocho", 9: "Nueve", 10: "Diez"}
+
+
+def por_fila(n):
+    """Tarjetas por fila en pantallas anchas, para que ninguna quede sola."""
+    return max(1, n) if n <= 5 else 3 if n == 6 else 4 if n <= 8 else 5
+
+
+def integrantes_texto(n=N_EQUIPO):
+    return f'{PALABRAS.get(n, n)} {"integrante" if n == 1 else "integrantes"}'
+
 
 # ---------------------------------------------------------------- piezas comunes
 def nav(p, activo):
@@ -234,7 +248,7 @@ def hero_inicio(embed):
         <div class="stat"><span class="stat__n" data-count="{len(MATERIAS)}">{len(MATERIAS)}</span><span class="stat__l">materias</span></div>
         <div class="stat"><span class="stat__n" data-count="{TOTAL_TEMAS}">{TOTAL_TEMAS}</span><span class="stat__l">temas y subtemas</span></div>
         <div class="stat"><span class="stat__n" data-count="18">18</span><span class="stat__l">semanas</span></div>
-        <div class="stat"><span class="stat__n" data-count="8">8</span><span class="stat__l">integrantes</span></div>
+        <div class="stat"><span class="stat__n" data-count="{N_EQUIPO}">{N_EQUIPO}</span><span class="stat__l">integrantes</span></div>
       </div>
     </div>
     {terminal(embed)}
@@ -389,13 +403,14 @@ def seccion_proyecto(embed):
 def tarjetas_equipo_estaticas():
     """Tarjetas de respaldo; main.js las reemplaza con los datos de equipo.js."""
     out = []
-    for i in range(1, 9):
+    for i, nombre in enumerate(NOMBRES_EQUIPO, 1):
+        avatar = esc(nombre.strip()[:1].upper()) if nombre.strip() else icon("user")
         out.append(f"""
 <article class="tcard" tabindex="0">
   <div class="tcard__in"><div class="tcard__face tcard__front">
-    <div class="tcard__avatar">{icon("user")}</div>
+    <div class="tcard__avatar">{avatar}</div>
     <span class="tcard__num">Integrante {i:02d}</span>
-    <h3 class="tcard__name is-empty">Nombre del integrante</h3>
+    <h3 class="tcard__name{"" if nombre.strip() else " is-empty"}">{esc(nombre.strip() or "Nombre del integrante")}</h3>
     <p class="tcard__rol is-empty">Rol en el equipo</p>
   </div></div>
 </article>""")
@@ -416,7 +431,7 @@ def seccion_equipo(pagina=False):
     return f"""
 <section class="section" id="equipo">
   <div class="wrap">{cab}
-    <div class="team" data-equipo>{tarjetas_equipo_estaticas()}</div>
+    <div class="team" data-equipo style="--n-row:{por_fila(N_EQUIPO)}">{tarjetas_equipo_estaticas()}</div>
   </div>
 </section>"""
 
@@ -702,9 +717,9 @@ def pagina_equipo():
     <nav class="crumbs" aria-label="Ruta de navegación"><a href="index.html">Inicio</a><span aria-hidden="true">/</span><span aria-current="page">Equipo</span></nav>
     <p class="mhero__tag"><span class="mhero__ic">{icon("users")}</span>Equipo del proyecto</p>
     <h1 class="mhero__title">Nuestro equipo</h1>
-    <p class="mhero__lead">Ocho integrantes del grupo {SITIO["grupo"]}, turno {SITIO["turno"].lower()}, del {SITIO["carrera"]}. Pasa el cursor o toca cada tarjeta para ver sus datos.</p>
+    <p class="mhero__lead">{integrantes_texto()} del grupo {SITIO["grupo"]}, turno {SITIO["turno"].lower()}, del {SITIO["carrera"]}. Pasa el cursor o toca cada tarjeta para ver sus datos.</p>
     <ul class="mhero__facts">
-      <li>{icon("users", "ic ic--sm")}<span><b>8</b> integrantes</span></li>
+      <li>{icon("users", "ic ic--sm")}<span><b>{N_EQUIPO}</b> integrantes</span></li>
       <li>{icon("hash", "ic ic--sm")}<span>Grupo <b>{SITIO["clave"]}</b></span></li>
       <li>{icon("calendar-days", "ic ic--sm")}<span>Ciclo <b>{SITIO["ciclo"]}</b></span></li>
     </ul>

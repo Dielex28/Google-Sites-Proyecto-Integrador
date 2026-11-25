@@ -4,7 +4,7 @@ Proyecto integrador del grupo **1A, turno matutino (TSIN1AM)** del
 **Tecnólogo en Sistemas Informáticos**, Escuela Politécnica de Guadalajara, ciclo 2026B.
 
 Es un sitio con el temario de las 10 materias del primer semestre, el calendario del
-ciclo y un espacio para los 8 integrantes del equipo. Viene en dos versiones:
+ciclo y las tarjetas de los integrantes del equipo: David, Alan, Armando, Isaac y Diego. Viene en dos versiones:
 
 | Versión | Para qué sirve | Dónde está |
 |---|---|---|
