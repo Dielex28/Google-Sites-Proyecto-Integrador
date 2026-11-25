@@ -4,10 +4,13 @@ Google Sites no permite que un programa cree el sitio por ustedes: hay que armar
 desde la cuenta de Google de un integrante. Esta carpeta trae todo listo para
 **copiar y pegar**. Con esta guía el sitio queda montado en unos 30 o 40 minutos.
 
-Los bloques tienen estilo *liquid glass*: cada uno trae su propio fondo líquido que se
-mueve y reacciona al cursor, paneles de vidrio con desenfoque en tiempo real e
-indicadores que se deslizan como gotas. Por eso se ven bien sobre cualquier tema de
-Google Sites: son paneles oscuros independientes.
+Los bloques tienen estilo *liquid glass*: cada uno trae su propio fondo de agua que
+hace ondas al mover el cursor o tocar, paneles de vidrio con desenfoque y reflejos en
+tiempo real, e indicadores que se deslizan como gotas. Por eso se ven bien sobre
+cualquier tema de Google Sites: son paneles oscuros independientes.
+
+En los bloques de materias cada tema tiene un círculo para **marcarlo como repasado**;
+el avance se guarda en el navegador de quien visita el sitio.
 
 ```
 google-sites/
@@ -48,17 +51,17 @@ página *Materias* (quedan como subpáginas).
 |---|---|---|---|
 | **Inicio** | *(sin encabezado, ver nota)* | `inicio/1-portada.html` · `inicio/2-materias.html` · `inicio/3-semana.html` · `inicio/4-proyecto.html` | 590 · 1650 · 590 · 510 px |
 | **Materias** | `00-inicio.jpg` | `inicio/2-materias.html` | 1650 px |
-| ↳ Tutoría de Ingreso I | `01-tutoria.jpg` | `materias/01-tutoria.html` | 1690 px |
-| ↳ Tecnologías de la Información | `02-tecnologias.jpg` | `materias/02-tecnologias.html` | 940 px |
-| ↳ Sexualidad y Perspectiva de Género | `03-sexualidad.jpg` | `materias/03-sexualidad.html` | 870 px |
-| ↳ Algoritmos y Programación | `04-algoritmos.jpg` | `materias/04-algoritmos.html` | 1010 px |
-| ↳ Inglés Básico | `05-ingles.jpg` | `materias/05-ingles.html` | 840 px |
-| ↳ Historia e Identidad Universitaria | `06-historia.jpg` | `materias/06-historia.html` | 900 px |
-| ↳ Habilidad Numérica | `07-numerica.jpg` | `materias/07-numerica.html` | 750 px |
-| ↳ Habilidad de Lectoescritura | `08-lectoescritura.jpg` | `materias/08-lectoescritura.html` | 750 px |
-| ↳ Física y sus Aplicaciones | `09-fisica.jpg` | `materias/09-fisica.html` | 1400 px |
-| ↳ Educación Socioemocional | `10-socioemocional.jpg` | `materias/10-socioemocional.html` | 750 px |
-| **Equipo** | `11-equipo.jpg` | `equipo/equipo.html` | 360 px |
+| ↳ Tutoría de Ingreso I | `01-tutoria.jpg` | `materias/01-tutoria.html` | 1680 px |
+| ↳ Tecnologías de la Información | `02-tecnologias.jpg` | `materias/02-tecnologias.html` | 930 px |
+| ↳ Sexualidad y Perspectiva de Género | `03-sexualidad.jpg` | `materias/03-sexualidad.html` | 860 px |
+| ↳ Programación Básica | `04-programacion.jpg` | `materias/04-programacion.html` | 1010 px |
+| ↳ Inglés Básico | `05-ingles.jpg` | `materias/05-ingles.html` | 860 px |
+| ↳ Historia e Identidad Universitaria | `06-historia.jpg` | `materias/06-historia.html` | 890 px |
+| ↳ Habilidad Numérica | `07-numerica.jpg` | `materias/07-numerica.html` | 780 px |
+| ↳ Habilidad de Lectoescritura | `08-lectoescritura.jpg` | `materias/08-lectoescritura.html` | 780 px |
+| ↳ Física y sus Aplicaciones | `09-fisica.jpg` | `materias/09-fisica.html` | 1430 px |
+| ↳ Educación Socioemocional | `10-socioemocional.jpg` | `materias/10-socioemocional.html` | 780 px |
+| **Equipo** | `11-equipo.jpg` | `equipo/equipo.html` | 670 px |
 
 **Encabezado de cada página.** Pasa el cursor sobre el encabezado → **Cambiar
 imagen** → **Subir** y elige la foto de `imagenes/encabezados/`. En **Tipo de
@@ -90,7 +93,7 @@ bote de basura, o elige el tipo **Solo título**.
 
 Antes de pegar `equipo/equipo.html`, ábrelo y busca casi al final la lista
 `window.EQUIPO = [`. Hay un renglón por integrante y los nombres ya están puestos
-(David, Alan, Armando, Isaac y Diego). Completa el resto de los datos, por ejemplo:
+(David, Alan, Armando, Isaac, Diego y Uziel). Completa el resto de los datos, por ejemplo:
 
 ```js
 { nombre: "David López Martínez", codigo: "226012345", correo: "david.lopez@alumnos.udg.mx", rol: "Diseño y contenido", frase: "Me gusta programar videojuegos", foto: "" },

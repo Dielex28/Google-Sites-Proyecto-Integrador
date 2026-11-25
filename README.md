@@ -4,32 +4,52 @@ Proyecto integrador del grupo **1A, turno matutino (TSIN1AM)** del
 **Tecnólogo en Sistemas Informáticos**, Escuela Politécnica de Guadalajara, ciclo 2026B.
 
 Es un sitio con el temario de las 10 materias del primer semestre, el calendario del
-ciclo y las tarjetas de los integrantes del equipo: David, Alan, Armando, Isaac y Diego. Viene en dos versiones:
+ciclo y las tarjetas de los integrantes del equipo: David, Alan, Armando, Isaac, Diego y Uziel. Viene en dos versiones:
 
 | Versión | Para qué sirve | Dónde está |
 |---|---|---|
 | **Kit para Google Sites** | Armar el sitio en Google Sites copiando y pegando bloques ya diseñados | [`google-sites/`](google-sites/) · empieza por [`google-sites/GUIA.md`](google-sites/GUIA.md) |
 | **Sitio web completo** | Verlo en el navegador o publicarlo con GitHub Pages; tiene barra lateral, buscador de temas y pestañas por unidad | [`index.html`](index.html), [`equipo.html`](equipo.html), [`materias/`](materias/) |
 
-## Diseño: liquid glass
+## Diseño: liquid glass fluid
 
-- **Fondo líquido vivo**: la foto de cada materia con una capa de color fluido (WebGL)
-  que se agita al mover el cursor y hace ondas al hacer clic.
-- **Vidrio con desenfoque en tiempo real**: paneles esmerilados con borde de luz y un
-  brillo que sigue al cursor.
-- **Refracción en los bordes** de botones e indicadores (Chrome y Edge).
-- **Indicadores que se comportan como gotas**: el marcador del menú, las pestañas y los
-  filtros se deslizan y se estiran con física de resorte.
-- **Aparición líquida**: las secciones pasan de borrosas a nítidas al llegar a ellas.
-- Interruptor **Efecto líquido** en la barra lateral para pausar el movimiento; también
+- **Agua de verdad**: el fondo es una simulación de ondas (WebGL2). La foto de cada
+  materia se ve a través del agua: el cursor deja una estela, cada clic abre ondas que
+  se propagan y rebotan, caen gotas sueltas y hay destellos de luz (cáusticas). Al
+  desplazarte el agua también se mueve.
+- **Vidrio real**: desenfoque en tiempo real; el borde brillante y el reflejo de cada
+  panel giran hacia la luz (el cursor; en el celular, la luz se mueve al desplazarte),
+  con un leve arcoíris en el borde como el cristal; un destello cruza el panel al pasar.
+- **Refracción y dispersión** en los bordes de indicadores, botones y la gota del
+  cursor (Chrome y Edge).
+- **Gota de cristal** que sigue al cursor, se estira con la velocidad y crece sobre lo
+  que se puede tocar.
+- **Indicadores que se comportan como gotas**: menú, pestañas y filtros se deslizan, se
+  estiran y se aplastan con física de resorte.
+- **Micro-animaciones en cada interacción**: botones magnéticos, ondas al tocar,
+  tarjetas que se inclinan y cambian de forma, casillas que se llenan de líquido,
+  barras que crecen, leyendas que resaltan su parte de la gráfica, y más.
+- **Aparición líquida**: al cargar, los paneles se condensan como gotas; al bajar, las
+  secciones pasan de borrosas a nítidas.
+- **Calidad automática**: si el equipo no da el ritmo, el agua baja su resolución.
+  Interruptor **Efecto líquido** en la barra lateral para pausar el movimiento; también
   respeta la opción del sistema de reducir movimiento.
+
+## Funciones
+
+- **Modo repaso**: cada tema tiene un círculo para marcarlo como repasado. La esfera de
+  la materia se llena con el avance, cada unidad muestra su conteo y la portada, las
+  tarjetas y la barra lateral muestran el progreso. Se guarda en el navegador.
+- **Buscador de temas** (tecla `/`): lleva directo al tema y lo resalta.
+- **Semana del ciclo** calculada con la fecha de hoy y lo que toca en Física.
+- **Impresión**: al imprimir una materia sale todo el temario en papel blanco.
 
 ## Materias incluidas
 
 1. Tutoría de Ingreso I
 2. Tecnologías de la Información (Prof. Tapia Sandoval D.)
 3. Sexualidad y Perspectiva de Género
-4. Algoritmos y Programación
+4. Programación Básica
 5. Inglés Básico
 6. Historia e Identidad Universitaria
 7. Habilidad Numérica
@@ -60,13 +80,14 @@ librerías extra).
 index.html, equipo.html, materias/   páginas generadas del sitio web
 assets/css/estilos.css               diseño liquid glass (adaptable a celular)
 assets/js/main.js                    fondo líquido, animaciones e interacción
-assets/js/datos.js                   calendario e índice del buscador (lo genera build.py)
+assets/js/datos.js                   calendario, totales e índice del buscador (lo genera build.py)
+assets/js/fondos/                    fotos de fondo incrustadas para el agua WebGL (procesar_imagenes.py)
 assets/js/equipo.js                  datos del equipo (editable)
 assets/img/fotos/                    fotografías por materia
 google-sites/                        kit para Google Sites (guía, bloques, imágenes)
 src/contenido.py                     temario de todas las materias
 src/build.py                         generador del sitio y de los bloques
-src/procesar_imagenes.py             recorte de fotos y encabezados para Google Sites
+src/procesar_imagenes.py             fotos, fondos del agua y encabezados para Google Sites
 src/iconos/                          íconos SVG (Lucide, licencia ISC)
 ```
 

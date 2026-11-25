@@ -188,28 +188,50 @@ def indice_busqueda():
 
 
 # ---------------------------------------------------------------- piezas comunes
+def _mapa(id_):
+    return (f'<feImage data-lgmap href="" x="0" y="0" width="100%" height="100%" '
+            f'preserveAspectRatio="none" result="{id_}"/>')
+
+
+def _canal(escala, matriz, nombre):
+    return (f'<feDisplacementMap in="SourceGraphic" in2="map" scale="{escala}" xChannelSelector="R" yChannelSelector="G" result="d{nombre}"/>'
+            f'<feColorMatrix in="d{nombre}" type="matrix" values="{matriz}" result="{nombre}"/>')
+
+
+# Filtros SVG de refracción (los usa backdrop-filter en Chromium; main.js genera el mapa).
+#   #lg   -> refracción de borde para vidrio grande
+#   #lg-c -> refracción con dispersión cromática (lentes, gota del cursor)
 SVG_DEFS = (
     '<svg class="defs" width="0" height="0" aria-hidden="true" focusable="false">'
     '<filter id="lg" x="0" y="0" width="100%" height="100%" color-interpolation-filters="sRGB">'
-    '<feImage id="lg-map" href="" x="0" y="0" width="100%" height="100%" preserveAspectRatio="none" result="map"/>'
+    + _mapa("map") +
     '<feDisplacementMap in="SourceGraphic" in2="map" scale="34" xChannelSelector="R" yChannelSelector="G"/>'
+    "</filter>"
+    '<filter id="lg-c" x="0" y="0" width="100%" height="100%" color-interpolation-filters="sRGB">'
+    + _mapa("map")
+    + _canal(46, "1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0", "r")
+    + _canal(38, "0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 1 0", "g")
+    + _canal(30, "0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 1 0", "b")
+    + '<feBlend in="r" in2="g" mode="screen" result="rg"/><feBlend in="rg" in2="b" mode="screen"/>'
     "</filter></svg>"
 )
 
 
 def fondo(foto, colores, p=""):
-    """Capa fija detrás del vidrio: foto + líquido WebGL + tinte + grano."""
+    """Capa fija detrás del vidrio: foto + agua WebGL + tinte + grano."""
     img = f'<img class="bg__photo" src="{p}assets/img/fotos/{foto}.jpg" alt="" decoding="async">' if foto else ""
     clase = "bg bg--photo" if foto else "bg"
+    textura = f'\n<script src="{p}assets/js/fondos/{foto}.js" defer></script>' if foto and (RAIZ / f"assets/js/fondos/{foto}.js").exists() else ""
     return (
         f'<div class="{clase}" aria-hidden="true">{img}'
         f'<canvas class="bg__liquid" data-liquid data-colors="{",".join(colores)}"></canvas>'
         '<div class="bg__blobs"><i></i><i></i><i></i></div>'
         '<div class="bg__tint"></div><div class="bg__grain"></div></div>'
+        f"{textura}"
     )
 
 
-def avatares(p="", limite=5):
+def avatares(p="", limite=6):
     caras = "".join(
         f'<span class="av" style="--c:{COLORES_EQUIPO[i % len(COLORES_EQUIPO)]}" title="{esc(n)}">{esc(iniciales(n) or "?")}</span>'
         for i, n in enumerate(NOMBRES_EQUIPO[:limite])
@@ -228,7 +250,8 @@ def sidebar(p, activo):
         actual = ' aria-current="page"' if clave == activo else ""
         estilo = f' style="--acc:{color}"' if color else ""
         clase = "side__item acc" + (" is-active" if clave == activo else "")
-        punto = f'<span class="side__ic">{icon(ico)}</span>'
+        prog = f' data-prog="{clave}"' if color else ""
+        punto = f'<span class="side__ic"{prog}>{icon(ico)}</span>'
         return f'<a class="{clase}"{estilo} href="{href}" data-li{actual}>{punto}<span class="side__tx">{esc(texto)}</span></a>'
 
     gen = "".join(item(*g) for g in generales)
@@ -303,7 +326,7 @@ def footer():
   <p>{SITIO["escuela"]} · {SITIO["carrera"]} · Grupo {SITIO["grupo"]}, turno {SITIO["turno"].lower()} · Ciclo {SITIO["ciclo"]}</p>
   <p>Proyecto académico elaborado por estudiantes del grupo {SITIO["grupo"]}. No es un sitio oficial de la institución. Fotografías: Unsplash · Íconos: Lucide</p>
 </footer>
-<a class="totop iconbtn glass-pill" href="#top" aria-label="Volver arriba" data-totop>{icon("arrow-up")}</a>"""
+<a class="totop iconbtn glass-pill" href="#top" aria-label="Volver arriba" data-totop><svg class="totop__ring" viewBox="0 0 48 48" aria-hidden="true"><circle cx="24" cy="24" r="22" pathLength="100"/></svg>{icon("arrow-up")}</a>"""
 
 
 def documento(titulo, descripcion, cuerpo, p="", clase=""):
@@ -315,6 +338,12 @@ def documento(titulo, descripcion, cuerpo, p="", clase=""):
 <title>{esc(titulo)}</title>
 <meta name="description" content="{esc(descripcion)}">
 <meta name="theme-color" content="#06080f">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="es_MX">
+<meta property="og:site_name" content="{esc(SITIO["titulo"])}">
+<meta property="og:title" content="{esc(titulo)}">
+<meta property="og:description" content="{esc(descripcion)}">
+<meta name="twitter:card" content="summary">
 <link rel="icon" href="{p}assets/img/favicon.svg" type="image/svg+xml">
 {FUENTES}
 <link rel="stylesheet" href="{p}assets/css/estilos.css">
@@ -412,7 +441,7 @@ def tarjetas_estadisticas(p, embed):
   </article>
   <article class="glass stat span-3" data-reveal data-jelly>
     <p class="stat__k">Temas y subtemas</p>
-    <p class="stat__v"><span data-count="{TOTAL_TEMAS}">{TOTAL_TEMAS}</span></p>
+    <p class="stat__v"><span data-count="{TOTAL_TEMAS}">{TOTAL_TEMAS}</span>{"" if embed else '<small data-repaso-global>por repasar</small>'}</p>
     <div class="bars" role="group" aria-label="Temas por materia">{barras}</div>
   </article>
   <article class="glass stat span-3" data-reveal data-jelly>
@@ -440,12 +469,17 @@ def tarjeta_materia(m, embed):
     foto = "" if embed else f'<img class="mcard__photo" src="assets/img/fotos/{m["slug"]}-card.jpg" alt="" loading="lazy" decoding="async">'
     ir = "" if embed else f'<span class="mcard__go">{icon("arrow-up-right")}</span>'
     etiqueta, cierre = ("article", "article") if embed else (f'a href="materias/{m["slug"]}.html"', "a")
+    progreso = "" if embed else (
+        f'<div class="mprog" data-prog-card="{m["slug"]}" data-total="{t}" hidden>'
+        '<span class="mprog__bar"><i></i></span><small></small></div>'
+    )
     return f"""
 <{etiqueta} class="mcard glass acc{ancha}" style="--acc:{m['color']}" data-area="{m['area']}" data-reveal data-jelly>
   {foto}
   <div class="mcard__top"><span class="orb">{icon(m["icono"])}</span><span class="mcard__area">{esc(AREAS[m["area"]])}</span>{ir}</div>
   <h3 class="mcard__title">{esc(m["nombre"])}</h3>
   {resumen}{unidades}
+  {progreso}
   <p class="mcard__foot">{meta}</p>
 </{cierre}>"""
 
@@ -588,15 +622,25 @@ def seccion_equipo(pagina=False):
 
 
 # ---------------------------------------------------------------- páginas de materia
+CHECK = '<svg class="chk__ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M5 12.6l4.3 4.3L19 7.2" pathLength="1"/></svg>'
+
+
 def arbol(temas, nivel=0):
+    """Árbol de temas. Cada tema y subtema tiene un botón para marcarlo como repasado."""
     items = []
     for t in temas:
         sub = t["sub"]
         chips = bool(sub) and all(not s["c"] and not s["sub"] for s in sub)
         marca = f'<span class="code">{esc(t["c"])}</span>' if t["c"] else '<span class="bullet" aria-hidden="true"></span>'
-        dentro = f'<div class="node" id="{t["id"]}">{marca}<span class="node__t">{esc(t["t"])}</span></div>'
+        texto = f'{t["c"]} {t["t"]}'.strip()
+        boton = (f'<button class="chk" type="button" data-tema="{t["id"]}" aria-pressed="false" '
+                 f'aria-label="Marcar como repasado: {esc(texto)}">{CHECK}</button>')
+        dentro = f'<div class="node" id="{t["id"]}">{boton}{marca}<span class="node__t">{esc(t["t"])}</span></div>'
         if chips:
-            dentro += '<ul class="tags">' + "".join(f'<li id="{s["id"]}">{esc(s["t"])}</li>' for s in sub) + "</ul>"
+            dentro += '<ul class="tags">' + "".join(
+                f'<li id="{s["id"]}"><button class="tag" type="button" data-tema="{s["id"]}" aria-pressed="false" '
+                f'title="Marcar como repasado">{CHECK}<span>{esc(s["t"])}</span></button></li>'
+                for s in sub) + "</ul>"
         elif sub:
             dentro += arbol(sub, nivel + 1)
         items.append(f"<li>{dentro}</li>")
@@ -607,11 +651,13 @@ def cabecera_seccion(etiqueta, titulo, icono):
     return f"""<header class="unit__head">
       <span class="orb orb--lg">{icon(icono)}</span>
       <div><p class="unit__label">{esc(etiqueta)}</p><h2 class="unit__title">{esc(titulo)}</h2></div>
+      <span class="unit__prog" data-unit-prog hidden></span>
     </header>"""
 
 
 def panel(id_, contenido, ancho=False):
-    return f'<section class="glass panel unit{" unit--wide" if ancho else ""}" id="{id_}" data-panel tabindex="-1">\n{contenido}\n</section>'
+    return (f'<section class="glass panel unit{" unit--wide" if ancho else ""}" id="{id_}" data-panel '
+            f'role="tabpanel" aria-labelledby="tab-{id_}" tabindex="-1">\n{contenido}\n</section>')
 
 
 def seccion_unidad(m, i, s):
@@ -722,10 +768,10 @@ def seccion_evaluacion(m):
         v = totales[k]
         pct = v / total * 100
         partes.append(
-            f'<div class="seg-bar__part" style="flex:{v};--c:var(--{slot})" tabindex="0" '
+            f'<div class="seg-bar__part" style="flex:{v};--c:var(--{slot})" tabindex="0" data-k="{k}" '
             f'aria-label="{nombre}: {fmt(v)} puntos, {pct:.0f} %" data-tip="{nombre} · {fmt(v)} pts · {pct:.0f} %"><span>{v:g}</span></div>'
         )
-        leyenda.append(f'<li><i style="--c:var(--{slot})"></i>{nombre}<span>{pct:.0f} %</span></li>')
+        leyenda.append(f'<li data-k="{k}"><i style="--c:var(--{slot})"></i>{nombre}<span>{pct:.0f} %</span></li>')
     tiles = "".join(
         f"""<div class="utile"><p class="utile__k">Unidad {u}</p><p class="utile__v">{fmt(por_unidad[u])}<small> pts</small></p><p class="utile__s">{semanas_u[u]} semanas · {esc(m["secciones"][u - 1]["titulo"])}</p></div>"""
         for u in range(1, 5)
@@ -752,7 +798,7 @@ def secciones_materia(m):
     corto = "Unidad" if m["tipo_seccion"] == "Unidad" else "Eje"
     for i, s in enumerate(m["secciones"], 1):
         out.append((f"u{i}", f"{corto} {i}", s["titulo"], seccion_unidad(m, i, s)))
-    if m["slug"] == "algoritmos":
+    if m["slug"] == "programacion":
         out.append(("ejemplo", "Ejemplo", "Así se ve un algoritmo en PSeInt", seccion_ejemplo()))
     if m.get("calendario"):
         out.append(("calendario", "Calendario", "Calendario de temas y puntos", seccion_calendario(m)))
@@ -778,10 +824,19 @@ def cabecera_materia(m, embed):
       <li>{icon("calendar-days", "ic ic--sm")}<span>Ciclo <b>{SITIO['ciclo']}</b></span></li>
     </ul>
   </div>
-  <div class="glass panel morb span-4" data-reveal data-jelly>
-    <div class="liquid-orb" aria-hidden="true"><span class="liquid-orb__core"></span><span class="liquid-orb__ic">{icon(m["icono"])}</span></div>
-    <p class="morb__k">{esc(m["corto"])}</p>
-    <p class="morb__v"><b data-count="{t}">{t}</b> temas en {n} {etiqueta_secciones(m)}</p>
+  <div class="glass panel morb span-4" data-reveal data-jelly data-repaso="{m['slug']}" data-total="{t}">
+    <div class="liquid-orb liquid-orb--gauge" style="--p:0" data-orb role="img" aria-label="Avance de repaso: 0 %">
+      <span class="liquid-orb__core"></span>
+      <span class="liquid-orb__fill"><i></i><i></i></span>
+      <span class="liquid-orb__ic">{icon(m["icono"])}</span>
+      <span class="liquid-orb__pct" data-repaso-pct>0 %</span>
+    </div>
+    <div class="morb__tx">
+      <p class="morb__k">Mi repaso · {esc(m["corto"])}</p>
+      <p class="morb__v"><b data-repaso-n>0</b> de {t} temas repasados</p>
+      <p class="morb__hint" data-repaso-hint>Toca el círculo junto a cada tema para marcarlo. Se guarda en este navegador.</p>
+      <button class="pill morb__reset" type="button" data-repaso-reset hidden>{icon("repeat", "ic ic--xs")}<span>Reiniciar repaso</span></button>
+    </div>
   </div>
 </section>"""
 
@@ -938,6 +993,7 @@ def construir():
     datos = (
         "/* Generado por src/build.py: calendario del ciclo e índice del buscador. */\n"
         f"window.SEMANAS = {json.dumps(datos_semanas(), ensure_ascii=False)};\n"
+        f"window.TOTALES = {json.dumps({m['slug']: total_temas(m) for m in MATERIAS})};\n"
         f"window.INDICE = {json.dumps(indice_busqueda(), ensure_ascii=False)};\n"
     )
     escribir(RAIZ / "assets/js/datos.js", datos)

@@ -1,12 +1,18 @@
 """Recorta y optimiza las fotografías (fuente: Unsplash) para el sitio y para Google Sites.
 
-Uso:  python3 src/procesar_imagenes.py <carpeta_con_fotos_originales>
+Uso:
+    python3 src/procesar_imagenes.py <carpeta_con_fotos_originales>
+    python3 src/procesar_imagenes.py --fondos     # solo regenera assets/js/fondos/
 
 Genera:
     assets/img/fotos/<nombre>.jpg          portada 2:1 para el sitio web
     assets/img/fotos/<nombre>-card.jpg     tarjeta 3:2 para el sitio web
+    assets/js/fondos/<nombre>.js           la misma foto incrustada (data URI) para que el
+                                           agua WebGL pueda refractarla, incluso con file://
     google-sites/imagenes/encabezados/*.jpg  encabezados 3:1 con el tono de cada materia
 """
+import base64
+import io
 import sys
 from pathlib import Path
 
@@ -94,7 +100,28 @@ def main(origen):
             encabezado(fotos[foto], color, FOCO.get(foto, 0.5)).save(
                 ENCABEZADOS / f"{archivo}.jpg", quality=80, optimize=True, progressive=True)
             print("encabezado", archivo)
+    fondos()
+
+
+def fondos():
+    """Foto de fondo de cada página como data URI dentro de un .js (textura para el agua WebGL)."""
+    destino = RAIZ / "assets" / "js" / "fondos"
+    destino.mkdir(parents=True, exist_ok=True)
+    for f in sorted(SALIDA.glob("*.jpg")):
+        if f.stem.endswith("-card") or f.stem == "proyecto":  # "proyecto" no es fondo de página
+            continue
+        img = Image.open(f).convert("RGB").resize((1280, 640), Image.LANCZOS)
+        buf = io.BytesIO()
+        img.save(buf, "JPEG", quality=62, optimize=True, progressive=True)
+        datos = base64.b64encode(buf.getvalue()).decode("ascii")
+        (destino / f"{f.stem}.js").write_text(
+            f'/* Fondo de "{f.stem}" para el agua WebGL. Generado por src/procesar_imagenes.py */\n'
+            f'window.FONDO = "data:image/jpeg;base64,{datos}";\n', encoding="utf-8")
+        print("fondo", f.stem, len(datos) // 1024, "KB")
 
 
 if __name__ == "__main__":
-    main(sys.argv[1])
+    if sys.argv[1:] == ["--fondos"]:
+        fondos()
+    else:
+        main(sys.argv[1])

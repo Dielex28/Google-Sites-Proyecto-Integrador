@@ -15,5 +15,6 @@ window.EQUIPO = [
   { nombre: "Alan", codigo: "", correo: "", rol: "", frase: "", foto: "" },
   { nombre: "Armando", codigo: "", correo: "", rol: "", frase: "", foto: "" },
   { nombre: "Isaac", codigo: "", correo: "", rol: "", frase: "", foto: "" },
-  { nombre: "Diego", codigo: "", correo: "", rol: "", frase: "", foto: "" }
+  { nombre: "Diego", codigo: "", correo: "", rol: "", frase: "", foto: "" },
+  { nombre: "Uziel", codigo: "", correo: "", rol: "", frase: "", foto: "" }
 ];

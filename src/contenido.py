@@ -328,9 +328,9 @@ MATERIAS = [
     },
     # ------------------------------------------------------------------ 4
     {
-        "slug": "algoritmos",
-        "nombre": "Algoritmos y Programación",
-        "corto": "Algoritmos",
+        "slug": "programacion",
+        "nombre": "Programación Básica",
+        "corto": "Programación",
         "area": "tecnologia",
         "icono": "code-xml",
         "color": "#17A88A",
@@ -761,7 +761,7 @@ MATERIAS = [
     },
 ]
 
-# Ejemplo que se muestra en la página de Algoritmos
+# Ejemplo que se muestra en la página de Programación Básica
 EJEMPLO_PSEINT = """Algoritmo PromedioParcial
     Definir c1, c2, c3, prom Como Real
     Escribir "Captura tres calificaciones:"
