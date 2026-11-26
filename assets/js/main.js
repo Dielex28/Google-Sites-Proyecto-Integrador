@@ -25,6 +25,12 @@
   var DIA = 864e5;
   var BASE = root.getAttribute("data-base") || "";
   var WEB = /^https?:$/.test(location.protocol);
+  /* en Google Sites cada bloque vive en su propio marco (<html class="embed">) */
+  var EMBED = root.classList.contains("embed");
+  function marcarHash(h) {
+    if (EMBED || !history.replaceState) return;
+    try { history.replaceState(null, "", h); } catch (e) { /* sin historial */ }
+  }
 
   function esc(s) {
     return String(s == null ? "" : s).replace(/[&<>"']/g, function (c) {
@@ -267,7 +273,7 @@
     if (conFoto) {
       capa.classList.add("is-loading");
       var fotoEl = $(".bg__photo", capa);
-      if (WEB && fotoEl) {
+      if (fotoEl && (WEB || /^data:/.test(fotoEl.getAttribute("src") || ""))) {
         var lista = function () { if (fotoEl.decode) fotoEl.decode().then(function () { usarFoto(fotoEl); }, function () { usarFoto(fotoEl); }); else usarFoto(fotoEl); };
         if (fotoEl.complete && fotoEl.naturalWidth) lista();
         else { fotoEl.addEventListener("load", lista, { once: true }); fotoEl.addEventListener("error", sinFoto, { once: true }); }
@@ -503,6 +509,13 @@
     return crearLiquidoSimple(c2);
   })();
   if (agua) { if (calma) agua.detener(); else agua.iniciar(); }
+  /* en Google Sites hay varios bloques por página: cada uno mueve su agua solo mientras se ve */
+  if (EMBED && agua && "IntersectionObserver" in window) {
+    new IntersectionObserver(function (es) {
+      if (calma) return;
+      if (es[es.length - 1].isIntersecting) agua.iniciar(); else agua.detener();
+    }).observe(document.body);
+  }
 
   /* el botón "Efecto líquido" alterna el modo calma */
   $$("[data-calma]").forEach(function (b) {
@@ -1082,7 +1095,7 @@
       b.addEventListener("click", function () {
         var id = b.getAttribute("data-tab");
         mostrarPanel(id);
-        if (history.replaceState) history.replaceState(null, "", "#" + id);
+        marcarHash("#" + id);
         sonar("tab");
       });
       b.addEventListener("keydown", function (e) {
@@ -1097,6 +1110,7 @@
 
   /* abre la pestaña y resalta el tema que pide la dirección (#u2, #t2-5…) */
   function abrirHash() {
+    if (EMBED) return;
     var id = decodeURIComponent((location.hash || "").slice(1));
     if (!id) return;
     var el = document.getElementById(id);
@@ -1483,7 +1497,7 @@
       correr();
       pintar();
       sonar("gota");
-      if (window.Notification && Notification.permission === "default") { try { Notification.requestPermission(); } catch (e) { /* nada */ } }
+      if (!EMBED && window.Notification && Notification.permission === "default") { try { Notification.requestPermission(); } catch (e) { /* nada */ } }
     }
     function pausar() { st.resta = restante(); st.fin = 0; salvar(); correr(); pintar(); sonar("suave"); }
     function reiniciar() { st.fin = 0; st.modo = "enfoque"; st.resta = total(); salvar(); correr(); pintar(); if (gauge) rebotar(gauge, "is-splash"); }
@@ -1495,7 +1509,7 @@
       salvar(); correr(); pintar();
     }
     function abrir(on) {
-      if (!pop) return;
+      if (!pop || pop.classList.contains("timer--inline")) return;
       var mostrar = on == null ? pop.hidden : on;
       if (mostrar === !pop.hidden) return;
       if (mostrar) {
@@ -1658,7 +1672,7 @@
   $$("[data-print]").forEach(function (b) { b.addEventListener("click", function () { window.print(); }); });
   function irPestana(id) {
     mostrarPanel(id);
-    if (history.replaceState) history.replaceState(null, "", "#" + id);
+    marcarHash("#" + id);
     var barra = $(".tabsbar");
     if (barra) barra.scrollIntoView({ block: "start", behavior: REDUCE ? "auto" : "smooth" });
     if (id === "notas") setTimeout(function () { var ta = $("[data-notas] textarea"); if (ta) ta.focus({ preventScroll: true }); }, 450);
@@ -1685,7 +1699,7 @@
       if (!sig) { rebotar(pan, dx < 0 ? "is-edge-r" : "is-edge-l"); return; }
       var id = sig.getAttribute("data-tab");
       mostrarPanel(id);
-      if (history.replaceState) history.replaceState(null, "", "#" + id);
+      marcarHash("#" + id);
       var p = document.getElementById(id);
       if (p) rebotar(p, dx < 0 ? "is-swipe-l" : "is-swipe-r");
       sonar("tab");
@@ -1789,7 +1803,7 @@
     $$("[data-ir-semana]").forEach(function (b) {
       b.addEventListener("click", function () {
         var w = $(".cal__w.is-now") || (SEMANA > 18 ? $("#sem-18") : $("#sem-1"));
-        if (history.replaceState && w) history.replaceState(null, "", "#" + w.id);
+        if (w) marcarHash("#" + w.id);
         resaltarSemana(w);
       });
     });
@@ -1798,7 +1812,7 @@
         var w = document.getElementById(a.getAttribute("href").slice(1));
         if (!w) return;
         e.preventDefault();
-        if (history.replaceState) history.replaceState(null, "", a.getAttribute("href"));
+        marcarHash(a.getAttribute("href"));
         resaltarSemana(w);
         sonar("gota");
       });
@@ -1851,7 +1865,7 @@
   });
 
   /* =========================================================== sin conexión y actualizaciones */
-  if (WEB && "serviceWorker" in navigator) {
+  if (WEB && !EMBED && "serviceWorker" in navigator) {
     var recargar = false;
     window.addEventListener("load", function () {
       navigator.serviceWorker.register(BASE + "sw.js").then(function (reg) {
@@ -2075,6 +2089,7 @@
 
   /* =========================================================== atajos de teclado */
   document.addEventListener("keydown", function (e) {
+    if (EMBED) return;
     var a = document.activeElement || {};
     var escribiendo = /input|textarea|select/i.test(a.tagName || "") || a.isContentEditable;
     if ((e.ctrlKey || e.metaKey) && !e.altKey && (e.key === "k" || e.key === "K")) {

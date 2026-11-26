@@ -1295,6 +1295,26 @@ a.stat { color: inherit; text-decoration: none; }
 @keyframes edge-l { 40% { transform: translateX(14px); } }
 @keyframes edge-r { 40% { transform: translateX(-14px); } }
 
+/* ===================================================================== bloques de Google Sites */
+.embed body { min-height: 0; }
+.embed-wrap { display: grid; grid-template-columns: minmax(0, 1fr); gap: 18px; padding: 16px; }
+.embed .tabsbar { top: 8px; }
+.embed .hero__panel { min-height: 300px; }
+.embed .cal { max-height: 760px; overflow-y: auto; padding-right: 6px; overscroll-behavior: contain; scrollbar-width: thin; scrollbar-color: rgba(255, 255, 255, 0.25) transparent; }
+.embed .toasts { bottom: 16px; }
+.mcard--plain { min-height: 0; }
+.timer.timer--inline { position: relative; top: auto; right: auto; left: auto; z-index: auto; width: auto; opacity: 1; transform: none; filter: none; }
+.hoy--embed { grid-template-columns: minmax(0, 1fr); }
+.hoy--embed > * { grid-column: auto; }
+@container app (min-width: 700px) {
+  .hoy--embed { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  /* temporizador en horizontal: el líquido a la izquierda y los controles a la derecha */
+  .timer.timer--inline { grid-template-columns: auto minmax(0, 1fr); justify-items: start; align-content: center; column-gap: 26px; row-gap: 12px; text-align: left; }
+  .timer--inline > .eyebrow { grid-column: 1 / -1; }
+  .timer--inline > .gauge { grid-row: 2 / span 4; align-self: center; width: 156px; height: 156px; }
+}
+@container app (min-width: 820px) { .about--wide .facts { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
+
 /* ===================================================================== aparición líquida */
 .rv { opacity: 0; filter: blur(16px); transform: translateY(26px) scale(0.985); }
 .rv.in {
@@ -1357,7 +1377,7 @@ a.stat { color: inherit; text-decoration: none; }
 /* ===================================================================== adaptable */
 /* El contenido se adapta al espacio real que tiene (consultas de contenedor):
    cuenta el ancho junto a la barra lateral, no el de la pantalla. */
-.main { container: app / inline-size; }
+.main, .embed-wrap { container: app / inline-size; }
 
 .hero .span-7, .hero .span-5, #semana .span-8, #semana .span-4,
 .mhead .span-8, .mhead .span-4, #proyecto .span-5, #proyecto .span-7,

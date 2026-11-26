@@ -12,6 +12,7 @@ Genera todo lo que se publica en el dominio:
     _headers, .nojekyll             encabezados y ajustes para Netlify, Cloudflare Pages y GitHub Pages
     src/og_paginas.json             datos para src/generar_imagenes.js (vistas previas al compartir)
 """
+import base64
 import hashlib
 import html
 import json
@@ -19,6 +20,7 @@ import re
 import sys
 from datetime import date, datetime, timedelta, timezone
 from pathlib import Path
+from urllib.parse import quote
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from contenido import AREAS, EJEMPLO_PSEINT, MATERIAS, SITIO  # noqa: E402
@@ -26,6 +28,10 @@ from contenido import AREAS, EJEMPLO_PSEINT, MATERIAS, SITIO  # noqa: E402
 RAIZ = Path(__file__).resolve().parent.parent
 ICONOS = Path(__file__).resolve().parent / "iconos"
 URL = SITIO.get("url", "").rstrip("/")
+CODIGOS = RAIZ / "google-sites" / "codigos"
+# True mientras se generan los bloques de Google Sites: sin enlaces entre páginas,
+# sin barra lateral (la navegación la pone Google Sites) y con todo incrustado.
+EN_BLOQUE = False
 
 # Categorías de evaluación de Física: orden fijo = orden de color (paleta validada)
 EVAL = [
@@ -328,16 +334,18 @@ def sidebar(p, activo):
 <div class="scrim" data-drawer-close hidden></div>"""
 
 
-def temporizador():
+def panel_temporizador(en_linea=False):
+    """Temporizador de estudio: ventana emergente en el sitio o panel fijo en un bloque."""
     presets = [("25", "5", "25 · 5"), ("50", "10", "50 · 10"), ("15", "3", "15 · 3")]
     botones = "".join(
         f'<button class="seg__btn{" is-active" if i == 0 else ""}" type="button" data-li data-timer-preset="{a},{b}" aria-pressed="{"true" if i == 0 else "false"}">{t}</button>'
         for i, (a, b, t) in enumerate(presets)
     )
-    return f"""
-    <div class="timer-wrap">
-      <button class="iconbtn glass-pill timer-btn" type="button" data-timer-open aria-expanded="false" aria-controls="temporizador" aria-label="Temporizador de estudio">{icon("timer")}<span class="timer-btn__t" data-timer-chip hidden></span></button>
-      <div class="timer glass" id="temporizador" data-timer role="dialog" aria-label="Temporizador de estudio" hidden>
+    if en_linea:
+        abre = '<div class="timer timer--inline glass panel" id="temporizador" data-timer role="region" aria-label="Temporizador de estudio" data-reveal>'
+    else:
+        abre = '<div class="timer glass" id="temporizador" data-timer role="dialog" aria-label="Temporizador de estudio" hidden>'
+    return f"""{abre}
         <p class="eyebrow">{icon("brain-circuit", "ic ic--xs")} Sesión de estudio</p>
         <div class="gauge gauge--timer" data-timer-gauge style="--p:1" role="timer" aria-live="off">
           <span class="gauge__fill"><i></i><i></i></span>
@@ -353,7 +361,14 @@ def temporizador():
         </div>
         <p class="timer__stats">Sesiones de enfoque hoy: <b data-timer-hoy>0</b></p>
         <p class="timer__hint">Mientras estudias, el agua del fondo se calma.</p>
-      </div>
+      </div>"""
+
+
+def temporizador():
+    return f"""
+    <div class="timer-wrap">
+      <button class="iconbtn glass-pill timer-btn" type="button" data-timer-open aria-expanded="false" aria-controls="temporizador" aria-label="Temporizador de estudio">{icon("timer")}<span class="timer-btn__t" data-timer-chip hidden></span></button>
+      {panel_temporizador()}
     </div>"""
 
 
@@ -522,10 +537,10 @@ def hero_inicio():
     <p class="eyebrow"><span class="pulse"></span>{SITIO["escuela"]}</p>
     <h1 class="hero__title" id="titulo">El mapa de nuestro <span class="liquid-text">primer semestre</span></h1>
     <p class="hero__lead">Proyecto integrador del grupo {SITIO["grupo"]}, turno {SITIO["turno"].lower()}, del {SITIO["carrera"]}. Las diez materias del ciclo {SITIO["ciclo"]} con sus unidades y temas, tu avance de repaso y el calendario, en un solo lugar.</p>
-    <div class="hero__cta">
+    {"" if EN_BLOQUE else f"""<div class="hero__cta">
       <a class="btn btn--liquid" href="#materias" data-ripple>Explorar materias {icon("arrow-right")}</a>
       <a class="btn btn--glass" href="calendario.html" data-ripple>{icon("calendar-days", "ic ic--sm")} Ver calendario</a>
-    </div>
+    </div>"""}
   </div>
   {terminal()}
 </section>"""
@@ -536,9 +551,14 @@ def tarjetas_estadisticas():
     cortos = {"tecnologia": "Tecnología", "ciencias": "Ciencias", "comunicacion": "Lenguaje", "integral": "Integral"}
     areas = "".join(f'<li title="{esc(v)}"><i style="--c:{c}"></i>{cortos[k]} <b>{conteo[k]}</b></li>' for (k, v), c in zip(AREAS.items(), ["#3b6ff5", "#8b4ff0", "#d9473b", "#e8962e"]))
     barras = "".join(
-        f'<a class="bar" href="materias/{m["slug"]}.html" style="--h:{total_temas(m) / MAX_TEMAS:.3f}" data-tip="{esc(m["corto"])} · {total_temas(m)} temas" aria-label="{esc(m["nombre"])}: {total_temas(m)} temas"></a>'
+        (f'<span class="bar" role="img"' if EN_BLOQUE else f'<a class="bar" href="materias/{m["slug"]}.html"')
+        + f' style="--h:{total_temas(m) / MAX_TEMAS:.3f}" data-tip="{esc(m["corto"])} · {total_temas(m)} temas" aria-label="{esc(m["nombre"])}: {total_temas(m)} temas"'
+        + ("></span>" if EN_BLOQUE else "></a>")
         for m in MATERIAS
     )
+    semana_abre = '<article class="glass stat span-3" data-reveal data-jelly>' if EN_BLOQUE else \
+        f'<a class="glass stat span-3" href="calendario.html" data-reveal data-jelly aria-label="Semana {SEMANA} de 18: ver calendario">'
+    ver_equipo = "" if EN_BLOQUE else f'<a class="pill pill--link" href="equipo.html" data-ripple>Ver equipo {icon("arrow-up-right", "ic ic--xs")}</a>'
     s = SEMANA
     ticks = "".join(f'<span class="tick{" is-past" if i < s else (" is-now" if i == s else "")}"></span>' for i in range(1, 19))
     return f"""
@@ -553,20 +573,20 @@ def tarjetas_estadisticas():
     <p class="stat__v"><span data-count="{TOTAL_TEMAS}">{TOTAL_TEMAS}</span><small data-repaso-global>por repasar</small></p>
     <div class="bars" role="group" aria-label="Temas por materia">{barras}</div>
   </article>
-  <a class="glass stat span-3" href="calendario.html" data-reveal data-jelly aria-label="Semana {s} de 18: ver calendario">
+  {semana_abre}
     <p class="stat__k">Semana del ciclo</p>
     <p class="stat__v"><span data-week-n>{s if 1 <= s <= 18 else "—"}</span><small>de 18</small></p>
     <div class="ticks" data-ticks aria-hidden="true">{ticks}</div>
-  </a>
+  {"</article>" if EN_BLOQUE else "</a>"}
   <article class="glass stat span-3" data-reveal data-jelly>
     <p class="stat__k">Equipo</p>
     <p class="stat__v"><span data-count="{N_EQUIPO}">{N_EQUIPO}</span><small>integrantes</small></p>
-    <div class="stat__team">{avatares()}<a class="pill pill--link" href="equipo.html" data-ripple>Ver equipo {icon("arrow-up-right", "ic ic--xs")}</a></div>
+    <div class="stat__team">{avatares()}{ver_equipo}</div>
   </article>
 </section>"""
 
 
-def seccion_hoy():
+def tarjeta_evaluacion(cls="span-4"):
     e = proxima_evaluacion()
     if e:
         dias = max(0, (date.fromisoformat(e["ini"]) - HOY).days)
@@ -575,6 +595,23 @@ def seccion_hoy():
         num, unidad, p = ("0", "días", 1) if e["s"] == SEMANA else (str(dias), "días", max(0.05, 1 - dias / 35))
     else:
         tit, meta, cuando, num, unidad, p = "Sin evaluaciones pendientes", "El plan de Física ya terminó", "", "—", "", 1
+    if EN_BLOQUE:
+        abre, cierre, ir = f'<article class="glass panel nexteval {cls} acc" style="--acc:#8B4FF0" data-reveal data-jelly data-nexteval>', "</article>", ""
+    else:
+        abre, cierre = f'<a class="glass panel nexteval {cls} acc" style="--acc:#8B4FF0" href="calendario.html" data-reveal data-jelly data-nexteval>', "</a>"
+        ir = f'<span class="nexteval__go">Ver calendario {icon("arrow-right", "ic ic--sm")}</span>'
+    return f"""{abre}
+    <p class="eyebrow">{icon("bell", "ic ic--xs")} Próxima evaluación</p>
+    <div class="nexteval__main">
+      <div class="gauge gauge--md" style="--p:{p:.3f}" data-nexteval-gauge><span class="gauge__fill"><i></i><i></i></span><span class="gauge__txt"><b data-nexteval-d>{num}</b><small data-nexteval-u>{unidad}</small></span></div>
+      <div class="nexteval__tx"><p class="nexteval__cuando" data-nexteval-c>{esc(cuando)}</p><h3 class="nexteval__t" data-nexteval-t>{esc(tit)}</h3><p class="nexteval__m" data-nexteval-m>{esc(meta)}</p></div>
+    </div>
+    <ul class="nexteval__more" data-nexteval-more aria-label="Evaluaciones siguientes"></ul>
+    {ir}
+  {cierre}"""
+
+
+def seccion_hoy():
     minis = "".join(
         f'<li><a class="mini acc" style="--acc:{m["color"]}" href="materias/{m["slug"]}.html" data-mini="{m["slug"]}" title="{esc(m["nombre"])}">'
         f'<span class="mini__orb" style="--p:0"><span class="mini__fill"><i></i></span>{icon(m["icono"])}</span>'
@@ -583,15 +620,7 @@ def seccion_hoy():
     )
     return f"""
 <section class="grid hoy" aria-label="Tu día">
-  <a class="glass panel nexteval span-4 acc" style="--acc:#8B4FF0" href="calendario.html" data-reveal data-jelly data-nexteval>
-    <p class="eyebrow">{icon("bell", "ic ic--xs")} Próxima evaluación</p>
-    <div class="nexteval__main">
-      <div class="gauge gauge--md" style="--p:{p:.3f}" data-nexteval-gauge><span class="gauge__fill"><i></i><i></i></span><span class="gauge__txt"><b data-nexteval-d>{num}</b><small data-nexteval-u>{unidad}</small></span></div>
-      <div class="nexteval__tx"><p class="nexteval__cuando" data-nexteval-c>{esc(cuando)}</p><h3 class="nexteval__t" data-nexteval-t>{esc(tit)}</h3><p class="nexteval__m" data-nexteval-m>{esc(meta)}</p></div>
-    </div>
-    <ul class="nexteval__more" data-nexteval-more aria-label="Evaluaciones siguientes"></ul>
-    <span class="nexteval__go">Ver calendario {icon("arrow-right", "ic ic--sm")}</span>
-  </a>
+  {tarjeta_evaluacion()}
   <article class="glass panel repaso-home span-5" data-reveal>
     <div class="repaso-home__head">
       <div><p class="eyebrow">{icon("list-checks", "ic ic--xs")} Tu repaso</p><h3 class="repaso-home__t"><b data-repaso-total>0 %</b> del temario repasado</h3></div>
@@ -609,6 +638,16 @@ def seccion_hoy():
 </section>"""
 
 
+def seccion_hoy_bloque():
+    """Versión para Google Sites: próxima evaluación y temporizador fijo.
+    (El resumen de repaso de las 10 materias no va: cada bloque guarda sus datos aparte.)"""
+    return f"""
+<section class="grid hoy hoy--embed" aria-label="Tu día">
+  {tarjeta_evaluacion("")}
+  {panel_temporizador(en_linea=True)}
+</section>"""
+
+
 ANCHAS = {"tutoria", "fisica"}
 
 
@@ -617,6 +656,14 @@ def tarjeta_materia(m):
     meta = f'{n} {etiqueta_secciones(m)} · {t} temas'
     ancha = " mcard--wide" if m["slug"] in ANCHAS else ""
     unidades = '<ol class="mcard__list">' + "".join(f"<li>{esc(s['titulo'])}</li>" for s in m["secciones"]) + "</ol>"
+    if EN_BLOQUE:
+        return f"""
+<article class="mcard mcard--plain glass acc{ancha}" style="--acc:{m['color']}" data-area="{m['area']}" data-reveal data-jelly>
+  <div class="mcard__top"><span class="orb">{icon(m["icono"])}</span><span class="mcard__area">{esc(AREAS[m["area"]])}</span></div>
+  <h3 class="mcard__title">{esc(m["nombre"])}</h3>
+  <p class="mcard__sum">{esc(m["resumen"])}</p>{unidades}
+  <p class="mcard__foot">{meta}</p>
+</article>"""
     return f"""
 <a class="mcard glass acc{ancha}" style="--acc:{m['color']};view-transition-name:m-{m['slug']}" href="materias/{m['slug']}.html" data-area="{m['area']}" data-reveal data-jelly>
   {picture(m["slug"], "", "mcard__photo", tarjeta=True, sizes="(min-width: 1180px) 30vw, 90vw")}
@@ -652,11 +699,17 @@ def seccion_materias():
 </section>"""
 
 
-def pista_semanas():
+def pista_semanas(destino="calendario.html#"):
+    """destino: a dónde lleva cada semana (None = sin enlace, como en los bloques de Google Sites)."""
     s = SEMANA
+
+    def dentro(w):
+        if destino is None:
+            return f'<span aria-label="Semana {w["s"]}, {w["fechas"]}">{w["s"]}</span>'
+        return f'<a href="{destino}sem-{w["s"]}" aria-label="Semana {w["s"]}, {w["fechas"]}">{w["s"]}</a>'
     celdas = "".join(
         f'<li class="{"is-past" if w["s"] < s else ("is-now" if w["s"] == s else "")}{" has-ev" if any(x[0] in EVALUABLES for x in w["p"]) else ""}" '
-        f'title="Semana {w["s"]} · {w["fechas"]}"><a href="calendario.html#sem-{w["s"]}" aria-label="Semana {w["s"]}, {w["fechas"]}">{w["s"]}</a></li>'
+        f'title="Semana {w["s"]} · {w["fechas"]}">{dentro(w)}</li>'
         for w in FISICA["calendario"]
     )
     meses = [("Ago", 1), ("Sep", 3), ("Oct", 7), ("Nov", 12), ("Dic", 16)]
@@ -695,12 +748,12 @@ def seccion_semana():
         <p class="eyebrow">Calendario del ciclo {SITIO["ciclo"]}</p>
         <h2 id="t-semana">¿En qué semana vamos?</h2>
         <p class="week__now" data-week-text>{texto_semana(s)}</p>
-        <a class="pill week__link" href="calendario.html" data-ripple>{icon("calendar-days", "ic ic--xs")} Abrir el calendario completo</a>
+        {"" if EN_BLOQUE else f'<a class="pill week__link" href="calendario.html" data-ripple>{icon("calendar-days", "ic ic--xs")} Abrir el calendario completo</a>'}
       </div>
       {gauge_semana()}
     </div>
     {numeros_semana()}
-    {pista_semanas()}
+    {pista_semanas(None if EN_BLOQUE else "calendario.html#")}
   </div>
   <div class="glass panel upnext span-4" data-reveal>
     <p class="eyebrow">{icon("atom", "ic ic--xs")} Física · semana a semana</p>
@@ -733,6 +786,16 @@ def seccion_proyecto(id_="proyecto"):
         ("Ciclo escolar", SITIO["ciclo"]),
     ]
     dl = "".join(f"<div><dt>{a}</dt><dd>{esc(b)}</dd></div>" for a, b in datos)
+    if EN_BLOQUE:
+        return f"""
+<section class="grid" id="{id_}" aria-labelledby="t-{id_}">
+  <div class="glass panel about about--wide span-12" data-reveal>
+    <p class="eyebrow">{icon("award", "ic ic--xs")} Sobre el proyecto · {SITIO["ciclo"]}</p>
+    <h2 id="t-{id_}">Un sitio hecho por y para el {SITIO["grupo"]}</h2>
+    <p class="about__p">Este sitio es nuestro proyecto integrador. Organiza el temario de cada materia del primer semestre para consultarlo rápido, marcar lo que ya repasaste, tomar notas, estudiar con temporizador y saber qué tema viene después.</p>
+    <dl class="facts">{dl}</dl>
+  </div>
+</section>"""
     return f"""
 <section class="grid" id="{id_}" aria-labelledby="t-{id_}">
   <figure class="glass media span-5" data-reveal>
@@ -917,7 +980,7 @@ def filtros_calendario(con_ev=False):
 
 def seccion_calendario(m):
     return panel("calendario", f"""{cabecera_seccion("Semana a semana", "Calendario de temas y puntos", "calendar-days", prog=False)}
-    <div class="cal__tools">{filtros_calendario()}<a class="pill" href="../calendario.html">{icon("calendar-plus", "ic ic--xs")} Calendario completo y .ics</a></div>
+    <div class="cal__tools">{filtros_calendario()}{"" if EN_BLOQUE else f'<a class="pill" href="../calendario.html">{icon("calendar-plus", "ic ic--xs")} Calendario completo y .ics</a>'}</div>
     <ol class="cal" data-cal>{filas_calendario(m)}</ol>""", ancho=True)
 
 
@@ -999,7 +1062,7 @@ def cabecera_materia(m):
     docente = f'<li>{icon("user", "ic ic--sm")}<span>{esc(m["docente"])}</span></li>' if m["docente"] else ""
     return f"""
 <section class="grid mhead acc" style="--acc:{m['color']}">
-  <div class="glass panel mhero span-8" style="view-transition-name:m-{m['slug']}" data-reveal>
+  <div class="glass panel mhero span-8"{"" if EN_BLOQUE else f' style="view-transition-name:m-{m["slug"]}"'} data-reveal>
     <p class="chip-area"><span class="orb orb--xs">{icon(m["icono"])}</span>{esc(AREAS[m['area']])}</p>
     <h1 class="mhero__title">{esc(m['nombre'])}</h1>
     <p class="mhero__lead">{esc(m['intro'])}</p>
@@ -1010,8 +1073,8 @@ def cabecera_materia(m):
       <li>{icon("calendar-days", "ic ic--sm")}<span>Ciclo <b>{SITIO['ciclo']}</b></span></li>
     </ul>
     <div class="mhero__acts">
-      <button class="pill" type="button" data-share>{icon("share-2", "ic ic--xs")}<span>Compartir</span></button>
-      <button class="pill" type="button" data-print>{icon("printer", "ic ic--xs")}<span>Imprimir temario</span></button>
+      {"" if EN_BLOQUE else f"""<button class="pill" type="button" data-share>{icon("share-2", "ic ic--xs")}<span>Compartir</span></button>
+      <button class="pill" type="button" data-print>{icon("printer", "ic ic--xs")}<span>Imprimir temario</span></button>"""}
       <button class="pill" type="button" data-ir-tab="notas">{icon("notebook-pen", "ic ic--xs")}<span>Mis notas</span></button>
     </div>
   </div>
@@ -1050,11 +1113,11 @@ def pagina_materia(m):
 </div>
 <div class="panels acc" style="--acc:{m['color']}" data-panels>
 {paneles}
-</div>
+</div>""" + ("" if EN_BLOQUE else f"""
 <nav class="pn" aria-label="Otras materias">
   <a class="glass pn__a acc" style="--acc:{ant['color']}" href="{ant['slug']}.html" data-jelly><span class="pn__k">{icon("arrow-left", "ic ic--sm")} Materia anterior</span><b>{esc(ant['nombre'])}</b></a>
   <a class="glass pn__a pn__a--next acc" style="--acc:{sig['color']}" href="{sig['slug']}.html" data-jelly><span class="pn__k">Siguiente materia {icon("arrow-right", "ic ic--sm")}</span><b>{esc(sig['nombre'])}</b></a>
-</nav>"""
+</nav>""")
 
 
 def paleta(color):
@@ -1073,7 +1136,7 @@ def pagina_inicio():
     return app("", "inicio", migas("", ("Panel del semestre", None)), contenido, "inicio", PALETA_INICIO)
 
 
-def pagina_calendario():
+def contenido_calendario():
     evs = evaluaciones()
     dias_cierre = max(0, (CIERRE - HOY).days)
     ev_html = "".join(
@@ -1093,7 +1156,7 @@ def pagina_calendario():
       <li>{icon("hourglass", "ic ic--sm")}<span>Cierre en <b data-cierre>{dias_cierre}</b> días</span></li>
     </ul>
     <div class="hero__cta">
-      <a class="btn btn--liquid" href="assets/calendario-2026b.ics" download data-ripple>{icon("calendar-plus", "ic ic--sm")} Agregar a mi calendario</a>
+      <a class="btn btn--liquid" href="{ics_enlace()}" download="calendario-2026b.ics" data-ripple>{icon("calendar-plus", "ic ic--sm")} Agregar a mi calendario</a>
       <button class="btn btn--glass" type="button" data-ir-semana data-ripple>{icon("crosshair", "ic ic--sm")} Ir a esta semana</button>
     </div>
   </div>
@@ -1126,11 +1189,22 @@ def pagina_calendario():
   <ol class="cal" data-cal>{filas_calendario(FISICA, enlaces=True)}</ol>
   <p class="fine">El plan semanal proviene del desglose de la materia de Física y sus Aplicaciones; es el calendario del ciclo que comparten todas las materias.</p>
 </section>"""
-    return app("", "calendario", migas("", ("Calendario", None)), contenido, "fisica", PALETA_CAL)
+    return contenido
 
 
-def pagina_equipo():
-    contenido = f"""
+def ics_enlace():
+    """En el sitio, el archivo .ics; en Google Sites, el calendario incrustado en el propio botón."""
+    if EN_BLOQUE:
+        return "data:text/calendar;charset=utf-8," + quote(generar_ics())
+    return "assets/calendario-2026b.ics"
+
+
+def pagina_calendario():
+    return app("", "calendario", migas("", ("Calendario", None)), contenido_calendario(), "fisica", PALETA_CAL)
+
+
+def contenido_equipo():
+    return f"""
 <section class="grid mhead">
   <div class="glass panel mhero span-8" data-reveal>
     <p class="chip-area"><span class="orb orb--xs" style="--acc:#3b5bff">{icon("users")}</span>Equipo del proyecto</p>
@@ -1149,8 +1223,11 @@ def pagina_equipo():
   </div>
 </section>
 {seccion_equipo(pagina=True)}
-{seccion_proyecto("grupo")}"""
-    return app("", "equipo", migas("", ("Equipo", None)), contenido, "equipo", PALETA_EQUIPO)
+{"" if EN_BLOQUE else seccion_proyecto("grupo")}"""
+
+
+def pagina_equipo():
+    return app("", "equipo", migas("", ("Equipo", None)), contenido_equipo(), "equipo", PALETA_EQUIPO)
 
 
 def pagina_materia_completa(m):
@@ -1168,6 +1245,190 @@ def pagina_aviso(clase, eyebrow, titulo, texto, botones):
   <div class="hero__cta">{botones}</div>
 </section>"""
     return app("/", clase, migas("/", (eyebrow, None)), contenido, "inicio", PALETA_INICIO)
+
+
+# ---------------------------------------------------------------- bloques de Google Sites
+FUENTES_GOOGLE = (
+    '<link rel="preconnect" href="https://fonts.googleapis.com">'
+    '<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>'
+    '<link rel="stylesheet" href="https://fonts.googleapis.com/css2?'
+    'family=Geist:wght@300..800&family=Geist+Mono:wght@400..600&display=swap">'
+)
+
+
+def compactar_css(css):
+    """Quita comentarios, espacios sobrantes y las fuentes locales (en Google Sites
+    las fuentes llegan de Google Fonts)."""
+    css = re.sub(r"/\*.*?\*/", "", css, flags=re.S)
+    css = re.sub(r"@font-face\s*\{[^}]*\}", "", css)
+    css = re.sub(r"\s+", " ", css)
+    css = re.sub(r"\s*([{};,>])\s*", r"\1", css)
+    return css.replace(";}", "}").strip()
+
+
+# Piezas que solo existen en el sitio completo: sus estilos no viajan en los bloques.
+FUERA_DE_BLOQUES = [
+    "side", r"side__[\w-]+", "scrim", "brand", r"brand__[\w-]+", "top", r"top__[\w-]+", "crumbs", "search", r"search__[\w-]+",
+    "timer-btn", r"timer-btn__[\w-]+", "timer-wrap", "avatars", "pal", r"pal__[\w-]+", "pal-open", "drawer-open", "dock", r"dock__[\w-]+",
+    "foot", r"foot__[\w-]+", "totop", r"totop__[\w-]+", "aviso", r"aviso__[\w-]+", "mini", r"mini__[\w-]+", "minis",
+    "repaso-home", r"repaso-home__[\w-]+", "enfoque", r"enfoque__[\w-]+", "media", r"media__[\w-]+", "pn", r"pn__[\w-]+",
+    "skip", "mprog", r"mprog__[\w-]+", "mcard__photo", "mcard__go", "week__link", "vt",
+]
+
+
+def _partir_selectores(cab):
+    partes, nivel, actual = [], 0, ""
+    for ch in cab:
+        if ch == "(":
+            nivel += 1
+        elif ch == ")":
+            nivel -= 1
+        if ch == "," and nivel == 0:
+            partes.append(actual)
+            actual = ""
+        else:
+            actual += ch
+    return partes + [actual]
+
+
+def podar_css(css):
+    """Quita de un CSS ya compactado las reglas cuyos selectores solo apuntan a piezas
+    que no existen en los bloques (barra lateral, paleta, barra inferior, etc.)."""
+    patron = re.compile(r"\.(?:%s)(?![\w-])" % "|".join(FUERA_DE_BLOQUES))
+
+    def procesar(txt):
+        out, i = [], 0
+        while i < len(txt):
+            j = txt.find("{", i)
+            if j < 0:
+                out.append(txt[i:])
+                break
+            cab, nivel, k = txt[i:j], 1, j + 1
+            while nivel:
+                nivel += {"{": 1, "}": -1}.get(txt[k], 0)
+                k += 1
+            cuerpo = txt[j + 1:k - 1]
+            if cab.startswith(("@media", "@container", "@supports")):
+                dentro = procesar(cuerpo)
+                if dentro:
+                    out.append(cab + "{" + dentro + "}")
+            elif cab.startswith("@view-transition") or "view-transition" in cab:
+                pass
+            elif cab.startswith("@"):
+                out.append(txt[i:k])
+            else:
+                sels = [x for x in _partir_selectores(cab) if not patron.search(x)]
+                if sels:
+                    out.append(",".join(sels) + "{" + cuerpo + "}")
+            i = k
+        return "".join(out)
+    return procesar(css)
+
+
+def compactar_js(js):
+    """Quita sangrías, renglones vacíos y comentarios de renglón completo."""
+    out, dentro = [], False
+    for ln in js.split("\n"):
+        t = ln.strip()
+        if dentro:
+            dentro = "*/" not in t
+            continue
+        if t.startswith("/*"):
+            if "*/" not in t:
+                dentro = True
+            elif not t.endswith("*/"):
+                out.append(t)
+            continue
+        if t and not t.startswith("//"):
+            out.append(t)
+    return "\n".join(out)
+
+
+def fondo_bloque(foto, colores):
+    """El mismo fondo de agua, con la foto incrustada para que no dependa de otro servidor."""
+    datos = base64.b64encode((RAIZ / f"assets/img/fotos/{foto}-800.webp").read_bytes()).decode("ascii")
+    return (
+        f'<div class="bg bg--photo" aria-hidden="true"><img class="bg__photo" src="data:image/webp;base64,{datos}" alt="" decoding="async">'
+        f'<canvas class="bg__liquid" data-liquid data-colors="{",".join(colores)}"></canvas>'
+        '<div class="bg__blobs"><i></i><i></i><i></i></div><div class="bg__tint"></div><div class="bg__grain"></div></div>'
+    )
+
+
+def guion_equipo():
+    """La lista del equipo, para editarla directamente dentro del bloque."""
+    lista = re.search(r"window\.EQUIPO = \[.*?\];", (RAIZ / "assets/js/equipo.js").read_text(encoding="utf-8"), re.S).group(0)
+    return f"""<script>
+/* ✏️ DATOS DEL EQUIPO: edita aquí, entre las comillas, la información de cada integrante.
+   Lo que dejes vacío ("") aparece como "Por completar". Para agregar a alguien copia un
+   renglón completo (de {{ a }},). En foto va un enlace público a una imagen cuadrada. */
+{lista}
+</script>"""
+
+
+def bloque(titulo, clase, cuerpo, foto, colores, css, js, datos, extra=""):
+    return f"""<!doctype html>
+<!--
+  {titulo}
+  Bloque para Google Sites · {SITIO["titulo"]} ({SITIO["clave"]})
+  Cómo pegarlo: Insertar > Incorporar > pestaña "Insertar código" > pega TODO este archivo >
+  Siguiente > Insertar. Luego ajusta el ancho y el alto del cuadro (ver google-sites/GUIA.md).
+  Lo genera src/build.py: si cambian el temario, vuelvan a generarlo en lugar de editarlo aquí.
+-->
+<html lang="es-MX" class="embed">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{esc(titulo)}</title>
+{FUENTES_GOOGLE}
+<style>{css}</style>
+<script>try{{if(localStorage.getItem("calma")==="1")document.documentElement.classList.add("calma")}}catch(e){{}}</script>
+</head>
+<body class="{clase}">{extra}
+{SVG_DEFS}
+{fondo_bloque(foto, colores)}
+<main class="embed-wrap" id="contenido">
+{cuerpo}
+</main>
+<div class="toasts" data-toasts aria-live="polite"></div>
+<script>{datos}</script>
+<script>{js}</script>
+</body>
+</html>
+"""
+
+
+def generar_bloques():
+    """Los bloques "Insertar código" de google-sites/codigos/ (ver google-sites/GUIA.md)."""
+    global EN_BLOQUE
+    EN_BLOQUE = True
+    try:
+        css = podar_css(compactar_css((RAIZ / "assets/css/estilos.css").read_text(encoding="utf-8")))
+        js = compactar_js((RAIZ / "assets/js/main.js").read_text(encoding="utf-8"))
+        datos = (
+            f"window.SEMANAS={json.dumps(datos_semanas(), ensure_ascii=False)};"
+            f"window.EVALUACIONES={json.dumps(evaluaciones(), ensure_ascii=False)};"
+            f"window.TOTALES={json.dumps({m['slug']: total_temas(m) for m in MATERIAS})};"
+            f"window.MATERIAS={json.dumps([{'s': m['slug'], 'n': m['nombre'], 'c': m['corto'], 'col': m['color']} for m in MATERIAS], ensure_ascii=False)};"
+        ).replace("</", "<\\/")
+        lista = [
+            ("inicio/1-portada.html", "Inicio · Portada", "home", hero_inicio() + tarjetas_estadisticas(), "inicio", PALETA_INICIO, ""),
+            ("inicio/2-tu-dia.html", "Inicio · Tu día", "home", seccion_hoy_bloque(), "inicio", PALETA_INICIO, ""),
+            ("inicio/3-materias.html", "Inicio · Materias", "home", seccion_materias(), "inicio", PALETA_INICIO, ""),
+            ("inicio/4-semana.html", "Inicio · ¿En qué semana vamos?", "home", seccion_semana(), "inicio", PALETA_INICIO, ""),
+            ("inicio/5-proyecto.html", "Inicio · Sobre el proyecto", "home", seccion_proyecto(), "proyecto", PALETA_INICIO, ""),
+        ]
+        for i, m in enumerate(MATERIAS, 1):
+            lista.append((f"materias/{i:02d}-{m['slug']}.html", m["nombre"], f"materia materia--{m['slug']}",
+                          pagina_materia(m), m["slug"], paleta(m["color"]), ""))
+        lista += [
+            ("calendario/calendario.html", "Calendario del ciclo", "cal-page", contenido_calendario(), "fisica", PALETA_CAL, ""),
+            ("equipo/equipo.html", "Equipo", "team-page", contenido_equipo(), "equipo", PALETA_EQUIPO, "\n" + guion_equipo()),
+        ]
+        for ruta, titulo, clase, cuerpo, foto, colores, extra in lista:
+            escribir(CODIGOS / ruta, bloque(titulo, clase, cuerpo, foto, colores, css, js, datos, extra))
+        return [r for r, *_ in lista]
+    finally:
+        EN_BLOQUE = False
 
 
 # ---------------------------------------------------------------- archivos del dominio
@@ -1408,6 +1669,8 @@ def construir():
 
 def main():
     construir()
+    bloques = generar_bloques()
+    print(f"Google Sites: {len(bloques)} bloques en google-sites/codigos/")
     print(f"Sitio generado: {len(PAGINAS)} páginas + 404 y sin conexión · {TOTAL_TEMAS} temas · "
           f"{'dominio ' + URL if URL else 'sin dominio todavía (SITIO[\"url\"] vacío)'}")
 

@@ -3,10 +3,18 @@
 Proyecto integrador del grupo **1A, turno matutino (TSIN1AM)** del
 **Tecnólogo en Sistemas Informáticos**, Escuela Politécnica de Guadalajara, ciclo 2026B.
 
-Sitio web con el temario de las 10 materias del primer semestre, herramientas de
+Sitio con el temario de las 10 materias del primer semestre, herramientas de
 estudio, el calendario del ciclo y las tarjetas del equipo: David, Alan, Armando,
-Isaac, Diego y Uziel. Está listo para publicarse con dominio propio: ver
-[`DESPLIEGUE.md`](DESPLIEGUE.md).
+Isaac, Diego y Uziel. Viene en dos versiones con el mismo diseño y contenido:
+
+| Versión | Para qué sirve | Dónde está |
+|---|---|---|
+| **Google Sites** (la que se entrega) | Armar el sitio en Google Sites pegando 17 bloques ya diseñados | [`google-sites/`](google-sites/) · empieza por [`google-sites/GUIA.md`](google-sites/GUIA.md) |
+| **Sitio web completo** (opcional) | Publicarlo con dominio propio; agrega app instalable, modo sin conexión, paleta de comandos y barra lateral | [`index.html`](index.html) y [`DESPLIEGUE.md`](DESPLIEGUE.md) |
+
+En Google Sites cada bloque es un panel independiente: conserva el diseño, el agua,
+el modo repaso, las notas, el temporizador y el calendario, pero no la app instalable,
+la paleta de comandos ni la barra lateral (la navegación la pone Google Sites).
 
 ## Diseño: liquid glass fluid
 
@@ -58,20 +66,24 @@ y abre <http://localhost:8000>.
 
 | Quiero cambiar… | Edita | Luego |
 |---|---|---|
-| Datos de los integrantes | `assets/js/equipo.js` | `python3 src/build.py` |
+| Datos de los integrantes | En Google Sites: el bloque `equipo/equipo.html` (ver la guía). En el sitio web: `assets/js/equipo.js` | Para el sitio web, `python3 src/build.py` |
 | Fotos de los integrantes | Copia la foto en `assets/img/equipo/` y escribe su ruta en el campo `foto` de `equipo.js` | `python3 src/build.py` |
 | Temas, unidades o descripciones | `src/contenido.py` | `python3 src/build.py` |
 | El dominio del sitio | `SITIO["url"]` en `src/contenido.py` | `python3 src/build.py` (ver `DESPLIEGUE.md`) |
 | Colores, tipografía o diseño | `assets/css/estilos.css` | `python3 src/build.py` |
 
-`python3 src/build.py` genera las páginas, el calendario `.ics`, el manifiesto de la
-app, el service worker y los archivos para buscadores (requiere Python 3.10 o más
+`python3 src/build.py` genera los 17 bloques de Google Sites y, para la versión web,
+las páginas, el calendario `.ics`, el manifiesto de la app, el service worker y los
+archivos para buscadores (requiere Python 3.10 o más
 reciente, sin librerías extra). Ejecútalo después de **cualquier** cambio: así cambia
 la huella de los archivos y nadie se queda con una versión vieja guardada.
 
 ## Estructura
 
 ```
+google-sites/GUIA.md                       guía paso a paso para Google Sites
+google-sites/codigos/                      17 bloques para "Insertar código" (generados)
+google-sites/imagenes/                     encabezados de página y logotipos
 index.html, calendario.html, equipo.html   páginas generadas
 materias/                                  una página por materia
 404.html, offline.html                     página no encontrada y sin conexión
@@ -88,8 +100,8 @@ assets/img/fotos/                          fotografías en JPG y WebP de varios 
 assets/img/icons/, assets/img/og/          íconos de la app y vistas previas al compartir
 src/contenido.py                           temario de todas las materias y datos del sitio
 src/build.py                               generador del sitio
-src/procesar_imagenes.py                   recorte y optimización de las fotos
-src/generar_imagenes.js                    íconos y vistas previas (Node + Playwright)
+src/procesar_imagenes.py                   fotos, fondos del agua y encabezados de Google Sites
+src/generar_imagenes.js                    íconos, logotipos y vistas previas (Node + Playwright)
 src/iconos/                                íconos SVG (Lucide, licencia ISC)
 ```
 

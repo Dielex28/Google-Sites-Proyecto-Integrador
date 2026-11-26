@@ -10,6 +10,8 @@
        assets/img/icons/icon-192.png, icon-512.png, icon-maskable-512.png,
                         apple-touch-icon.png (180), favicon-32.png
        assets/img/og/<página>.jpg   1200 × 630, una por página
+       google-sites/imagenes/logo-1A.png, logo-horizontal-oscuro.png (texto oscuro, para
+                        fondos claros) y logo-horizontal-claro.png (texto claro, para fondos oscuros)
    Las imágenes ya vienen generadas en el repositorio; solo hace falta volver a
    ejecutarlo si cambian los nombres, el dominio o las fotos. */
 const fs = require("fs");
@@ -115,6 +117,18 @@ function og(d) {
   </body></html>`;
 }
 
+/* ---------------- logotipo horizontal para Google Sites ---------------- */
+function logoHorizontal(textoClaro) {
+  const tinta = textoClaro ? "#f5f7fc" : "#0b1222";
+  const sub = textoClaro ? "rgba(245,247,252,.62)" : "rgba(11,18,34,.6)";
+  return `<!doctype html><html><head><style>${BASE}
+  body { width: 990px; height: 216px; display: flex; align-items: center; gap: 30px; padding-left: 12px; }
+  img { width: 192px; height: 192px; }
+  b { display: block; font-size: 76px; font-weight: 750; letter-spacing: -0.045em; line-height: 1; color: ${tinta}; }
+  small { display: block; margin-top: 16px; font: 500 30px "Geist Mono", monospace; letter-spacing: .14em; color: ${sub}; }
+  </style></head><body><img src="${url("assets/img/icons/icon-512.png")}" alt=""><div><b>Mapa del Semestre</b><small>TSIN1AM · 2026B</small></div></body></html>`;
+}
+
 async function foto(navegador, htmlTexto, { ancho, alto, salida, tipo = "png", transparente = false }) {
   const tmp = path.join(os.tmpdir(), `img-${process.pid}-${Math.random().toString(36).slice(2)}.html`);
   fs.writeFileSync(tmp, htmlTexto);
@@ -137,6 +151,10 @@ async function foto(navegador, htmlTexto, { ancho, alto, salida, tipo = "png", t
   await foto(navegador, icono(512, { maskable: true }), { ancho: 512, alto: 512, salida: ic("icon-maskable-512.png") });
   await foto(navegador, icono(180, { plano: true }), { ancho: 180, alto: 180, salida: ic("apple-touch-icon.png") });
   await foto(navegador, icono(32), { ancho: 32, alto: 32, salida: ic("favicon-32.png"), transparente: true });
+  const gs = (n) => path.join(RAIZ, "google-sites/imagenes", n);
+  await foto(navegador, icono(512), { ancho: 512, alto: 512, salida: gs("logo-1A.png"), transparente: true });
+  await foto(navegador, logoHorizontal(false), { ancho: 990, alto: 216, salida: gs("logo-horizontal-oscuro.png"), transparente: true });
+  await foto(navegador, logoHorizontal(true), { ancho: 990, alto: 216, salida: gs("logo-horizontal-claro.png"), transparente: true });
   for (const d of paginas) {
     await foto(navegador, og(d), { ancho: 1200, alto: 630, salida: path.join(RAIZ, `assets/img/og/${d.nombre}.jpg`), tipo: "jpeg" });
   }
