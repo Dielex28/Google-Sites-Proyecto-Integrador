@@ -4,6 +4,9 @@ Google Sites no permite que un programa cree el sitio por ustedes: hay que armar
 desde la cuenta de Google de un integrante. Esta carpeta trae todo listo para
 **copiar y pegar**. Con esta guía el sitio queda montado en unos 40 minutos.
 
+> ¿Prefieres una lista para ir palomeando, con enlaces directos a cada bloque e
+> imagen? Está en [LISTA.md](LISTA.md).
+
 Cada bloque es un panel *liquid glass* completo: su propio fondo de agua con la foto
 de la página (ondas al mover el cursor o tocar), vidrio con desenfoque y reflejos en
 tiempo real e indicadores que se deslizan como gotas. Se ven bien sobre cualquier tema
