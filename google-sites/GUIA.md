@@ -6,6 +6,9 @@ desde la cuenta de Google de un integrante. Esta carpeta trae todo listo para
 
 > ¿Prefieres una lista para ir palomeando, con enlaces directos a cada bloque e
 > imagen? Está en [LISTA.md](LISTA.md).
+>
+> ¿Quieres leer o copiar todo el texto del sitio (cada materia con sus temas, el
+> calendario y la evaluación)? Está en [CONTENIDO.md](CONTENIDO.md).
 
 Cada bloque es un panel *liquid glass* completo: su propio fondo de agua con la foto
 de la página (ondas al mover el cursor o tocar), vidrio con desenfoque y reflejos en

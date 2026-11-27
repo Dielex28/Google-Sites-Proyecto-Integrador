@@ -1431,6 +1431,242 @@ def generar_bloques():
         EN_BLOQUE = False
 
 
+# ---------------------------------------------------------------- contenido en texto (para llenar Google Sites a mano)
+def temas_md(temas, nivel=0):
+    out = []
+    for t in temas:
+        sangria = "  " * nivel
+        codigo = f"**{t['c']}** " if t["c"] else ""
+        out.append(f"{sangria}- {codigo}{t['t']}")
+        out += temas_md(t["sub"], nivel + 1)
+    return out
+
+
+def generar_contenido():
+    """google-sites/CONTENIDO.md: todo el texto del sitio, página por página."""
+    S, L = SITIO, []
+    a = L.append
+    conteo = {k: sum(1 for m in MATERIAS if m["area"] == k) for k in AREAS}
+    evs = evaluaciones()
+    a(f"# Contenido completo · {S['titulo']}")
+    a("")
+    a("Todo el texto que lleva el sitio, ordenado por página de Google Sites. Sirve para "
+      "revisar el contenido o para escribirlo a mano con cuadros de texto (**Insertar → "
+      "Cuadro de texto**) si no se usan los bloques de código. Cada `##` es una página; "
+      "cada `###` es una sección dentro de ella.")
+    a("")
+    a(f"*Generado con `src/build.py` a partir de `src/contenido.py`.*")
+    a("")
+    a("---")
+    a("")
+    a("## Datos generales del sitio")
+    a("")
+    a(f"- **Nombre del sitio:** {S['titulo']}")
+    a(f"- **Escuela:** {S['escuela']}")
+    a(f"- **Carrera:** {S['carrera']}")
+    a(f"- **Grupo y turno:** {S['grupo']} · {S['turno']}")
+    a(f"- **Clave del grupo:** {S['clave']}")
+    a(f"- **Ciclo escolar:** {S['ciclo']} (del 17 de agosto al 18 de diciembre de 2026, 18 semanas)")
+    a(f"- **Integrantes:** {', '.join(NOMBRES_EQUIPO)}")
+    a(f"- **Pie de página:** Proyecto académico elaborado por estudiantes del grupo {S['grupo']}. "
+      "No es un sitio oficial de la institución. Fotografías: Unsplash · Íconos: Lucide · Tipografía: Geist.")
+    a("")
+    a("---")
+    a("")
+
+    # Inicio
+    a("## Página: Inicio")
+    a("")
+    a("### Portada")
+    a("")
+    a(f"- **Etiqueta:** {S['escuela']}")
+    a("- **Título:** El mapa de nuestro primer semestre")
+    a(f"- **Texto:** Proyecto integrador del grupo {S['grupo']}, turno {S['turno'].lower()}, del {S['carrera']}. "
+      f"Las diez materias del ciclo {S['ciclo']} con sus unidades y temas, tu avance de repaso y el calendario, en un solo lugar.")
+    a("")
+    a("### Resumen del semestre")
+    a("")
+    a(f"- **{len(MATERIAS)} materias** en 4 áreas: " + ", ".join(f"{v} ({conteo[k]})" for k, v in AREAS.items()))
+    a(f"- **{TOTAL_TEMAS} temas y subtemas** en total")
+    a("- **18 semanas** de ciclo")
+    a(f"- **{N_EQUIPO} integrantes** en el equipo")
+    a("")
+    a("Temas por materia:")
+    a("")
+    a("| Materia | Unidades o ejes | Temas y subtemas |")
+    a("|---|---|---|")
+    for m in MATERIAS:
+        a(f"| {m['nombre']} | {len(m['secciones'])} | {total_temas(m)} |")
+    a("")
+    a("### Lo que vamos a aprender")
+    a("")
+    a(f"Ciclo {S['ciclo']} · {len(MATERIAS)} materias. (Aquí van las 10 materias con su resumen y sus unidades; "
+      "el detalle está en la página **Materias** de este documento.)")
+    a("")
+    a("### ¿En qué semana vamos?")
+    a("")
+    a("- El ciclo tiene 18 semanas: inicia el lunes 17 de agosto y termina el viernes 18 de diciembre de 2026.")
+    a("- La semana 18 (14 – 18 dic) es la fecha límite para el registro y publicación de la evaluación continua.")
+    a("- En el bloque de código, la semana actual y lo que toca en Física se calculan solos con la fecha de hoy.")
+    a("")
+    a("### Sobre el proyecto")
+    a("")
+    a(f"- **Título:** Un sitio hecho por y para el {S['grupo']}")
+    a("- **Texto:** Este sitio es nuestro proyecto integrador. Organiza el temario de cada materia del primer semestre "
+      "para consultarlo rápido, marcar lo que ya repasaste, tomar notas, estudiar con temporizador y saber qué tema viene después.")
+    a(f"- **Escuela:** {S['escuela']}")
+    a(f"- **Carrera:** {S['carrera']}")
+    a(f"- **Grupo y turno:** {S['grupo']} · {S['turno']}")
+    a(f"- **Clave del grupo:** {S['clave']}")
+    a(f"- **Ciclo escolar:** {S['ciclo']}")
+    a("")
+    a("---")
+    a("")
+
+    # Materias (resumen)
+    a("## Página: Materias")
+    a("")
+    a("### Lo que vamos a aprender")
+    a("")
+    for i, m in enumerate(MATERIAS, 1):
+        a(f"**{i}. {m['nombre']}** · {AREAS[m['area']]}  ")
+        a(f"{m['resumen']}  ")
+        a(f"*{len(m['secciones'])} {etiqueta_secciones(m)} · {total_temas(m)} temas*")
+        a("")
+        for j, sec in enumerate(m["secciones"], 1):
+            a(f"{j}. {sec['titulo']}")
+        a("")
+    a("---")
+    a("")
+
+    # Cada materia
+    for i, m in enumerate(MATERIAS, 1):
+        a(f"## Página: {m['nombre']}")
+        a("")
+        a(f"- **Área:** {AREAS[m['area']]}")
+        if m["docente"]:
+            a(f"- **Docente:** {m['docente']}")
+        a(f"- **Descripción:** {m['intro']}")
+        a(f"- **Datos:** {len(m['secciones'])} {etiqueta_secciones(m)} · {total_temas(m)} temas y subtemas · Ciclo {S['ciclo']}")
+        a("")
+        if m.get("proposito"):
+            a("### Presentación")
+            a("")
+            a(f"**Propósito:** {m['proposito']}")
+            a("")
+            a("**Indicadores de logro (rasgos esenciales del programa):**")
+            a("")
+            for g in m["indicadores"]:
+                a(f"- **{g['titulo']}:** " + "; ".join(g["items"]) + ".")
+            a("")
+        if m.get("linea_tiempo"):
+            a("### Línea del tiempo: momentos clave de la UDG")
+            a("")
+            for h in m["linea_tiempo"]:
+                a(f"- **{h['anio']}:** {h['texto']}")
+            a("")
+        for j, sec in enumerate(m["secciones"], 1):
+            a(f"### {tipo_seccion(m)} {j}: {sec['titulo']}")
+            a("")
+            if sec.get("objetivo"):
+                a(f"**Objetivo:** {sec['objetivo']}")
+                a("")
+            if sec.get("descripcion"):
+                a(sec["descripcion"])
+                a("")
+            L.extend(temas_md(sec["temas"]))
+            a("")
+            if sec.get("insignia"):
+                a(f"🏁 {sec['insignia']}")
+                a("")
+            if sec.get("nota"):
+                a(f"> **Nota.** {sec['nota']}")
+                a("")
+        if m["slug"] == "programacion":
+            a("### Ejemplo: así se ve un algoritmo en PSeInt")
+            a("")
+            a("```")
+            a(EJEMPLO_PSEINT)
+            a("```")
+            a("")
+            a("Ejemplo ilustrativo: lee tres calificaciones, calcula el promedio y decide si se aprueba con 60 o más. "
+              "Usa estructura secuencial y selectiva.")
+            a("")
+        if m.get("calendario"):
+            a("### Calendario de temas y puntos (semana a semana)")
+            a("")
+            a("| Semana | Fechas | Unidad | Temas | Puntos |")
+            a("|---|---|---|---|---|")
+            for w in m["calendario"]:
+                u = f"Unidad {w['u']}" if w["u"] else "Cierre"
+                a(f"| {w['s']} | {w['fechas']} | {u} | {' · '.join(w['temas'])} | {puntos_texto(w) or '—'} |")
+            a("")
+            totales = {k: 0.0 for k, _, _ in EVAL}
+            por_u = {u: 0.0 for u in range(1, 5)}
+            for w in m["calendario"]:
+                for x in w["p"]:
+                    totales[x[0]] += x[1]
+                    por_u[w["u"]] += x[1]
+            total = sum(totales.values())
+            a("### Evaluación: distribución de los puntos")
+            a("")
+            a("| Tipo | Puntos | Porcentaje |")
+            a("|---|---|---|")
+            for k, n, _ in EVAL:
+                a(f"| {n} | {fmt(totales[k])} | {totales[k] / total * 100:.1f} % |")
+            a(f"| **Total** | **{fmt(total)}** | **100 %** |")
+            a("")
+            a("| Unidad | Puntos |")
+            a("|---|---|")
+            for u in range(1, 5):
+                a(f"| Unidad {u}: {m['secciones'][u - 1]['titulo']} | {fmt(por_u[u])} |")
+            a("")
+        a("### Mis notas")
+        a("")
+        a("Espacio para que cada quien escriba sus apuntes. Solo existe en el bloque de código "
+          "(se guarda en el navegador); con cuadros de texto no se puede hacer.")
+        a("")
+        a("---")
+        a("")
+
+    # Calendario
+    a("## Página: Calendario")
+    a("")
+    a("- **Título:** Calendario del ciclo")
+    a("- **Texto:** Las 18 semanas del ciclo, del 17 de agosto al 18 de diciembre, con el plan semanal de Física: "
+      "temas, actividades, tareas y exámenes. Agrégalo a tu calendario para recibir los recordatorios en el celular.")
+    a(f"- **Datos:** 18 semanas · {len(evs)} evaluaciones de Física")
+    a("")
+    a("### Evaluaciones de Física")
+    a("")
+    a("| Evaluación | Semana | Fechas | Puntos |")
+    a("|---|---|---|---|")
+    for e in evs:
+        a(f"| {e['n']} | {e['s']} | {e['f']} | {fmt(e['pts'])} |")
+    a("")
+    a("### Plan semanal")
+    a("")
+    a("Es la misma tabla de la sección *Calendario de temas y puntos* de **Física y sus Aplicaciones**. "
+      "El plan semanal proviene del desglose de esa materia; es el calendario del ciclo que comparten todas las materias.")
+    a("")
+    a("---")
+    a("")
+
+    # Equipo
+    a("## Página: Equipo")
+    a("")
+    a("- **Título:** Nuestro equipo")
+    a(f"- **Texto:** {integrantes_texto()} del grupo {S['grupo']}, turno {S['turno'].lower()}, del {S['carrera']}.")
+    a(f"- **Datos:** {N_EQUIPO} integrantes · Grupo {S['clave']} · Ciclo {S['ciclo']}")
+    a("")
+    a("| # | Nombre | Código de alumno | Correo institucional | Rol en el equipo | Frase o pasatiempo |")
+    a("|---|---|---|---|---|---|")
+    for k, n in enumerate(NOMBRES_EQUIPO, 1):
+        a(f"| {k:02d} | {n} | Por completar | Por completar | Por completar | Por completar |")
+    a("")
+    escribir(RAIZ / "google-sites" / "CONTENIDO.md", "\n".join(L) + "\n")
+
+
 # ---------------------------------------------------------------- archivos del dominio
 def json_ld_materia(m):
     ld = {
@@ -1670,6 +1906,7 @@ def construir():
 def main():
     construir()
     bloques = generar_bloques()
+    generar_contenido()
     print(f"Google Sites: {len(bloques)} bloques en google-sites/codigos/")
     print(f"Sitio generado: {len(PAGINAS)} páginas + 404 y sin conexión · {TOTAL_TEMAS} temas · "
           f"{'dominio ' + URL if URL else 'sin dominio todavía (SITIO[\"url\"] vacío)'}")
